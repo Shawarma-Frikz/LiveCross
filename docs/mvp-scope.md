@@ -1,55 +1,56 @@
 # LiveCross — MVP Boundary
 
-**Purpose:** Freeze what the first course-ready version will include, what can be added only after it works, and what the project will not attempt. This scope is for one fixed camera view and one crossing scene. The product concept supports several pair types, but evaluation claims must follow annotation coverage.
+**Purpose:** Define a feasible first version for one fixed camera scene. The MVP supports and demonstrates all four requested interaction types: pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–configured fixed object. The DOT benchmark directly validates only the vulnerable-road-user–vehicle category, so every other category uses its own manually annotated clips and its own results.
 
-## MVP — required for the first complete demo
+## MVP — required
 
 | Feature | MVP definition | Completion evidence |
 |---|---|---|
-| Video input | Replay an annotated/recorded clip through the same inference pipeline used by the demo. | A clip can be selected, played, paused, and reviewed at a flagged time. |
-| Local live input | Process a staged interaction from one laptop webcam. Keep clip replay as a fallback for presentation day. | A staged scene flows through detection, tracking, scoring, and explanation without retraining. |
-| Camera/scene scope | One fixed camera and one manually configured crossing/conflict polygon. | Polygon and camera settings persist in a local config file. |
-| Road-user detection | Detect people and motor vehicles with a documented pretrained CNN detector; keep the model fixed for the MVP. | The overlay and saved detections show class, box, confidence, and frame/time. |
-| Configured fixed hazards | Let the reviewer mark fixed obstacle regions/points (for example, a tree or light pole) on the scene image. | Saved scene config contains each obstacle ID, type, and geometry; automatic recognition is unnecessary for MVP. |
-| Tracking | Assign temporary track IDs and maintain short motion trails. | Pedestrian and vehicle tracks remain usable across representative event clips; ID switches are recorded as a failure mode. |
-| Multi-type interaction candidates | Generate pair windows for pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–configured-fixed-hazard. | Each event records its pair type. DOT-backed evaluation is limited to its labeled VRU–vehicle scenarios; other types use a separate manual set and remain exploratory if data are insufficient. |
-| Conflict scoring | Use a transparent baseline based on predicted zone-entry timing, path proximity, and track quality. Treat image-coordinate values as proxies; fixed hazards use approach/path intersection with configured geometry. | A saved event can be recomputed from its tracks, obstacle geometry, and thresholds. |
-| Hard-negative experiment | Train a linear SVM on interaction-level motion/visibility features; mine and review false-positive safe interactions from training sequences only. Keep pair type explicit. | Report the same held-out comparison before and after mining, with per-type counts and no mixing unsupported labels into the DOT benchmark. |
-| Explainable event | Show the tracks, conflict zone, event time, triggered factors, and an uncertainty/review state. | A reviewer can trace every displayed reason to a stored measurement or rule. |
-| Event log | Store event ID, times, involved tracks, score/state, explanation fields, source, and review status locally. | Selecting a log row reopens the corresponding video moment and explanation. |
-| Responsive web interface | Provide a browser review screen that reflows for laptop and phone widths; inference runs locally for the course demo. | Core event review works without clipped content at desktop and narrow-phone widths. |
-| Course evaluation | Evaluate sequence-separated data using event precision/recall/F1, false alerts per video duration, delay/lead time when labels allow, FPS, and hard-negative ablation. | Final metrics include sample counts, split policy, runtime hardware, and failure examples. |
+| Video input | Replay recorded footage through the same inference pipeline used by live demo. | Clips can be selected, played, paused, and reviewed at an event time. |
+| Local live input | Process staged interactions from one laptop webcam; keep clip replay as a reliable fallback. | Staged scenes pass through detection, tracking, scoring, and explanation. |
+| Camera and scene | One fixed camera view, one configured crossing/conflict polygon, and documented image dimensions. | Scene settings persist locally and render consistently at different display sizes. |
+| Road-user detection | Use a documented pretrained YOLO-family detector candidate for people and motor vehicles; include bicycles if supported. Keep weights fixed for MVP. | Record model/version, weight source, license, and class mapping; display class, box, confidence, and timestamp. |
+| Tracking | Assign temporary within-clip IDs and maintain motion trails for people and vehicles. | Track breaks, false detections, and ID switches are recorded in the failure review. |
+| Fixed hazards | Allow the reviewer to configure fixed-object points/regions such as a tree or light pole. | Each obstacle has a stable scene ID and geometry; it is visibly drawn in the overlay. |
+| Typed interaction generation | Generate moving pairs for pedestrian–vehicle, vehicle–vehicle, and pedestrian–pedestrian; compare vehicle paths with configured fixed-object regions. Store the pair type and all actor/object IDs. | Each type is exercised on a recorded or staged clip and creates a reviewable candidate event. |
+| Pair-aware rule baseline | Estimate path proximity and time of closest approach for moving pairs; for vehicle–object, test whether the projected vehicle path intersects the configured hazard region. Treat uncalibrated values as image-plane estimates. | Every score is reproducible from stored tracks, geometry, timestamps, and thresholds. |
+| Interaction classifier | Train a linear SVM on manually reviewed motion/visibility features with pair type included. Use per-type thresholds or per-type models only if the annotation audit shows the shared model is unsuitable. | Compare to the deterministic rule baseline; record per-type training and evaluation counts. |
+| Hard-negative experiment | Review safe false-positive interactions from training clips, then mine selected hard negatives without using held-out clips. Preserve category labels. | Compare before/after mining using the same held-out clips; report false-alert change and recall by type. |
+| XAI event | Show the clip/time, pair type, paths or obstacle region, triggered rule factors, SVM feature contributions, and an uncertain/review state. | Every displayed explanation traces to measured features or a named rule. |
+| Local event log | Store event ID, interval, pair type, involved tracks/object ID, score, reasons, source, and review status locally. | Selecting an event opens its clip moment and evidence. |
+| Responsive interface | Provide a local browser review screen for phone and desktop widths. | Event review is usable at both sizes; inference remains local. |
+| Category-specific evaluation | Evaluate each pair type separately. Use DOT labels plus manual event intervals for pedestrian/bicyclist–vehicle; use a separate permission-cleared, manually annotated clip set for the other categories. | Report counts, event precision/recall/F1 when sample size permits, false alerts per annotated minute, delay when labels permit, FPS, and failure examples for each category. Mark sparse categories exploratory. |
 
-## Stretch — only after every MVP row works
+## Data and annotation boundary
+
+- **Pedestrian/bicyclist–vehicle:** DOT Stage 1B is the primary benchmark. Its run-level conflict label is not an event label, so event intervals and actor-pair identities must be manually reviewed before event-level scoring.
+- **Vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object:** Create a small, documented supplemental annotation set from suitable recorded footage and safe staged clips. Keep its source, consent/permission status, split, and annotation rules distinct from DOT.
+- Use complete source clips/runs for train/development/test separation. Do not use held-out clips for threshold tuning or hard-negative mining.
+- Support all four categories in the demo even if some category-level metrics must be reported as exploratory. Do not imply that DOT validates unsupported categories.
+
+## Stretch — only after all four MVP paths work
 
 | Feature | Add only when | Boundary |
 |---|---|---|
-| Transfer-learning CNN risk comparator | The selected dataset has enough valid labeled event windows and the baseline is complete. | Compare against the motion-feature SVM; do not let it replace event-level evaluation. |
-| HOG + SVM crop comparator | There is time for a focused classical-method comparison. | Optional experiment; not required for the live pipeline. |
-| Bicycle detection | Dataset labels and detector quality support it. | Add bicycles as an extra road-user class; do not block pedestrian/vehicle MVP. |
-| Broader labeled evaluation | A permission-cleared annotation set has enough examples for each additional pair type. | Report metrics separately; never transfer DOT VRU–vehicle labels to vehicle–vehicle, pedestrian–pedestrian, or fixed-hazard pairs. |
-| Camera calibration | A defensible calibration procedure and suitable scene geometry are available. | Then, and only then, evaluate physical distance/TTC units. |
-| Mobile-browser camera capture | The responsive review UI and laptop webcam mode are stable. | Phone support for reviewing events is MVP; using a phone as a live capture device is stretch. |
-| Additional lighting/view conditions | Data is available and the single-scene pipeline is measured. | Treat each condition as a separate generalization experiment. |
-| Optional clip export/privacy blur | The data terms permit derived media and time remains. | Keep originals local; redact faces/plates before sharing any demo clip. |
+| CNN interaction comparator | Each category has enough event-level labels and the rule/SVM comparison is complete. | Optional scientific comparison; not added just to increase model count. |
+| Camera calibration | A defensible calibration procedure and matching scene geometry are available. | Only then report physical distances or TTC units. |
+| Automatic fixed-object detection | Configurable geometry and vehicle path scoring are stable. | Adds a new perception task; does not replace manual hazard configuration in MVP. |
+| Multi-camera fusion, city mapping, native phone capture | The single-camera MVP is complete and time remains. | Outside the course MVP. |
 
-## Out of scope for this project
+## Out of scope
 
-| Excluded feature | Why it is excluded |
-|---|---|
-| Multi-camera fusion or camera handoff | Expands calibration, synchronization, and tracking beyond the single-scene course scope. |
-| GPS mapping, city-wide hotspot maps, or persistent infrastructure analytics | Requires georeferencing and a broader deployment/data pipeline. |
-| Native iOS/Android packaging | The deliverable is a responsive browser prototype. |
-| Automatic driver alerts, traffic-signal control, or emergency dispatch | LiveCross is a review aid, not a certified safety-control system. |
-| Claims that a crash will happen, or judgments of fault or pedestrian intent | Video-derived proxies do not establish certainty, intent, or responsibility. |
-| Reliable physical speed, distance, or TTC without calibration | Image-plane measurements do not have physical units. |
-| Cloud upload, face recognition, identity tracking, or long-term storage of raw footage | Not needed for the course prototype and would add privacy and security obligations. |
-| Production deployment or claims of preventing collisions | Requires prospective, independent safety validation beyond this project. |
+- Certified driver/public warnings, traffic-signal control, or emergency dispatch.
+- Claims that a crash will occur, or judgments of fault or intent.
+- Reliable physical speed, distance, or collision probability without validation.
+- Identity recognition, cross-session identity tracking, cloud upload, or long-term storage of raw footage.
+- Pooling all categories into one headline score that hides per-type failures.
 
-## MVP completion gate
+## Completion gate
 
-The MVP is complete when one fixed-scene clip and one staged laptop-webcam interaction can pass through the same pipeline; the interface records and explains candidate events; the hard-negative experiment is compared on held-out sequences; the responsive review works on desktop and phone widths; and the report states the measured limits. If webcam capture fails, clip replay remains the required reliable demonstration path and the failure is documented.
+The MVP is complete when all four typed paths can produce reviewable events on recorded or staged clips; the rule baseline and linear SVM have been compared on eligible labeled data; hard-negative mining is evaluated without split leakage; event explanations, uncertainty, and local logging work; and the responsive interface handles both clip replay and a staged webcam feed. Category-specific evidence and limitations must be reported separately. Clip replay remains the reliable demonstration path if webcam capture fails.
 
-## Scope-change rule
+## Approval and feasibility gates
 
-Do not add stretch work until the MVP completion gate is met. If data access, labels, or compute force a change, update the brief and record which feature moved category and why before changing the implementation plan.
+1. The student reports that the instructor approved LiveCross as a custom topic and approved solo work. Record that decision in the registration/project log if requested.
+2. Audit annotation coverage before freezing per-category acceptance targets. The five-run DOT sample is a pipeline-feasibility pilot, not enough by itself for strong claims.
+3. If a pair type lacks sufficient independent labeled clips, keep the feature in the working demo and report its metrics as exploratory rather than dropping it or borrowing another category’s labels.

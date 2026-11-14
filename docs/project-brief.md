@@ -1,13 +1,13 @@
 # LiveCross — Project Brief
 
-**Status:** Draft for course-project approval  
+**Status:** Draft for implementation
 **Project type:** Explainable computer-vision prototype for road-safety review
 
 ## Problem statement
 
-Road-safety teams often review video after a concern has been reported. Finding moments when two moving road users—or a vehicle and a fixed roadside obstacle—may have approached the same space at nearly the same time can take careful, repeated viewing. LiveCross will analyze a fixed-camera video and bring candidate interactions forward for human review. Intended pair types are pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–configured fixed object (for example, a tree or light pole).
+Road-safety teams often review video after a concern has been reported. Finding moments when people or vehicles converge on a crossing area—or when a vehicle path approaches a fixed roadside hazard—can take careful, repeated viewing. LiveCross will analyze fixed-camera video and bring four typed event candidates forward for human review: pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–fixed-object.
 
-The project asks: **Can a course-sized computer-vision pipeline find and explain candidate conflicts across several actor-pair types in a defined crossing scene, while reducing false alerts from safe interactions?**
+The project asks: **Can a course-sized computer-vision pipeline find and explain several types of potential crossing conflicts, and can hard-negative mining reduce false alerts without hiding failures in less common pair types?**
 
 ## Intended user and use
 
@@ -19,7 +19,8 @@ The primary user is a **campus, municipal, or road-safety reviewer** examining a
 - **Input:** A recorded video clip first, followed by one staged local laptop-webcam feed through the same pipeline.
 - **Moving actors:** Pedestrians and motor vehicles; bicycles only if the selected data and detector support them reliably.
 - **Fixed hazards:** User-configured scene objects such as trees or light poles. They are static landmarks/regions, not objects expected to move or receive a tracked identity.
-- **Interaction coverage:** Plan for pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–fixed-object candidates. Report each category separately and mark unsupported or unannotated categories as exploratory.
+- **MVP interaction coverage:** Pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–fixed-object (such as a tree or light pole). Include bicyclist–vehicle when detection and clip annotations support it.
+- **Data boundary:** DOT is the benchmark for its documented vulnerable-road-user–vehicle scenarios. The other pair types use a separate, manually annotated clip set and are reported independently; they are not described as DOT-validated.
 - **Initial conditions:** Begin with a small, documented set of usable sequences. Record frame rate, resolution, lighting, occlusion, camera view, and annotation coverage.
 
 ## Output
@@ -38,10 +39,10 @@ Distances and time-to-collision values derived from image coordinates will be la
 1. Build a reproducible video pipeline for detection, tracking, interaction features, and event visualization.
 2. Compare a transparent rule baseline with a learned conflict filter; use verified hard negatives from training sequences to study false-alert reduction.
 3. Explain each flag with the measurements and conditions that contributed to it.
-4. Evaluate on sequence-separated data using event-level precision, recall, F1, false alerts per video duration, detection delay, and processing speed.
+4. Evaluate each pair type separately on source-separated data using event-level precision, recall, F1, false alerts per video duration, detection delay, and processing speed. Mark sparse categories exploratory.
 5. Deliver a responsive browser demo with clip replay and a staged local laptop-webcam mode; keep clip replay as a reliable fallback.
 
-The complete feature-by-feature boundary is recorded in [`mvp-scope.md`](mvp-scope.md). The minimum version uses one fixed scene, a pretrained CNN detector, tracking, transparent conflict scoring, reviewed hard negatives, a local event log, and an explainable responsive review interface.
+The complete feature-by-feature boundary is recorded in [`mvp-scope.md`](mvp-scope.md). The minimum version uses one fixed scene, a pretrained detector, tracking, transparent conflict scoring, a trained linear SVM interaction filter, reviewed hard negatives, a local event log, and an explainable responsive review interface.
 
 ## Non-goals and limits
 
@@ -49,7 +50,7 @@ LiveCross will not diagnose intent, determine fault, predict that a crash will o
 
 ## Data and approval note
 
-The preferred benchmark is the **U.S. DOT Intersection Safety Challenge Stage 1B**. Its official description covers conflict/non-conflict scenarios between vulnerable road users (such as pedestrians and bicyclists) and vehicles. It does not establish labels for vehicle–vehicle, pedestrian–pedestrian, or vehicle–fixed-object conflicts. Those categories require a separate manually annotated set or must remain exploratory; do not present them as validated by DOT labels. If DOT is unusable and PIE is selected, revise claims to its supported task plus explicitly defined conflict proxies. Confirm the final topic against instructor requirements. The provisional event definitions and pending label-mapping template are in [`event-vocabulary.md`](event-vocabulary.md).
+The preferred benchmark is the **U.S. DOT Intersection Safety Challenge Stage 1B**. Its official description covers conflict/non-conflict scenarios between vulnerable road users (such as pedestrians and bicyclists) and vehicles. Its five-run sample has been inspected, but its labels are run-level; event intervals need manual annotations, and the sample alone is too small for strong final claims. Inspect the public 41-run validation asset before freezing its evaluation plan. The three other interaction types use a separate manual clip set. Per the student, the instructor approved LiveCross as a custom topic and approved solo work. Operational definitions are in [`event-vocabulary.md`](event-vocabulary.md), with a proposed labeling process in [`manual-annotation-protocol.md`](manual-annotation-protocol.md).
 
 Initial measurable evaluation thresholds and the DOT label-level limitation are recorded in [`acceptance-targets.md`](acceptance-targets.md); confirm sample contents before freezing the final test protocol.
 

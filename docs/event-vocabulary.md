@@ -7,7 +7,7 @@
 | Term | Working definition | Annotation / modeling rule |
 |---|---|---|
 | **Actor** | A moving tracked road user or a configured fixed scene hazard. | Moving actors have temporary track IDs; fixed hazards have scene-config IDs and no motion track. |
-| **Pair type** | The typed combination under review: pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, or vehicle–fixed-object. | Store explicitly for every event and evaluate each type separately. |
+| **Pair type** | The typed combination under review: pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, or vehicle–fixed-object. | All four are MVP categories. Store pair type for every event; only VRU–vehicle has DOT benchmark labels, while the others require separate annotations and evaluation. |
 | **Interaction** | A time-bounded episode in which two actors are relevant to the same configured conflict area or have sufficiently close predicted paths in the same analysis window. | An interaction is a candidate pair for review. It is not automatically dangerous or a near miss. |
 | **Conflict candidate** | An interaction for which the current motion rule or learned filter estimates that two moving actors may occupy overlapping space at close times, or a moving vehicle may approach/intersect a configured fixed-hazard region. | This is LiveCross’s model output, not ground truth that a near miss or crash occurred. Store the score, rule conditions, actor IDs, and time range. |
 | **Non-conflict interaction** | A comparable interaction that the dataset annotation guide or documented human review identifies as non-conflicting/safe for the project’s defined task. | Do not label an example negative solely because LiveCross did not alert. Preserve the source of the negative label. |

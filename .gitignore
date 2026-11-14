@@ -1,0 +1,10 @@
+data/raw/
+data/processed/
+.venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+models/checkpoints/
+models/*.pt
+models/*.pth
+models/*.onnx

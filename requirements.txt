@@ -1,0 +1,11 @@
+# Python 3.10+; pin exact versions after the first reproducible environment setup.
+opencv-python
+numpy
+pandas
+matplotlib
+scikit-learn
+torch
+torchvision
+ultralytics
+streamlit
+jupyter
