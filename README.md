@@ -1,16 +1,16 @@
 # LiveCross
 
-**An explainable computer-vision prototype for reviewing pedestrian–vehicle interactions at a crossing.**
+**An explainable computer-vision prototype for reviewing multiple kinds of potential conflicts at a crossing.**
 
 > **Project status:** Scope and planning. The detection pipeline and web application have not been implemented yet.
 
 ## What LiveCross is intended to do
 
-LiveCross will analyze video from one fixed crossing and bring potentially conflicting pedestrian–vehicle interactions forward for human review. The first version is planned to support both recorded clips and a staged local laptop-webcam demo through the same pipeline.
+LiveCross will analyze video from one fixed crossing and bring potential conflicts between road users and configured obstacles forward for human review. Intended interaction types include pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–fixed-object (such as a tree or light pole). The first version is planned to support recorded clips and a staged local laptop-webcam demo through the same pipeline. Dataset-backed evaluation will be limited to the interaction types actually labeled by the selected data; other types require a separately annotated demonstration set.
 
 The planned system will:
 
-- detect pedestrians and motor vehicles, then track them across frames;
+- detect and track pedestrians and motor vehicles; represent fixed hazards as configured scene objects;
 - compare their motion with a manually defined crossing/conflict zone;
 - flag candidate events using transparent conflict-scoring logic;
 - explain each flag with track paths, timing, proximity factors, and uncertainty;
@@ -29,7 +29,7 @@ LiveCross is a course/research prototype for **safety analysis and event review*
 
 ## Planned data and methods
 
-The preferred dataset is the U.S. DOT Intersection Safety Challenge Stage 1B, pending confirmation that its video and annotations support the project’s conflict task. PIE is a fallback for pedestrian crossing behavior; it does not directly label near-miss events, so the task and claims would need to change if PIE is used.
+The preferred benchmark is the U.S. DOT Intersection Safety Challenge Stage 1B. Its official description covers conflict/non-conflict scenarios between vulnerable road users (including pedestrians and bicyclists) and vehicles; it does not establish labels for vehicle–vehicle, pedestrian–pedestrian, or vehicle–fixed-object conflicts. Those additional interaction types need separate, clearly identified manual annotations and must not be reported as DOT-validated results. PIE is a fallback for pedestrian crossing behavior; it does not directly label near-miss events.
 
 The planned tools include OpenCV, PyTorch/torchvision, scikit-learn, and Streamlit. The exact model, package versions, dataset split, and run instructions will be recorded once implementation begins.
 

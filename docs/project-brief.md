@@ -5,9 +5,9 @@
 
 ## Problem statement
 
-Road-safety teams often review video after a concern has been reported. Finding the moments when a pedestrian and a vehicle may have approached the same crossing area at nearly the same time can take careful, repeated viewing. LiveCross will analyze a fixed-camera video, identify pedestrian–vehicle interactions that meet a transparent potential-conflict rule, and bring those moments forward for a person to review.
+Road-safety teams often review video after a concern has been reported. Finding moments when two moving road users—or a vehicle and a fixed roadside obstacle—may have approached the same space at nearly the same time can take careful, repeated viewing. LiveCross will analyze a fixed-camera video and bring candidate interactions forward for human review. Intended pair types are pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–configured fixed object (for example, a tree or light pole).
 
-The project asks: **Can a course-sized computer-vision pipeline find and explain candidate pedestrian–vehicle conflicts in a defined crossing scene, while reducing false alerts from safe interactions?**
+The project asks: **Can a course-sized computer-vision pipeline find and explain candidate conflicts across several actor-pair types in a defined crossing scene, while reducing false alerts from safe interactions?**
 
 ## Intended user and use
 
@@ -17,19 +17,21 @@ The primary user is a **campus, municipal, or road-safety reviewer** examining a
 
 - **Scene:** One fixed, stable camera view containing a visible crossing or marked conflict zone.
 - **Input:** A recorded video clip first, followed by one staged local laptop-webcam feed through the same pipeline.
-- **Road users:** Pedestrians and motor vehicles, with bicycles included only if the selected data supports them reliably.
+- **Moving actors:** Pedestrians and motor vehicles; bicycles only if the selected data and detector support them reliably.
+- **Fixed hazards:** User-configured scene objects such as trees or light poles. They are static landmarks/regions, not objects expected to move or receive a tracked identity.
+- **Interaction coverage:** Plan for pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–fixed-object candidates. Report each category separately and mark unsupported or unannotated categories as exploratory.
 - **Initial conditions:** Begin with a small, documented set of usable sequences. Record frame rate, resolution, lighting, occlusion, camera view, and annotation coverage.
 
 ## Output
 
 For each candidate event, LiveCross will show:
 
-- the event time range and the people/vehicle tracks involved;
+- the event time range, pair type, and involved track IDs or configured fixed-object ID;
 - the configured crossing/conflict zone and recent motion trails;
 - the measured factors that triggered the flag, such as estimated zone-entry timing and path proximity;
 - an uncertainty/review state when tracking, visibility, or geometry is insufficient.
 
-Distances and time-to-collision values derived from image coordinates will be labelled **image-plane estimates** unless camera calibration supports physical measurements.
+Distances and time-to-collision values derived from image coordinates will be labelled **image-plane estimates** unless camera calibration supports physical measurements. A candidate is a review flag, not a confirmed collision or a live public warning.
 
 ## Project goals
 
@@ -47,7 +49,7 @@ LiveCross will not diagnose intent, determine fault, predict that a crash will o
 
 ## Data and approval note
 
-The preferred dataset is the **U.S. DOT Intersection Safety Challenge Stage 1B**, subject to confirming video access and annotation semantics. If the usable data only supports pedestrian crossing intention (for example, PIE), the task and claims will be revised to crossing anticipation plus explicitly defined conflict proxies. Dataset choice and the final project topic require confirmation against the instructor’s requirements. The provisional event definitions and pending label-mapping template are in [`event-vocabulary.md`](event-vocabulary.md).
+The preferred benchmark is the **U.S. DOT Intersection Safety Challenge Stage 1B**. Its official description covers conflict/non-conflict scenarios between vulnerable road users (such as pedestrians and bicyclists) and vehicles. It does not establish labels for vehicle–vehicle, pedestrian–pedestrian, or vehicle–fixed-object conflicts. Those categories require a separate manually annotated set or must remain exploratory; do not present them as validated by DOT labels. If DOT is unusable and PIE is selected, revise claims to its supported task plus explicitly defined conflict proxies. Confirm the final topic against instructor requirements. The provisional event definitions and pending label-mapping template are in [`event-vocabulary.md`](event-vocabulary.md).
 
 Initial measurable evaluation thresholds and the DOT label-level limitation are recorded in [`acceptance-targets.md`](acceptance-targets.md); confirm sample contents before freezing the final test protocol.
 

@@ -5,11 +5,12 @@
 
 ## Dataset facts that affect evaluation
 
-The official DOT pages describe separate training and validation assets. Training has 1,104 runs, is unlabeled, is approximately 1 TB in full, and only a subset is downloadable as public sample ZIPs; the full set requires a data request. Validation has 41 runs, is approximately 30 GB in full, and includes a five-run, approximately 3 GB sample. Its ground truth includes 3D road-user boxes per timestamp and a **run-level** conflict/no-conflict label. The official data story says visual camera MP4s have frame-timestamp CSVs.
+The official DOT pages describe separate training and validation assets. Training has 1,104 runs, is unlabeled, is approximately 1 TB in full, and only a subset is downloadable as public sample ZIPs; the full set requires a data request. Validation has 41 runs, is approximately 30 GB in full, and includes a five-run, approximately 3 GB sample. Its ground truth includes 3D road-user boxes per timestamp and a **run-level** conflict/no-conflict label. DOT describes scenarios involving vulnerable road users (pedestrians/bicyclists) and vehicles. That supports the primary VRU–vehicle benchmark only; it does not establish reference labels for vehicle–vehicle, pedestrian–pedestrian, or vehicle–fixed-object interactions. The official data story says visual camera MP4s have frame-timestamp CSVs.
 
 Therefore:
 
 - The run-level labels can support a run-level conflict/no-conflict measure.
+- The additional pair types need a separate permission-cleared annotation set; report them separately and mark them exploratory until the sample supports meaningful evaluation.
 - They do not, by themselves, provide event start/end times. Event-level precision/recall and alert delay need a separately documented manual event annotation set.
 - Do not treat the unlabeled training runs as supervised conflict labels, and do not report event-level metrics against run labels.
 - If inspection of the five-run sample cannot support the minimum event set below, keep event-level results exploratory and record the limitation; do not weaken thresholds after looking at test results.
@@ -40,7 +41,7 @@ Before training or viewing test-set results:
 
 ### Event-matching rule
 
-For event-level scores, a prediction matches a reference event when it is in the same run and its time interval overlaps the reference interval by at least **50% of the shorter interval**. If the data permits reliable pair identity, require the same pedestrian–vehicle pair too. Count each reference event and each predicted event at most once; unmatched predictions are false alerts and unmatched references are misses. Review this rule against the sample annotation format before locking the test protocol.
+For event-level scores, a prediction matches a reference event when it is in the same run, has the same pair type, and its time interval overlaps the reference interval by at least **50% of the shorter interval**. If the data permits reliable actor identity, require the same actor pair (or same vehicle and fixed-hazard ID) too. Count each reference event and each predicted event at most once; unmatched predictions are false alerts and unmatched references are misses. Review this rule against each sample annotation format before locking the test protocol.
 
 ## Secondary reporting targets
 

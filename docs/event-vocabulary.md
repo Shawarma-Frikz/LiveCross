@@ -6,14 +6,16 @@
 
 | Term | Working definition | Annotation / modeling rule |
 |---|---|---|
-| **Interaction** | A time-bounded episode in which a tracked pedestrian and a tracked vehicle are both relevant to the configured crossing/conflict area during the same analysis window. | An interaction is a candidate pair for review. It is not automatically dangerous or a near miss. |
-| **Conflict candidate** | An interaction for which the current motion rule or learned filter estimates that the two road users may occupy an overlapping conflict area at close times or close paths. | This is LiveCross’s model output, not ground truth that a near miss or crash occurred. Store the score, rule conditions, track IDs, and time range. |
+| **Actor** | A moving tracked road user or a configured fixed scene hazard. | Moving actors have temporary track IDs; fixed hazards have scene-config IDs and no motion track. |
+| **Pair type** | The typed combination under review: pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, or vehicle–fixed-object. | Store explicitly for every event and evaluate each type separately. |
+| **Interaction** | A time-bounded episode in which two actors are relevant to the same configured conflict area or have sufficiently close predicted paths in the same analysis window. | An interaction is a candidate pair for review. It is not automatically dangerous or a near miss. |
+| **Conflict candidate** | An interaction for which the current motion rule or learned filter estimates that two moving actors may occupy overlapping space at close times, or a moving vehicle may approach/intersect a configured fixed-hazard region. | This is LiveCross’s model output, not ground truth that a near miss or crash occurred. Store the score, rule conditions, actor IDs, and time range. |
 | **Non-conflict interaction** | A comparable interaction that the dataset annotation guide or documented human review identifies as non-conflicting/safe for the project’s defined task. | Do not label an example negative solely because LiveCross did not alert. Preserve the source of the negative label. |
 | **Uncertain** | The available video or annotation does not support a reliable conflict/non-conflict decision. | Keep it as a separate review state; exclude it from binary training/evaluation unless it is later adjudicated under a documented rule. |
 | **Occluded** | A road user or relevant part of the path is hidden or truncated enough to weaken the interaction evidence. | Record as an uncertainty reason. Occlusion alone does not prove either conflict or non-conflict. |
 | **Event start** | The earliest timestamp in a continuous interaction interval that meets the configured event rule after any persistence/smoothing requirement. | The exact persistence duration and time-window values are configuration decisions for the risk-scoring tasks; they are not fixed here. |
 | **Event end** | The last timestamp in that continuous qualifying interval before the interaction no longer meets the configured rule. | Retain the source sequence and frame/time bounds so the interval can be replayed. |
-| **Duplicate event** | Two event records for the same sequence and same pedestrian–vehicle track pair whose time intervals overlap or fall within the configured merge gap. | Merge for display into one event with a combined interval; preserve the raw prediction windows for audit and metric calculation. The merge gap is a later configuration decision. |
+| **Duplicate event** | Two event records for the same sequence and same actor pair whose time intervals overlap or fall within the configured merge gap. | Merge for display into one event with a combined interval; preserve the raw prediction windows for audit and metric calculation. The merge gap is a later configuration decision. |
 
 ## Labeling principles
 
@@ -41,4 +43,4 @@ No dataset labels are mapped to the LiveCross vocabulary yet. Complete this tabl
 
 ## Event record fields
 
-Each reviewed event should retain, when available: `event_id`, `sequence_id`, `source_label`, `livecross_label`, `review_label`, `review_reason`, `start_time`, `end_time`, `pedestrian_track_id`, `vehicle_track_id`, `track_quality`, `conflict_score`, `triggered_factors`, `uncertainty_reason`, and `mapping_version`.
+Each reviewed event should retain, when available: `event_id`, `sequence_id`, `source_label`, `livecross_label`, `review_label`, `review_reason`, `pair_type`, `start_time`, `end_time`, `actor_a_track_id`, `actor_b_track_id`, `fixed_hazard_id`, `track_quality`, `conflict_score`, `triggered_factors`, `uncertainty_reason`, and `mapping_version`. A fixed hazard has a scene-config ID rather than a track ID.
