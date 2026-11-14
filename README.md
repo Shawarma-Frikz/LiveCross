@@ -24,6 +24,7 @@ LiveCross is a course/research prototype for **safety analysis and event review*
 - [Project brief](docs/project-brief.md) — problem, intended user, scene, input/output, goals, and limitations.
 - [MVP boundary](docs/mvp-scope.md) — features assigned to MVP, stretch, or out of scope.
 - [Event vocabulary](docs/event-vocabulary.md) — provisional operational definitions and the dataset-label mapping template.
+- [Acceptance targets](docs/acceptance-targets.md) — initial thresholds, evaluation protocol, and dataset-dependent caveats.
 
 ## Planned data and methods
 

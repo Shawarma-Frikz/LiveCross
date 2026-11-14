@@ -48,3 +48,5 @@ LiveCross will not diagnose intent, determine fault, predict that a crash will o
 ## Data and approval note
 
 The preferred dataset is the **U.S. DOT Intersection Safety Challenge Stage 1B**, subject to confirming video access and annotation semantics. If the usable data only supports pedestrian crossing intention (for example, PIE), the task and claims will be revised to crossing anticipation plus explicitly defined conflict proxies. Dataset choice and the final project topic require confirmation against the instructor’s requirements. The provisional event definitions and pending label-mapping template are in [`event-vocabulary.md`](event-vocabulary.md).
+
+Initial measurable evaluation thresholds and the DOT label-level limitation are recorded in [`acceptance-targets.md`](acceptance-targets.md); confirm sample contents before freezing the final test protocol.
