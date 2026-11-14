@@ -16,7 +16,7 @@ The primary user is a **campus, municipal, or road-safety reviewer** examining a
 ## Scene and input
 
 - **Scene:** One fixed, stable camera view containing a visible crossing or marked conflict zone.
-- **Input:** A recorded video clip for the first working version; local webcam input is a later demonstration option.
+- **Input:** A recorded video clip first, followed by one staged local laptop-webcam feed through the same pipeline.
 - **Road users:** Pedestrians and motor vehicles, with bicycles included only if the selected data supports them reliably.
 - **Initial conditions:** Begin with a small, documented set of usable sequences. Record frame rate, resolution, lighting, occlusion, camera view, and annotation coverage.
 
@@ -37,7 +37,9 @@ Distances and time-to-collision values derived from image coordinates will be la
 2. Compare a transparent rule baseline with a learned conflict filter; use verified hard negatives from training sequences to study false-alert reduction.
 3. Explain each flag with the measurements and conditions that contributed to it.
 4. Evaluate on sequence-separated data using event-level precision, recall, F1, false alerts per video duration, detection delay, and processing speed.
-5. Deliver a responsive browser demo with replay mode and, if feasible, local webcam mode.
+5. Deliver a responsive browser demo with clip replay and a staged local laptop-webcam mode; keep clip replay as a reliable fallback.
+
+The complete feature-by-feature boundary is recorded in [`mvp-scope.md`](mvp-scope.md). The minimum version uses one fixed scene, a pretrained CNN detector, tracking, transparent conflict scoring, reviewed hard negatives, a local event log, and an explainable responsive review interface.
 
 ## Non-goals and limits
 
