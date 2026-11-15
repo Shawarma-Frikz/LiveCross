@@ -8,3 +8,4 @@ models/checkpoints/
 models/*.pt
 models/*.pth
 models/*.onnx
+tmp

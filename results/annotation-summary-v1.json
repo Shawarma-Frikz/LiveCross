@@ -1,0 +1,540 @@
+{
+  "generated_on": "2026-11-15",
+  "annotation_version": "1.0.0-draft",
+  "manual_rule_version": "visual-categorical-v1.0.0",
+  "annotation_table": "data/annotations/v1/events.csv",
+  "annotation_table_sha256": "ed4488525f8f188c6729b7ab2e255e08bbe65dba9fa48c776e997a2e1d143861",
+  "events_by_split_and_pair_type": {
+    "train": {
+      "pedestrian_vehicle": {
+        "potential_conflict_count": 1,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 4.011825
+      },
+      "vehicle_vehicle": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 0
+      },
+      "pedestrian_pedestrian": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 0
+      },
+      "vehicle_fixed_object": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 0
+      },
+      "pedestrian_fixed_object": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 0
+      }
+    },
+    "validation": {
+      "pedestrian_vehicle": {
+        "potential_conflict_count": 1,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 1.976635
+      },
+      "vehicle_vehicle": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 0
+      },
+      "pedestrian_pedestrian": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 1,
+        "annotated_window_duration_seconds": 5.954668
+      },
+      "vehicle_fixed_object": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 0
+      },
+      "pedestrian_fixed_object": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 0
+      }
+    },
+    "test": {
+      "pedestrian_vehicle": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 0
+      },
+      "vehicle_vehicle": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 0
+      },
+      "pedestrian_pedestrian": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 0
+      },
+      "vehicle_fixed_object": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 0
+      },
+      "pedestrian_fixed_object": {
+        "potential_conflict_count": 0,
+        "non_conflict_interaction_count": 0,
+        "uncertain_count": 0,
+        "annotated_window_duration_seconds": 0
+      }
+    }
+  },
+  "category_sample_gates": {
+    "pedestrian_vehicle": {
+      "adjudicated_potential_conflict_windows": 0,
+      "adjudicated_non_conflict_windows": 0,
+      "distinct_source_runs": 0,
+      "target_per_status": 20,
+      "target_distinct_source_runs": 5,
+      "sample_gate_met": false,
+      "reporting_status": "exploratory"
+    },
+    "vehicle_vehicle": {
+      "adjudicated_potential_conflict_windows": 0,
+      "adjudicated_non_conflict_windows": 0,
+      "distinct_source_runs": 0,
+      "target_per_status": 20,
+      "target_distinct_source_runs": 5,
+      "sample_gate_met": false,
+      "reporting_status": "exploratory"
+    },
+    "pedestrian_pedestrian": {
+      "adjudicated_potential_conflict_windows": 0,
+      "adjudicated_non_conflict_windows": 0,
+      "distinct_source_runs": 0,
+      "target_per_status": 20,
+      "target_distinct_source_runs": 5,
+      "sample_gate_met": false,
+      "reporting_status": "exploratory"
+    },
+    "vehicle_fixed_object": {
+      "adjudicated_potential_conflict_windows": 0,
+      "adjudicated_non_conflict_windows": 0,
+      "distinct_source_runs": 0,
+      "target_per_status": 20,
+      "target_distinct_source_runs": 5,
+      "sample_gate_met": false,
+      "reporting_status": "exploratory"
+    },
+    "pedestrian_fixed_object": {
+      "adjudicated_potential_conflict_windows": 0,
+      "adjudicated_non_conflict_windows": 0,
+      "distinct_source_runs": 0,
+      "target_per_status": 20,
+      "target_distinct_source_runs": 5,
+      "sample_gate_met": false,
+      "reporting_status": "exploratory"
+    }
+  },
+  "uncertain_examples": [
+    {
+      "event_id": "LC-DOT-Run_841-PP-001",
+      "source_dataset": "DOT ISC Stage 1B",
+      "source_archive": "training-sample-1.zip",
+      "source_video_path": "Run_841/VisualCamera7_Run_841.mp4",
+      "source_run": "Run_841",
+      "split": "validation",
+      "source_label": "not provided",
+      "source_label_scope": "unlabeled training run",
+      "pair_type": "pedestrian_pedestrian",
+      "actor_a_class": "pedestrian",
+      "actor_a_track_id": "",
+      "actor_b_class": "pedestrian",
+      "actor_b_track_id": "",
+      "fixed_hazard_id": "",
+      "start_frame": "139",
+      "end_frame": "288",
+      "start_timestamp": "2023-11-28-11-17-34_274807",
+      "end_timestamp": "2023-11-28-11-17-40_229475",
+      "window_duration_seconds": "5.954668",
+      "status": "uncertain",
+      "confidence": "low",
+      "uncertainty_reason": "Individual actor identities and paths cannot be established from coarse samples; adjudicate from continuous frames.",
+      "annotation_notes": "A small group is visible close together near the curb/crosswalk in the one-second review pack. Individual identities and pair paths cannot be tracked reliably from these samples, so this is retained as an uncertain review window and excluded from binary counts.",
+      "annotator_id": "codex_visual_first_pass",
+      "annotation_version": "1.0.0-draft",
+      "review_stage": "assistant_first_pass_requires_student_adjudication"
+    }
+  ],
+  "excluded_examples": [
+    {
+      "exclusion_id": "EXC-DOT-Run_632-001",
+      "source_dataset": "DOT ISC Stage 1B",
+      "source_archive": "training-sample-1.zip",
+      "source_run": "Run_632",
+      "split": "validation",
+      "pair_type": "all",
+      "source_timestamp_start": "2023-11-30-21-33-42_391869",
+      "source_timestamp_end": "2023-11-30-21-34-30_870106",
+      "reason": "Low-light one-second survey did not establish an identifiable actor pair or event. This is excluded from binary labeling and is not a non-conflict label.",
+      "reviewer": "codex_visual_first_pass",
+      "annotation_version": "1.0.0-draft"
+    },
+    {
+      "exclusion_id": "EXC-DOT-Run_1194-001",
+      "source_dataset": "DOT ISC Stage 1B",
+      "source_archive": "training-sample-2.zip",
+      "source_run": "Run_1194",
+      "split": "train",
+      "pair_type": "all",
+      "source_timestamp_start": "2024-01-25-18-19-45_549327",
+      "source_timestamp_end": "2024-01-25-18-20-50_281699",
+      "reason": "Severe night-time darkness and headlight glare obscure road-user detail and path evidence across the recording. Exclude from event labeling; this is not a non-conflict label.",
+      "reviewer": "codex_visual_first_pass",
+      "annotation_version": "1.0.0-draft"
+    }
+  ],
+  "review_pack_inventory": {
+    "by_split": {
+      "train": {
+        "sequence_count_with_pack": 16,
+        "sampled_source_timeline_seconds": 802.13069,
+        "event_annotation_records": 1
+      },
+      "validation": {
+        "sequence_count_with_pack": 4,
+        "sampled_source_timeline_seconds": 210.956089,
+        "event_annotation_records": 2
+      },
+      "test": {
+        "sequence_count_with_pack": 0,
+        "sampled_source_timeline_seconds": 0,
+        "event_annotation_records": 0
+      }
+    },
+    "by_run": {
+      "Run_1035": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 50,
+            "source_timeline_span_seconds": 48.562544,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_1049": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 52,
+            "source_timeline_span_seconds": 50.429282,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_1165": {
+        "split": "validation",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 52,
+            "source_timeline_span_seconds": 50.17351,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_1194": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 66,
+            "source_timeline_span_seconds": 64.732372,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_2": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 55,
+            "source_timeline_span_seconds": 53.845089,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_254": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 25,
+            "source_timeline_span_seconds": 23.916501,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_255": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 59,
+            "source_timeline_span_seconds": 57.354808,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_294": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 0.25,
+            "sampled_frames": 69,
+            "source_timeline_span_seconds": 16.915338,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          },
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 30,
+            "source_timeline_span_seconds": 28.931839,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_405": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 62,
+            "source_timeline_span_seconds": 60.200511,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_406": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 39,
+            "source_timeline_span_seconds": 37.109906,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_408": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 50,
+            "source_timeline_span_seconds": 48.997954,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_440": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 54,
+            "source_timeline_span_seconds": 52.981337,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_548": {
+        "split": "validation",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 54,
+            "source_timeline_span_seconds": 52.204259,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_632": {
+        "split": "validation",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 50,
+            "source_timeline_span_seconds": 48.478237,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_803": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 51,
+            "source_timeline_span_seconds": 49.289099,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_841": {
+        "split": "validation",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 62,
+            "source_timeline_span_seconds": 60.100083,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_87": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 60,
+            "source_timeline_span_seconds": 58.799423,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_889": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 72,
+            "source_timeline_span_seconds": 70.455807,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_931": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 62,
+            "source_timeline_span_seconds": 60.649162,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      },
+      "Run_942": {
+        "split": "train",
+        "review_packs": [
+          {
+            "sample_interval_seconds": 1.0,
+            "sampled_frames": 37,
+            "source_timeline_span_seconds": 35.875056,
+            "generated_by": "scripts/build_annotation_review_pack.py",
+            "content_reviewed": false
+          }
+        ],
+        "pack_generated": true,
+        "content_reviewed": false
+      }
+    },
+    "interpretation": "Generated contact sheets identify footage available for review; pack generation alone does not mean a human reviewed the clip."
+  },
+  "reviewer_coverage": {
+    "by_annotator": {
+      "codex_visual_first_pass": {
+        "records": 3,
+        "source_runs": [
+          "Run_1165",
+          "Run_294",
+          "Run_841"
+        ],
+        "is_independent_human_annotator": false,
+        "adjudication_required": true
+      }
+    },
+    "independent_second_annotator_count": 0,
+    "student_adjudication_complete": false
+  },
+  "test_label_control": {
+    "test_event_rows_in_table": 0,
+    "test_event_labels": "sealed; not annotated or used for model/threshold selection in this pilot"
+  },
+  "interpretation": "All five pair types remain exploratory. Assistant first-pass rows are not eligible for training or primary metrics until student frame-level adjudication. Uncertain/excluded windows are never counted as non-conflict examples."
+}

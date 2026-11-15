@@ -1,7 +1,7 @@
 # Manual Interaction Annotation Protocol
 
 **Purpose:** Provide consistent event labels for interaction categories not fully labeled in the DOT benchmark, and event boundaries for DOT runs whose labels are only run-level.
-**Status:** The three-state labels, five pair-type definitions, provenance fields, and split/leakage controls are defined. Numeric time, proximity, and persistence thresholds remain intentionally unfrozen until the later interaction-scoring step inspects candidate clips; freeze them before held-out predictions or test results are viewed. The protocol does not claim that an event-labeled dataset already exists.
+**Status:** General protocol is defined. The first versioned pilot is documented in [event-label-set-v1.md](event-label-set-v1.md). It contains assistant first-pass drafts awaiting student adjudication; it is not project ground truth or a finalized training/evaluation set. The qualitative manual-label rule is frozen as visual-categorical-v1.0.0. Numeric model time/proximity/scoring thresholds remain unfrozen and must be set using training/development data before held-out predictions or test results are viewed. Review contact sheets are sampled for discovery; accepted labels require continuous-video review.
 
 ## Labels
 
@@ -27,11 +27,13 @@ Freeze the actual time, distance/proximity, and persistence thresholds after vid
 
 ## Annotation record
 
-Store one event per continuous interaction interval with at least:
+Store one event/window per continuous interaction interval with at least:
 
 `event_id`, `source_dataset`, `source_clip`, `source_run`, `split`, `pair_type`, `actor_a_class`, `actor_a_track_id`, `actor_b_class`, `actor_b_track_id`, `fixed_hazard_id`, `start_timestamp`, `end_timestamp`, `status`, `confidence`, `uncertainty_reason`, `annotation_notes`, `annotator_id`, `annotation_version`, and `source_label`.
 
 For a fixed object, `fixed_hazard_id` and the saved scene geometry replace a second moving track ID. Preserve the original frame index and timestamp string; do not derive event time from nominal FPS when a frame-time CSV exists.
+
+Versioned table v1 also preserves `source_archive`, `source_video_path`, `source_label_scope`, `start_frame`, `end_frame`, `window_duration_seconds`, and `review_stage`. Temporary reviewer-assigned IDs must be explicitly marked as non-source IDs. Unadjudicated assistant drafts remain ineligible for training and primary metrics.
 
 ## Review and split controls
 

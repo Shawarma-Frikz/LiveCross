@@ -46,6 +46,7 @@ See [data/README.md](data/README.md) for download and local organization instruc
 The current source inventory, label boundaries, split policy, privacy handling, and data limitations are summarized in the [data card](docs/data-card.md).
 The [dataset expansion plan](docs/dataset-expansion-plan.md) records what evidence is still needed for the five interaction types and how each data source will be used.
 The [dataset-alignment decision](docs/dataset-decision.md) explains why DOT remains the video source, why PIE does not match this project's conflict-event target, and the manual annotation route required before event-level training.
+The [event-label pilot](docs/event-label-set-v1.md) includes a versioned draft table, uncertainty/exclusion records, a reproducible summary, and test-excluded train/development review sheets. It is **not yet project ground truth**: assistant first-pass labels require student frame-level adjudication; all five categories remain exploratory and no test event labels are included.
 The compact 10-run validation candidate pool is documented in [compact-subset-selection.md](docs/compact-subset-selection.md), with a reproducible run/camera/duration manifest. Whole-run assignments are recorded in [splits.csv](data/manifests/splits.csv) and can be regenerated with `python scripts/create_sequence_split.py`.
 Generate the timestamped, local inspection gallery across all three splits with `python scripts/build_inspection_gallery.py`; see [inspection-gallery.md](docs/inspection-gallery.md) for the label-scope limits and output location.
 
@@ -64,6 +65,8 @@ python scripts/build_compact_subset_manifest.py
 ```
 
 This verifies the selected videos and timestamp rows and writes `data/manifests/compact-subset.csv` plus `results/audits/compact-subset-audit.json`. It does not create event labels. Regenerate the run-level split separately with `python scripts/create_sequence_split.py`.
+
+To rebuild the test-excluded training and development annotation contact sheets, run `python scripts/build_annotation_review_pack.py --splits train validation`; to refresh split/category counts after an annotation-table change, run `python scripts/summarize_event_annotations.py`. See [`docs/event-label-set-v1.md`](docs/event-label-set-v1.md). Contact sheets are candidate-finding aids; ground-truth labels require continuous-video student review. The review-pack script rejects test runs; no test event labels are in the current table.
 
 To regenerate the subset and split metadata in order, run `python scripts/build_compact_subset_manifest.py`, `python scripts/create_sequence_split.py`, then `python scripts/build_compact_subset_manifest.py` again so the subset manifest records its test assignment.
 

@@ -3,13 +3,13 @@
 **Version:** 1.0
 
 **Reviewed:** 15 November 2026
-**Status:** Source inventory, camera choice, label boundaries, subset, and run split are documented. No project event labels or model results exist yet.
+**Status:** Source inventory, camera choice, label boundaries, subset, and run split are documented. A small assistant-generated development annotation pilot exists in draft form; student adjudication, independent review, and held-out event labels are still absent. No model results exist yet.
 
 ## Purpose and scope
 
 This card describes the data currently downloaded and audited for LiveCross: three DOT archives used for RGB video, plus separate trajectory/video supplements. It does not describe the full approximately 1 TB DOT training corpus. The primary visual track uses fixed-camera video to study potential vulnerable-road-user–vehicle conflicts. LiveCross's five planned pair types are pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object; the DOT conflict labels support only the first of these at **run level**. The other types need separate permission-cleared, project-reviewed annotations and must be reported separately.
 
-LiveCross is intended for human review of potential-conflict candidates. It is not an accident detector, crash predictor, certified warning system, or determination of fault. A source `conflict` label does not establish that an impact occurred.
+LiveCross is intended for human review of potential-conflict candidates. It is not an accident detector, crash predictor, certified warning system, or determination of fault. A source `conflict` label does not establish that an impact occurred. The first project event-label draft is tracked separately in [`event-label-set-v1.md`](event-label-set-v1.md); it is not yet suitable as supervised ground truth.
 
 ## Primary source and collection context
 

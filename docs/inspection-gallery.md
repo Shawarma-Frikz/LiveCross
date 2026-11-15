@@ -16,7 +16,7 @@ Open `data/processed/inspection-gallery/index.html`. The local page links to one
 
 - Test-sheet `conflict` and `no conflict` are DOT **run-level** source labels. They are not frame labels, event intervals, or actor-pair judgments. Each row is explicitly marked “run-level only.”
 - Training and development clips come from unlabeled DOT training samples. They are shown as unlabeled.
-- Event-level conflict/non-conflict, difficult/occluded, uncertain, and actor-track annotations are not present in the current source records. The gallery does not invent these labels; its manifest marks the frame samples as context only. Add event-specific examples after the manual annotation task, using the frozen run split.
+- The gallery does not contain event-level labels; its manifest marks the frame samples as context only. A separate draft annotation pilot and expanded train/development survey pack are documented in [event-label-set-v1.md](event-label-set-v1.md); event rows remain unadjudicated and must not be used as project ground truth. Keep event-specific labels separate from gallery source labels.
 - A DOT 3D-box projection was not approved as RGB ground truth for this selected view, so the gallery does not draw boxes or tracks.
 
 The 10-run compact subset appears within the test contact sheet. The contact sheets and frame crops remain under Git-ignored `data/processed/inspection-gallery/` because they are derived source imagery; review dataset terms and privacy before sharing them. The generator, instructions, and split-aware metadata are tracked in the repository.
