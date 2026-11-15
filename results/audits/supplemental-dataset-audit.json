@@ -3,6 +3,7 @@
   "purpose": "Local inventory/schema/label audit of downloaded supplementary candidate datasets; not a model evaluation.",
   "sources": {
     "tgsim_foggy_bottom": {
+      "available": true,
       "file": {
         "path": "data/raw/tgsim-foggy-bottom.csv",
         "bytes": 342323446
@@ -115,6 +116,7 @@
       "interpretation": "Trajectory observations only; no RGB video or source-provided conflict-event labels in this CSV."
     },
     "roco_sample": {
+      "available": true,
       "file": {
         "path": "data/raw/roco/ROCO.zip",
         "bytes": 25063270
@@ -183,6 +185,7 @@
       "interpretation": "Vehicle conflict-event trajectories and labels; no RGB frames in this sample archive, so it cannot validate visual detection or image-space explanations."
     },
     "waterloo_intersection": {
+      "available": true,
       "database_archive": {
         "path": "data/raw/waterloo/intersection_dbfiles.zip",
         "bytes": 610803071
