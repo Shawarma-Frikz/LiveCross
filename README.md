@@ -43,6 +43,15 @@ The learned interaction classifier and the pretrained detector have different jo
 
 See [data/README.md](data/README.md) for download and local organization instructions and [dataset access notes](docs/dataset-access.md) for the inspected sample, terms, and citation.
 The sample’s current source, label, and limitation summary is in the [data card](docs/data-card.md).
+The [dataset expansion plan](docs/dataset-expansion-plan.md) records what evidence is still needed for four-category evaluation and how each data source will be used.
+
+To download the planned public datasets into the ignored `data/raw/` folder, run:
+
+```powershell
+python scripts/fetch_project_data.py
+```
+
+The fetch script downloads the 41-run DOT validation archive, both public DOT training-sample archives, the camera-calibration archive, and the FHWA TGSIM Foggy Bottom trajectory CSV. Ensure at least 60 GB is free for the downloads and about 100 GB if you plan to extract them too. The approximately 1 TB DOT training archive is unlabeled and is not part of the required download.
 
 ## Planned milestones
 

@@ -1,7 +1,7 @@
 # LiveCross — Acceptance Targets
 
 **Status:** Initial targets recorded before any held-out test results are viewed.  
-**Dataset metadata and five-run sample inspected:** U.S. DOT Intersection Safety Challenge Stage 1B, 14 November 2026. The public sample is adequate for an engineering pilot, not for strong final performance claims. Inspect the public 41-run validation asset and complete annotation dictionary before freezing the final protocol.
+**Dataset metadata and five-run sample inspected:** U.S. DOT Intersection Safety Challenge Stage 1B, 14 November 2026. The public sample is adequate for an engineering pilot, not for strong final performance claims. Inspect the public 41-run validation asset and complete annotation dictionary before freezing the final protocol. The four-category evidence plan is in [`dataset-expansion-plan.md`](dataset-expansion-plan.md).
 
 ## Dataset facts that affect evaluation
 

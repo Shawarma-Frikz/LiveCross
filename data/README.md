@@ -34,7 +34,9 @@ Download from the official page above and place the file as `data/raw/validation
 
 The validation data supplies 3D road-user boxes per timestamp and a run-level conflict/no-conflict label. It does not supply event boundaries in the five-run sample. The event-level task therefore needs separately documented manual event intervals, with complete runs kept together across training/development/test splits. DOT conflict labels support vulnerable-road-user–vehicle interactions; they do not validate vehicle–vehicle, pedestrian–pedestrian, or vehicle–fixed-object results.
 
-The 1,104-run training dataset is unlabeled and about 1 TB; the full training set requires an ITS JPO request. It is not needed for the initial prototype. The full 41-run validation set is the first candidate for scaling evaluation after sample feasibility is confirmed.
+The 1,104-run training dataset is unlabeled and about 1 TB; the full training set requires an ITS JPO request. The two public training samples (about 7.6 GB and 4.8 GB) are a more appropriate source for manually reviewed training/development examples and hard-negative mining. Keep them out of the held-out test split. The full 41-run validation set is the priority for scaling the VRU–vehicle benchmark.
+
+The downloaded five-run sample is not enough for strong final claims or all four interaction types. Follow [`docs/dataset-expansion-plan.md`](../docs/dataset-expansion-plan.md): use the full DOT validation set for held-out VRU–vehicle results; use the two public DOT training samples only for manually reviewed training/development clips; consider the public FHWA TGSIM trajectory data for motion-feature research; and create a small permission-cleared staged video set for visual evaluation of the other categories and fixed-object cases. Keep each source’s metrics separate.
 
 ## Citation and rights
 

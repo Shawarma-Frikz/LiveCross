@@ -23,14 +23,14 @@
 - The validation data includes a binary **run-level** conflict/no-conflict label and timestamped 3D road-user boxes.
 - The five-run sample has **two conflict runs and three non-conflict runs**.
 - The run label does not identify event start/end times or automatically assign a conflict label to each detected actor pair. Manual event annotation and adjudication are required for event-level SVM training/evaluation.
-- The primary project target is pedestrian/bicyclist–vehicle interaction review. The DOT description does not establish labels for vehicle–vehicle, pedestrian–pedestrian, or vehicle–fixed-object events.
+- DOT is one evidence source for the four-category MVP, not complete coverage: its description establishes VRU–vehicle scenarios but not labels for vehicle–vehicle, pedestrian–pedestrian, or vehicle–fixed-object events.
 - The 3D GT file uses world-coordinate centers, dimensions, and orientations. Projection to image coordinates depends on camera calibration; this project has not yet verified that transformation.
 
 ## Intended preprocessing and data split
 
 Use one documented visual camera, decode its MP4, and align every frame with its supplied timestamp CSV. Store camera resolution, measured video metadata, dropped/duplicate-frame handling, crossing-zone configuration, and preprocessing parameters in the experiment manifest. Do not treat nominal FPS as the timestamp source.
 
-The five-run sample is for access and pipeline feasibility only. Before final experiments, inspect the full 41-run validation data and consider using separate public training-sample runs for manually labeled train/development windows and validation runs for held-out evaluation. The training sample is unlabeled, so any interaction-level target must be manually verified; preserve whole runs in one split. Freeze the final split only after class counts and usable event intervals are known.
+The five-run sample is for access and pipeline feasibility only. Before final experiments, inspect the full 41-run validation data and consider using separate public training-sample runs for manually labeled train/development windows and validation runs for held-out evaluation. The training sample is unlabeled, so any interaction-level target must be manually verified; preserve whole runs in one split. Freeze the final split only after class counts and usable event intervals are known. See [`dataset-expansion-plan.md`](dataset-expansion-plan.md) for separate supplemental sources and coverage gaps.
 
 ## Known biases and limits
 

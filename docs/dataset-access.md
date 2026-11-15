@@ -15,8 +15,8 @@ After extraction, choose one run and locate a visual camera `.mp4` plus the matc
 |---|---|---|
 | Validation sample | 5 runs; about 3 GB | Public ZIP attachment on the [validation page](https://data.transportation.gov/Roadways-and-Bridges/Intersection-Safety-Challenge-Stage-1B-Validation-/j58q-ymi4). Recommended first choice for checking the data. |
 | Full validation | 41 runs; about 30 GB | Public full validation ZIP linked from the same page/data story. |
-| Training sample 1 | About 7.6 GB | Public ZIP attachment on the [training page](https://data.transportation.gov/Roadways-and-Bridges/Intersection-Safety-Challenge-Stage-1B-Training-Da/vq7s-mv3v). |
-| Training sample 2 | About 4.8 GB | Public ZIP attachment on the training page. |
+| Training sample 1 | 8,161,594,056 bytes (~7.6 GiB) | Public ZIP attachment on the [training page](https://data.transportation.gov/Roadways-and-Bridges/Intersection-Safety-Challenge-Stage-1B-Training-Da/vq7s-mv3v). Unlabeled; suitable for manually reviewed training/development windows, not direct supervised evaluation. |
+| Training sample 2 | 5,148,222,990 bytes (~4.8 GiB) | Public ZIP attachment on the training page. Unlabeled; suitable for manually reviewed training/development windows, not direct supervised evaluation. |
 | Full training | 1,104 runs; about 1 TB | Submit the ITS JPO [data request form](https://its.dot.gov/data/data-request/); the portal says an administrator follows up with download instructions. The form is available to anyone; organization and use-case details are requested, and use case is optional. |
 
 The full training asset is explicitly described as **unlabeled**. The validation asset provides timestamped 3D road-user boxes and a **run-level** conflict/no-conflict label. This is not event-timing ground truth, so event-level evaluation still needs documented manual event annotations. See [`acceptance-targets.md`](acceptance-targets.md).
@@ -50,5 +50,7 @@ Use the relevant citation in project reports:
 - [x] Verified `Run_1003/VisualCamera7_Run_1003.mp4` and its frame-timing CSV are paired and complete: 31,852,808-byte MP4, 62,999-byte CSV, 1,968 decoded video frames, and 1,968 timestamp rows. OpenCV opened the MP4 at 1280×720, reported 30 FPS, and decoded a frame successfully. A sampled frame shows a fixed roadside intersection with a marked crosswalk.
 - [x] Inspected the run-level label file: Run_1003 is marked `no conflict`; the sample provides one label per run, not event start/end times.
 - [ ] Before implementation, examine the full annotation dictionary and confirm whether DOT ground-truth objects are usable in RGB image coordinates for the chosen camera; the metadata describes camera/world calibration, but this initial access check did not validate the projection pipeline.
+- [ ] Download the complete 41-run validation archive, both public training-sample archives, and calibration archive using [`scripts/fetch_project_data.py`](../scripts/fetch_project_data.py); verify sizes and ZIP CRCs before extracting needed RGB videos, timestamps, GT, and calibration files.
+- [ ] Download and inspect the public FHWA TGSIM Foggy Bottom trajectory CSV for schema and use terms; do not treat it as video or conflict ground truth.
 
 **Timing note:** The timestamp CSV spans approximately 73 seconds for 1,968 frames, while the MP4 container reports 30 FPS. Use the supplied per-frame timestamps as source time rather than reconstructing event times from nominal FPS alone; inspect this behavior across more runs before locking timing logic.
