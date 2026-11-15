@@ -1,6 +1,7 @@
 # Manual Interaction Annotation Protocol
 
-**Purpose:** Provide consistent event labels for interaction categories not fully labeled in the DOT benchmark, and event boundaries for DOT runs whose labels are only run-level. This protocol is provisional until the complete DOT annotation guide and sample coverage are inspected.
+**Purpose:** Provide consistent event labels for interaction categories not fully labeled in the DOT benchmark, and event boundaries for DOT runs whose labels are only run-level.
+**Status:** The three-state labels, five pair-type definitions, provenance fields, and split/leakage controls are defined. Numeric time, proximity, and persistence thresholds remain intentionally unfrozen until the later interaction-scoring step inspects candidate clips; freeze them before held-out predictions or test results are viewed. The protocol does not claim that an event-labeled dataset already exists.
 
 ## Labels
 

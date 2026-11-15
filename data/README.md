@@ -50,6 +50,16 @@ python scripts/build_compact_subset_manifest.py
 
 The subset is an **unassigned validation candidate pool**, not the finished train/development/test split. Its source labels remain run-level only; event times, actor pairs, and the other four interaction types still require separately reviewed annotations.
 
+### Extract the selected video pairs
+
+The 28.6 GB validation ZIP does not need to be fully unpacked. For frame-by-frame review, annotation, and later video-pipeline work, extract only the ten selected VisualCamera7 MP4s and their ten matching timestamp CSVs (about 328.4 MiB of video plus small CSV files). Keep the original ZIP as the source archive. Run from the repository root:
+
+```powershell
+python scripts/extract_compact_subset.py
+```
+
+The script reads the reviewed subset manifest, checks the archived video sizes against it, extracts complete files with ZIP CRC verification, and writes them under `data/raw/selected-validation/<Run_ID>/`. The destination is Git-ignored. The extraction is repeatable and does not create labels or a train/development/test split. Do not extract the unrelated sensor streams for the RGB MVP.
+
 ## Local organization
 
 ```text
@@ -58,6 +68,7 @@ data/
 ├── raw/                      # ignored: downloaded archives and extracted source data
 │   ├── validation-sample.zip
 │   ├── metadata-and-supporting-docs.zip
+│   ├── selected-validation/   # ignored: 10 selected MP4/timestamp pairs
 │   └── inspection/           # small local audit subset, also ignored
 └── processed/                # generated clips, annotations, and features; do not commit by default
 ```

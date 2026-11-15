@@ -44,7 +44,7 @@ The learned interaction classifier and the pretrained detector have different jo
 See [data/README.md](data/README.md) for download and local organization instructions and [dataset access notes](docs/dataset-access.md) for the inspected sample, terms, and citation.
 The sample’s current source, label, and limitation summary is in the [data card](docs/data-card.md).
 The [dataset expansion plan](docs/dataset-expansion-plan.md) records what evidence is still needed for the five interaction types and how each data source will be used.
-The [dataset/fallback decision](docs/dataset-decision.md) explains why DOT remains the video source, why PIE is not a label-compatible fallback for this scope, and which manual labels are required before event-level training.
+The [dataset-alignment decision](docs/dataset-decision.md) explains why DOT remains the video source, why PIE does not match this project's conflict-event target, and the manual annotation route required before event-level training.
 The current compact validation candidate pool is documented in [compact-subset-selection.md](docs/compact-subset-selection.md), with a reproducible run/camera/duration manifest.
 
 Supplementary data have their own [terms/schema/label audit](docs/supplemental-data-audit.md). Recreate the local inventories for TGSIM, ROCO, and a representative Waterloo database with:
@@ -170,7 +170,7 @@ Repository remote: [github.com/Shawarma-Frikz/LiveCross](https://github.com/Shaw
 - [Manual annotation protocol](docs/manual-annotation-protocol.md)
 - [Acceptance targets](docs/acceptance-targets.md)
 - [Dataset access and terms](docs/dataset-access.md)
-- [Dataset and fallback decision](docs/dataset-decision.md)
+- [Dataset-alignment decision](docs/dataset-decision.md)
 - [Compact subset selection](docs/compact-subset-selection.md)
 - [DOT data card](docs/data-card.md)
 - [Supplemental dataset audit](docs/supplemental-data-audit.md)

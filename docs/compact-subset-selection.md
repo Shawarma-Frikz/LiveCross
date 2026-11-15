@@ -35,6 +35,8 @@ The row-level manifest is [`data/manifests/compact-subset.csv`](../data/manifest
 python scripts/build_compact_subset_manifest.py
 ```
 
-The script reads the existing `data/raw/validation-full.zip`, verifies the 41-run source-label inventory, selected-run label values, presence of VisualCamera7 video/timestamp pairs, video metadata and midpoint decodability, monotonic timestamps, and frame-count/timestamp-row equality. It writes metadata only; it does not extract selected footage permanently, annotate events, or assign train/development/test splits.
+The manifest builder reads the existing `data/raw/validation-full.zip`, verifies the 41-run source-label inventory, selected-run label values, presence of VisualCamera7 video/timestamp pairs, video metadata and midpoint decodability, monotonic timestamps, and frame-count/timestamp-row equality. It writes metadata only; it does not annotate events or assign train/development/test splits.
+
+The selected 10 complete MP4/timestamp pairs are now extracted locally under `data/raw/selected-validation/<Run_ID>/` for review and annotation. Recreate that ignored local copy with `python scripts/extract_compact_subset.py`. The script extracts only those 20 archive members, checks the source video sizes against the manifest, and reads each selected member fully so ZIP CRC errors are detected. It does not alter or expand the source archive, annotate events, or assign splits. The extracted source video payload is 344,268,302 bytes (about 328.4 MiB), plus the timestamp CSVs.
 
 The explicit row list and split status are also visible in the CSV. The next distinct data actions are the sequence-level split and the project-created event annotations; the manifest does not mark either as complete.
