@@ -8,7 +8,7 @@
 
 Reviewers may need to replay crossing footage repeatedly to find moments when road users or vehicles approach the same crossing area at nearly the same time, or when a road-user path appears to intersect a fixed hazard. LiveCross is planned as a local video-review tool that flags candidate pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object interactions, displays the motion evidence, and lets a human reviewer inspect the event.
 
-It is a **safety-analysis prototype**, not a driver warning or a claim that a collision will occur. DOT labels support only vulnerable-road-user–vehicle evaluation. The other categories stay in the MVP as distinct candidate-detection paths and will use a separately documented, manually annotated clip set; metrics and claims will be reported per category and marked exploratory when sample counts are insufficient.
+It is a **safety-analysis prototype**, not a driver warning or a claim that a collision will occur. DOT's native labels support only run-level reporting for vulnerable-road-user–vehicle scenarios; they are not event-level labels. The other categories stay in the MVP as distinct candidate-detection paths and will use a separately documented, manually annotated clip set; metrics and claims will be reported per category and marked exploratory when sample counts are insufficient.
 
 ## Objectives
 
@@ -29,7 +29,7 @@ It is a **safety-analysis prototype**, not a driver warning or a claim that a co
 6. **Explainability:** show the video tracks and rule factors; expose the linear SVM’s signed feature contributions for each decision. Keep an explicit uncertain state.
 7. **Demo:** review uploaded clips first and add one staged local webcam feed when replay works reliably.
 
-The learned interaction classifier and the pretrained detector have different jobs. The pretrained detector is not the project’s sole contribution: the team will implement and evaluate the motion features, event logic, hard-negative mining, and explanations. A CNN risk comparator is optional and only considered if annotation volume and time justify it.
+The learned interaction classifier and the pretrained detector have different jobs. The pretrained detector is not the project’s sole contribution: the project will implement and evaluate the motion features, event logic, hard-negative mining, and explanations. A CNN risk comparator is optional and only considered if annotation volume and time justify it.
 
 ## Dataset
 
@@ -39,10 +39,11 @@ The learned interaction classifier and the pretrained detector have different jo
 - It contains visual-camera MP4s and per-frame timestamp CSVs; a selected Run 1003 Visual Camera 7 clip was opened and decoded successfully at 1280×720.
 - The sample’s validation labels are conflict/no-conflict **per run**, not event intervals. The five-run sample has two conflict runs and three non-conflict runs, so it is for pipeline feasibility, not a strong final evaluation by itself.
 - The downloaded full validation archive contains 41 runs (28,642,566,098 bytes; about 26.7 GiB) and is reserved as LiveCross's held-out test partition. Its source labels are 12 conflict and 29 no-conflict runs, at run level only. The two public unlabeled training samples contain 20 additional runs, split into 16 train and 4 development runs.
+- The split is recorded once per complete source run in `data/manifests/splits.csv`, using seed 42 for the training/development assignments. Class stratification is impossible for the unlabeled training samples; all compact-subset runs remain in test. The DOT source labels are known run-level labels and must not be used to tune event-level predictions.
 - DOT conflict labels cover vulnerable-road-user/vehicle scenarios only. The other interaction types need separate video annotations and evaluation; never present those results as DOT-validated.
 
 See [data/README.md](data/README.md) for download and local organization instructions and [dataset access notes](docs/dataset-access.md) for the inspected sample, terms, and citation.
-The sample’s current source, label, and limitation summary is in the [data card](docs/data-card.md).
+The current source inventory, label boundaries, split policy, privacy handling, and data limitations are summarized in the [data card](docs/data-card.md).
 The [dataset expansion plan](docs/dataset-expansion-plan.md) records what evidence is still needed for the five interaction types and how each data source will be used.
 The [dataset-alignment decision](docs/dataset-decision.md) explains why DOT remains the video source, why PIE does not match this project's conflict-event target, and the manual annotation route required before event-level training.
 The compact 10-run validation candidate pool is documented in [compact-subset-selection.md](docs/compact-subset-selection.md), with a reproducible run/camera/duration manifest. Whole-run assignments are recorded in [splits.csv](data/manifests/splits.csv) and can be regenerated with `python scripts/create_sequence_split.py`.
@@ -64,6 +65,8 @@ python scripts/build_compact_subset_manifest.py
 
 This verifies the selected videos and timestamp rows and writes `data/manifests/compact-subset.csv` plus `results/audits/compact-subset-audit.json`. It does not create event labels. Regenerate the run-level split separately with `python scripts/create_sequence_split.py`.
 
+To regenerate the subset and split metadata in order, run `python scripts/build_compact_subset_manifest.py`, `python scripts/create_sequence_split.py`, then `python scripts/build_compact_subset_manifest.py` again so the subset manifest records its test assignment.
+
 ## Traceable sample audit
 
 Recreate the machine-checkable inventory, frame decode/timestamp comparison, run-label counts, and selected-run GT summary with:
@@ -80,7 +83,7 @@ To download the planned public datasets into the ignored `data/raw/` folder, run
 python scripts/fetch_project_data.py
 ```
 
-The fetch script downloads the 41-run DOT validation archive, both public DOT training-sample archives, the camera-calibration archive, and the FHWA TGSIM Foggy Bottom trajectory CSV. Ensure at least 60 GB is free for the downloads and about 100 GB if you plan to extract them too. The approximately 1 TB DOT training archive is unlabeled and is not part of the required download.
+The fetch script downloads the 41-run DOT validation archive, both public DOT training-sample archives, the camera-calibration archive, and the FHWA TGSIM Foggy Bottom trajectory CSV. Ensure at least 60 GB is free for the downloads. Full-archive extraction is not required: the selected 10-run RGB subset uses about 328.4 MiB of video plus small timestamp CSVs and can be extracted with `python scripts/extract_compact_subset.py`. The approximately 1 TB DOT training archive is unlabeled and is not part of the required download.
 
 ## Planned milestones
 
@@ -110,13 +113,18 @@ LiveCross/
 ├── data/
 │   ├── README.md
 │   └── manifests/
-│       └── compact-subset.csv
+│       ├── compact-subset.csv
+│       └── splits.csv
 ├── notebooks/
 │   └── README.md
 ├── scripts/
 │   ├── audit_sample_data.py
 │   ├── audit_supplemental_data.py
-│   └── build_compact_subset_manifest.py
+│   ├── build_compact_subset_manifest.py
+│   ├── create_sequence_split.py
+│   ├── extract_compact_subset.py
+│   ├── fetch_project_data.py
+│   └── build_inspection_gallery.py
 ├── src/
 │   └── README.md
 ├── models/
@@ -126,10 +134,14 @@ LiveCross/
 │   └── audits/
 │       ├── dot-sample-audit.json
 │       ├── supplemental-dataset-audit.json
-│       └── compact-subset-audit.json
+│       ├── compact-subset-audit.json
+│       └── sequence-split-audit.json
 └── docs/
     ├── references.md
     ├── professor-guide-alignment.md
+    ├── dataset-decision.md
+    ├── compact-subset-selection.md
+    ├── inspection-gallery.md
     └── ...
 ```
 
@@ -159,6 +171,7 @@ Repository remote: [github.com/Shawarma-Frikz/LiveCross](https://github.com/Shaw
 ## Current limitations
 
 - The five-run sample is too small for strong performance claims and has only run-level conflict labels.
+- The local inspection gallery samples every source run, but its frames are contextual samples, not event annotations; difficult/uncertain event examples remain unavailable until manual labeling.
 - Event-level reference intervals must be annotated for every evaluated pair type.
 - All five interaction types are in the MVP; the four non-VRU–vehicle types require separate, suitable annotations and category-specific evaluation. Treat results as exploratory if a category has too few examples.
 - No model is trained, and no UI or launch command is implemented yet.

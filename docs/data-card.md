@@ -1,52 +1,87 @@
-# DOT Stage 1B Data Card
+# LiveCross — Data Card
 
-**Purpose:** Record the source, content, labels, and limitations of the data used by LiveCross. This initial card describes the downloaded five-run validation sample, not the entire 41-run validation dataset.
+**Version:** 1.0
 
-## Source and collection
+**Reviewed:** 15 November 2026
+**Status:** Source inventory, camera choice, label boundaries, subset, and run split are documented. No project event labels or model results exist yet.
 
-- **Source:** U.S. DOT Intersection Safety Challenge Stage 1B Validation Data, [official page](https://data.transportation.gov/Roadways-and-Bridges/Intersection-Safety-Challenge-Stage-1B-Validation-/j58q-ymi4).
-- **Collection:** Controlled signalized four-way intersection at FHWA Turner-Fairbank Highway Research Center, McLean, Virginia; collected October 2023 through March 2024.
-- **Sensors:** Eight visual CCTV cameras, five thermal cameras, two LiDAR sensors, four radar sensors, plus traffic-controller data.
-- **Scenarios:** Conflict/non-conflict scenarios between vulnerable road users (for example, pedestrians and bicyclists) and vehicles, in day/night conditions. Surrogate VRU systems were used so no human VRU was placed at risk.
-- **Raw data access:** Public sample and validation files; access routes and terms are in [`dataset-access.md`](dataset-access.md). Raw archives and derived media are excluded from Git.
+## Purpose and scope
 
-## Sample used for the initial audit
+This card describes the data currently downloaded and audited for LiveCross: three DOT archives used for RGB video, plus separate trajectory/video supplements. It does not describe the full approximately 1 TB DOT training corpus. The primary visual track uses fixed-camera video to study potential vulnerable-road-user–vehicle conflicts. LiveCross's five planned pair types are pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object; the DOT conflict labels support only the first of these at **run level**. The other types need separate permission-cleared, project-reviewed annotations and must be reported separately.
 
-- Five runs, downloaded archive size **3,540,625,371 bytes**.
-- Inventory: 65 MP4 videos, 82 CSV files, 10 JSON files, and 13 PCAP files.
-- The five run IDs listed in the sample label file are `Run_1003`, `Run_1023`, `Run_108`, `Run_1290`, and `Run_850`.
-- For `Run_1003`, `VisualCamera7_Run_1003.mp4` is 1280×720, reports 30 FPS, and decodes 1,968 frames. Its matching frame-timing CSV has 1,968 rows. The timestamp span is 73.044 seconds; mean frame interval is 37.135 ms (about 26.93 Hz), with intervals from 5.451 to 113.329 ms. The nominal 30 FPS duration is 65.6 seconds. Use frame timestamps rather than nominal FPS for timing.
-- The inspected GT CSV has 758 timestamp rows and three run-specific class blocks: `Passenger_Vehicle`, `VRU_Child`, and `VRU_Adult_Using_Walker`. The metadata defines 18 subclasses overall. GT contains 3D box centers, dimensions, and orientations in the LiDAR 2 reference frame.
+LiveCross is intended for human review of potential-conflict candidates. It is not an accident detector, crash predictor, certified warning system, or determination of fault. A source `conflict` label does not establish that an impact occurred.
 
-## Labels and intended prediction target
+## Primary source and collection context
 
-- The validation data includes a binary **run-level** conflict/no-conflict label and timestamped 3D road-user boxes.
-- The five-run sample has **two conflict runs and three non-conflict runs**.
-- The run label does not identify event start/end times or automatically assign a conflict label to each detected actor pair. Manual event annotation and adjudication are required for event-level SVM training/evaluation.
-- Metadata §4.3.2 describes a run as conflict based on TTC when two road users are identified as having a path-intersection point. The inspected metadata does not state a numeric TTC threshold; do not invent one or interpret `conflict` as proof that a collision occurred. The label CSV contains no ambiguous/uncertain state.
-- Sample mapping: `Run_1023` and `Run_1290` are source-labeled `conflict`; `Run_1003`, `Run_108`, and `Run_850` are source-labeled `no conflict`. Keep these values at run level; they are not event windows or per-frame labels. The field-by-field mapping and eligibility decisions are in [`event-vocabulary.md`](event-vocabulary.md).
-- DOT is one evidence source for the five-type MVP, not complete coverage: its description establishes VRU–vehicle scenarios but not labels for vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, or pedestrian–fixed-object events.
-- **Projection feasibility:** The metadata states that GT coordinates are in the LiDAR 2 frame. Supporting workbooks provide a LiDAR 2–Visual Camera 6 extrinsic (reported mean reprojection error 3.89 px), a Visual Camera 6–Visual Camera 7 pairwise extrinsic (0.50 px), and Visual Camera 7 intrinsics/distortion (intrinsic reprojection error 0.2150 px). The chain allows a mathematical projection into the selected RGB camera.
-- **Projection usability decision (15 November 2026):** Camera 7 calibration intrinsics are reported for 1920×1080, while the selected MP4 is 1280×720; the intrinsic matrix was scaled by 2/3 for the audit, with distortion coefficients retained and ordered for OpenCV. GT UTC timestamps were aligned to camera timestamps using the recording date's Eastern Standard Time offset, and nearby frames were compared. Across several timestamp-matched frames, projected actor centers/boxes fell on empty image regions or outside the image rather than clearly matching visible road users. The failure may be due to visibility/occlusion, timestamp/frame correspondence, calibration chain direction/quality, or GT semantics; this audit does not identify which cause is responsible. **Do not use these projections as image-space detection ground truth for Run_1003 / Visual Camera 7.** Keep the source GT in its LiDAR 2 frame, and use independently reviewed 2D annotations for RGB evaluation until a validated overlay is obtained. Method and evidence: [`projection-audit.md`](projection-audit.md).
+**Source:** [U.S. DOT Intersection Safety Challenge Stage 1B](https://data.transportation.gov/Roadways-and-Bridges/Intersection-Safety-Challenge-Stage-1B-Validation-/j58q-ymi4), collected at FHWA’s Turner-Fairbank Highway Research Center Smart Intersection facility in McLean, Virginia, from October 2023 through March 2024. The site is a controlled, signalized four-way intersection. The source describes one intersection instrumented with eight CCTV visual cameras, five thermal cameras, two LiDAR sensors, four radar sensors, and traffic-controller data. The scenarios include potential-conflict and non-conflict VRU–vehicle activity in daytime and nighttime conditions. DOT states that no human VRU was put at risk; surrogate VRU systems were used in the collection.
 
-## Intended preprocessing and data split
+The official [DOT data story](https://data.transportation.gov/stories/s/U-S-DOT-Intersection-Safety-Challenge-Stage-1B-Sys/smqb-i5sx/) says visual-camera recordings are MP4 files accompanied by a CSV of per-frame timestamps. LiveCross currently uses the roadside **VisualCamera7** view, not a moving dash-camera view. It is a fixed 1280×720 stream that reports nominal 30 FPS in the inspected runs. The frame-timing CSV is the source of frame time: timestamps are irregular, so do not reconstruct event time from nominal FPS alone. The representative Run_1003 stream has 1,968 frames and 1,968 timestamp rows spanning 73.044 seconds, while 30 FPS would imply 65.6 seconds.
 
-Use one documented visual camera, decode its MP4, and align every frame with its supplied timestamp CSV. Store camera resolution, measured video metadata, dropped/duplicate-frame handling, crossing-zone configuration, and preprocessing parameters in the experiment manifest. Do not treat nominal FPS as the timestamp source.
+## Downloaded assets and roles
 
-The five-run sample is for access and pipeline feasibility only. A compact candidate pool of 10 complete VisualCamera7 runs has been selected from the full 41-run validation archive; its 5/5 run-label balance and limits are in [`compact-subset-selection.md`](compact-subset-selection.md), with a row manifest at [`data/manifests/compact-subset.csv`](../data/manifests/compact-subset.csv). The sequence-level split is frozen in [`data/manifests/splits.csv`](../data/manifests/splits.csv): 16 unlabeled public training-sample runs for train, 4 for development, and all 41 official validation runs held out for test. The split uses seed 42 and groups complete source runs. Class stratification is unavailable for the unlabeled training samples; the 41-run test labels are known run-level source labels (12 conflict, 29 no conflict), not event labels. Keep any project-created event annotations for test runs out of model and threshold selection. This split does not create event labels: manually reviewed event/pair annotations are still required before supervised event training or event-level evaluation. See [`dataset-decision.md`](dataset-decision.md) for the DOT-versus-PIE decision and [`dataset-expansion-plan.md`](dataset-expansion-plan.md) for separate supplemental sources and coverage gaps.
+| Asset | Local inventory | Label/content scope | LiveCross role |
+|---|---|---|---|
+| DOT full validation archive | 41 runs; 28,642,566,098 bytes | Timestamped 3D road-user boxes and one `conflict`/`no conflict` value per run; inventory is 12 conflict and 29 no-conflict runs | Held-out test partition for DOT source-label reporting and future manually annotated event evaluation; never use for training, tuning, or hard-negative mining |
+| DOT public training sample 1 | 10 runs; 8,161,594,056 bytes | Official training data is unlabeled | Eight complete runs assigned to train; two to development after manual review/annotation |
+| DOT public training sample 2 | 10 runs; 5,148,222,990 bytes | Official training data is unlabeled | Eight complete runs assigned to train; two to development after manual review/annotation |
+| DOT five-run validation sample | Five runs; 3,540,625,371 bytes | Two source-labeled conflict and three no-conflict runs | Used for initial access, schema, and decoding audit; not counted as a separate split because these runs are included in the full 41-run validation archive |
+| DOT compact VisualCamera7 subset | 10 complete runs from full validation; 344,268,302 video bytes (about 328.4 MiB), plus timestamp CSVs | Five source-run conflict and five source-run no-conflict; three daylight and two low-light reviewed midpoints per label group | Balanced inspection/evaluation candidate subset, wholly inside test; not representative of natural prevalence and not event-labeled |
 
-## Known biases and limits
+All 61 unique runs in the two training samples and full validation archive are recorded once in [`data/manifests/splits.csv`](../data/manifests/splits.csv). Seed 42 is used for deterministic, archive-balanced train/development assignment: eight train and two development runs from each training sample. All 41 official validation runs are held out as test. The training archives have no source conflict classes, so class stratification for train/development is impossible. Test source labels are known at run level (12/29); only future project-created event labels must remain unavailable to model and threshold selection. See the reproducible [split audit](../results/audits/sequence-split-audit.json).
 
-- One controlled intersection and a limited number of runs; do not claim generalization to arbitrary public roads, locations, weather, or camera viewpoints.
-- Surrogate VRUs and scripted scenarios may not match natural human movement.
-- The five-run sample has few run labels and no event boundaries, so it cannot support strong event-level performance claims by itself.
-- Some sensor streams may be missing in particular runs; RGB-only processing does not mean every run/camera is complete.
-- Image-plane motion estimates are not physical distance or collision probability without validated calibration.
+The compact subset selection is described in [`compact-subset-selection.md`](compact-subset-selection.md). It uses whole runs, one fixed roadside view covering the intersection/crosswalk, source-label balance, and qualitative midpoint-light strata. All 10 streams are 1280×720 and report 30 FPS; their supplied timestamp spans total 441.422 seconds (about 7 minutes 21 seconds). The five-run sample is a duplicate view of runs in the full validation archive, not an independent evaluation set. The compact subset does not assign a run label to each frame or actor pair.
 
-## Changes to record
+## Labels and annotation status
 
-Update this card when manual labels are created, camera projection is validated, or a frozen run split must be revised under a documented pre-test reason.
+DOT validation provides:
 
-## Supplemental sources are separate evidence tracks
+- **Run-level conflict/no-conflict labels.** The metadata describes conflict ground truth in terms of TTC and road users with intersecting paths, but the label file provides no event start/end time, responsible actor-pair ID, or ambiguous class. The metadata does not specify a numeric TTC threshold. Do not expand the run label across frames or pairs.
+- **Timestamped 3D road-user boxes** in the LiDAR 2 coordinate frame. These are not automatically RGB boxes. A projection feasibility audit for Run_1003 / VisualCamera7 produced visibly misaligned boxes; those projections are not approved as image-space ground truth. See [`projection-audit.md`](projection-audit.md).
+- **No event-level LiveCross annotations yet.** Conflict candidate, non-conflict interaction, and uncertain are project-created human labels defined in [`event-vocabulary.md`](event-vocabulary.md) and [`manual-annotation-protocol.md`](manual-annotation-protocol.md). Event times, pair type, IDs where visible, reviewer, provenance, and uncertainty reasons still need to be recorded before event-level training or scoring.
 
-The downloaded TGSIM, ROCO, and Waterloo files are not part of the DOT validation sample and must not be merged into its labels. Their local inventory, schema, terms, and intended use are documented separately in [`supplemental-data-audit.md`](supplemental-data-audit.md), with a reproducible output at [`results/audits/supplemental-dataset-audit.json`](../results/audits/supplemental-dataset-audit.json). In short: TGSIM and ROCO are trajectory data without RGB; ROCO has vehicle conflict-event labels; Waterloo has video and tracks but its reuse terms remain unresolved, and its route conflict points are not observed conflict-event labels.
+DOT labels cover the source's documented VRU–vehicle scenarios only. They do not validate vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, or pedestrian–fixed-object events. No source currently supplies RGB event labels for all five types. If a category lacks enough independent annotated clips, mark it exploratory rather than pooling its results with another category. Frozen metric targets and the sample-size gate are in [`acceptance-targets.md`](acceptance-targets.md).
+
+## Separate supplementary sources
+
+These sources are not mixed into the DOT split or its metrics:
+
+| Source | Audited content | Intended use and exclusion |
+|---|---|---|
+| FHWA TGSIM Foggy Bottom | 342,323,446-byte trajectory CSV; 2,492,261 rows and 20,511 IDs | Motion-feature and candidate-window research only. No RGB or source conflict labels; derived thresholds are surrogate labels. |
+| ROCO sample | 25,063,270-byte archive; 101 labeled vehicle-conflict trajectory events and 8,080 trajectory-frame JSON files; no RGB | Separate trajectory-only vehicle-conflict study, not visual evaluation. The sample contains three severity-2 traffic-accident records, but no accident video. CSV parsing caveat and CC BY-SA 4.0/additional terms are recorded in the audit. |
+| Waterloo Intersection | 14 AVI/SQLite pairs with track data; route conflict points are geometric path intersections, not observed pairwise events | Not part of the core/public evaluation: the publisher page does not state reuse terms. Do not redistribute or publish derived clips until permission is established. |
+
+See [`supplemental-data-audit.md`](supplemental-data-audit.md) and its reproducible [`audit report`](../results/audits/supplemental-dataset-audit.json) for schemas, terms, citations, and parsing limits. The full DOT training corpus (1,104 runs, about 1 TB) was not requested or downloaded: it is unlabeled and outside the current course-sized download plan; the public samples still require project annotations before supervised event training. Calibration archives and non-RGB DOT sensors are not part of the current RGB split; calibration material was consulted only for the projection feasibility review.
+
+## Selection, preprocessing, and reproducibility
+
+- Keep each source run intact in one partition. Never randomly split adjacent frames from one run.
+- The 10-run compact subset uses complete VisualCamera7 MP4s plus matching timestamp CSVs. Their midpoint light labels are qualitative visual-review strata, not dataset annotations.
+- Only the selected validation videos and timing CSVs are extracted under the Git-ignored `data/raw/selected-validation/`; the source ZIP archives remain intact. The compact video payload is about 328.4 MiB. No full multi-sensor extraction is required.
+- A local [inspection gallery](inspection-gallery.md) samples five timestamped context frames from each of the 61 runs (16 train, 4 development, 41 test). Its images and HTML remain under Git-ignored `data/processed/inspection-gallery/`; it does not add event labels or track boxes.
+- Rebuild the source-run split with `python scripts/create_sequence_split.py`. Rebuild the compact inventory with `python scripts/build_compact_subset_manifest.py`; rebuild the gallery with `python scripts/build_inspection_gallery.py`.
+- Future staged or permission-cleared footage must be added by complete recording session to the split procedure before model predictions are inspected. It is not in the present 61-run manifest.
+
+## Bias, privacy, terms, and excluded use
+
+Known limitations and biases:
+
+- Data come from one controlled intersection and one fixed-camera viewpoint in the selected RGB track; this is not independent-location validation or natural traffic prevalence.
+- Scenarios are experimental and include surrogate VRUs; their motion may not represent natural human behavior. Conditions include day and night but do not establish broad weather or camera coverage.
+- The 5/5 compact subset is deliberately balanced against a 12/29 source-label distribution. Do not use it to estimate real-world prevalence.
+- Training samples are unlabeled, and event labels/actor pairs are absent. Visual quality, glare, occlusion, and difficult/uncertain event classes have not been formally annotated.
+- Current RGB box projection is not approved; do not report image-space detection metrics from those projected boxes.
+
+The DOT validation catalog marks access and rights as public, but does not expose a separate validation-specific license field; this is not blanket permission to republish all raw or derived media. Preserve the official citation/access date in [`dataset-access.md`](dataset-access.md), keep raw archives and generated imagery out of Git, process locally, and check terms before external sharing or publication. Before sharing any imagery, inspect for faces, plates, or other identifying details and blur them where needed. LiveCross does not identify people or track identity across sessions. Any future staged footage requires permission/consent and safe staging; never record or stage beside active traffic. Waterloo media remain excluded until reuse rights are confirmed.
+
+The following are outside the current card's supervised visual scope: the full unlabeled 1 TB training corpus, the duplicate five-run sample as an independent split, non-RGB LiDAR/radar/thermal/controller streams in the MVP, trajectory-only TGSIM/ROCO as image ground truth, Waterloo footage pending terms, and any future staged clips until they are permission-cleared and assigned to a source-session split.
+
+## Sources and related records
+
+- [Official DOT Stage 1B validation data page](https://data.transportation.gov/Roadways-and-Bridges/Intersection-Safety-Challenge-Stage-1B-Validation-/j58q-ymi4) and [DOT collection/data story](https://data.transportation.gov/stories/s/U-S-DOT-Intersection-Safety-Challenge-Stage-1B-Sys/smqb-i5sx/).
+- [`dataset-access.md`](dataset-access.md) records download sizes, terms, and recommended citations.
+- [`dataset-decision.md`](dataset-decision.md) explains why PIE is not a conflict-label-compatible fallback.
+- [`dataset-expansion-plan.md`](dataset-expansion-plan.md) specifies the supplemental annotation route and five-type evidence gap.
+- [`risk-register.md`](risk-register.md) records privacy, data-use, and evaluation risks.
+
+**Update this card** when permission-cleared footage is added, event annotations are created, the split changes for a documented pre-test reason, camera projection is validated, or source terms change.
