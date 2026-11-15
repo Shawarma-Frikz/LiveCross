@@ -9,4 +9,3 @@ torchvision
 ultralytics
 streamlit
 jupyter
-cv
