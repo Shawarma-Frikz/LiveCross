@@ -2,6 +2,8 @@
 
 **Decision:** The data currently downloaded is **not sufficient for final evaluation** of the five-interaction MVP. Keep the DOT five-run sample as the access and pipeline pilot. Expand evaluation in separate, auditable tracks; no single source currently supplies labeled video ground truth for all five interaction types.
 
+A 10-run, one-camera DOT validation candidate pool has been selected for the limited VRU–vehicle track. Its balance, duration, frame/timestamp checks, and run-level label limits are documented in [`compact-subset-selection.md`](compact-subset-selection.md); it is not event-labeled or split yet.
+
 ## Existing data
 
 | Source | What it can support | What it cannot support | Project use |

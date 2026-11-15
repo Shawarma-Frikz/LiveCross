@@ -45,6 +45,7 @@ See [data/README.md](data/README.md) for download and local organization instruc
 The sample’s current source, label, and limitation summary is in the [data card](docs/data-card.md).
 The [dataset expansion plan](docs/dataset-expansion-plan.md) records what evidence is still needed for the five interaction types and how each data source will be used.
 The [dataset/fallback decision](docs/dataset-decision.md) explains why DOT remains the video source, why PIE is not a label-compatible fallback for this scope, and which manual labels are required before event-level training.
+The current compact validation candidate pool is documented in [compact-subset-selection.md](docs/compact-subset-selection.md), with a reproducible run/camera/duration manifest.
 
 Supplementary data have their own [terms/schema/label audit](docs/supplemental-data-audit.md). Recreate the local inventories for TGSIM, ROCO, and a representative Waterloo database with:
 
@@ -53,6 +54,14 @@ python scripts/audit_supplemental_data.py
 ```
 
 The audit writes `results/audits/supplemental-dataset-audit.json`. It does not train a model or treat trajectory-derived candidates as source conflict ground truth. Waterloo redistribution terms remain unresolved; keep those media files out of Git.
+
+Rebuild the selected DOT run/camera inventory and timestamp-duration manifest (requires the local `data/raw/validation-full.zip`):
+
+```powershell
+python scripts/build_compact_subset_manifest.py
+```
+
+This verifies the selected videos and timestamp rows and writes `data/manifests/compact-subset.csv` plus `results/audits/compact-subset-audit.json`. It does not assign splits or create event labels.
 
 ## Traceable sample audit
 
@@ -98,9 +107,15 @@ LiveCross/
 ├── requirements.txt
 ├── .gitignore
 ├── data/
-│   └── README.md
+│   ├── README.md
+│   └── manifests/
+│       └── compact-subset.csv
 ├── notebooks/
 │   └── README.md
+├── scripts/
+│   ├── audit_sample_data.py
+│   ├── audit_supplemental_data.py
+│   └── build_compact_subset_manifest.py
 ├── src/
 │   └── README.md
 ├── models/
@@ -109,7 +124,8 @@ LiveCross/
 │   ├── README.md
 │   └── audits/
 │       ├── dot-sample-audit.json
-│       └── supplemental-dataset-audit.json
+│       ├── supplemental-dataset-audit.json
+│       └── compact-subset-audit.json
 └── docs/
     ├── references.md
     ├── professor-guide-alignment.md
@@ -155,6 +171,7 @@ Repository remote: [github.com/Shawarma-Frikz/LiveCross](https://github.com/Shaw
 - [Acceptance targets](docs/acceptance-targets.md)
 - [Dataset access and terms](docs/dataset-access.md)
 - [Dataset and fallback decision](docs/dataset-decision.md)
+- [Compact subset selection](docs/compact-subset-selection.md)
 - [DOT data card](docs/data-card.md)
 - [Supplemental dataset audit](docs/supplemental-data-audit.md)
 - [Professor-guide alignment and submission checklist](docs/professor-guide-alignment.md)

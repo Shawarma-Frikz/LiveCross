@@ -38,6 +38,18 @@ Regenerate the machine-checkable archive inventory, Run_1003 video/timestamp com
 - `conflict_no_conflict_labels_sample_validation_runs.csv` has one binary label per run; the five sample runs include two conflict and three non-conflict labels. These are not event start/end labels.
 - The sample validates access and video decoding, but is too small by itself for strong model-performance claims.
 
+## Compact validation subset
+
+The current 01.5 candidate pool uses 10 complete VisualCamera7 sequences from `validation-full.zip`: five DOT run-level conflict labels and five no-conflict labels. It is balanced across three daylight and two low-light midpoint views per source-label group. The selected camera files total about 7 minutes 21 seconds by supplied timestamps; all 10 timestamp row counts match the decoded video frame counts. Selection rationale and limits are in [`docs/compact-subset-selection.md`](../docs/compact-subset-selection.md).
+
+Recreate the row-level list in [`manifests/compact-subset.csv`](manifests/compact-subset.csv) and the aggregate audit in [`results/audits/compact-subset-audit.json`](../results/audits/compact-subset-audit.json) with:
+
+```powershell
+python scripts/build_compact_subset_manifest.py
+```
+
+The subset is an **unassigned validation candidate pool**, not the finished train/development/test split. Its source labels remain run-level only; event times, actor pairs, and the other four interaction types still require separately reviewed annotations.
+
 ## Local organization
 
 ```text

@@ -1,0 +1,162 @@
+{
+  "audit_date": "2026-11-15",
+  "subset_id": "LiveCross-DOT-validation-compact-v1",
+  "source_archive": "data/raw/validation-full.zip",
+  "source_archive_bytes": 28642566098,
+  "manifest": "data/manifests/compact-subset.csv",
+  "selection_rule": [
+    "Choose five DOT source-conflict and five source-no-conflict runs from the 41-run validation archive.",
+    "Use VisualCamera7 consistently (same recorded fixed roadside view across selected runs).",
+    "Balance reviewed midpoint appearance at three daylight and two low-light runs in each source-label class.",
+    "Retain each selected camera stream in full; do not sample or crop temporal segments.",
+    "Leave split assignment unassigned for the separate sequence-level split task."
+  ],
+  "source_label_inventory_full_validation": {
+    "conflict": 12,
+    "no conflict": 29
+  },
+  "selected_run_count": 10,
+  "selected_source_run_label_counts": {
+    "conflict": 5,
+    "no conflict": 5
+  },
+  "selected_counts_by_source_label_and_reviewed_midpoint_light": {
+    "conflict": {
+      "daylight": 3,
+      "low-light": 2
+    },
+    "no conflict": {
+      "daylight": 3,
+      "low-light": 2
+    }
+  },
+  "selected_camera_counts": {
+    "VisualCamera7": 10
+  },
+  "resolution_counts": {
+    "1280x720": 10
+  },
+  "timestamp_span_seconds_by_source_label": {
+    "conflict": 236.582583,
+    "no conflict": 204.839863
+  },
+  "total_selected_timestamp_span_seconds": 441.422446,
+  "total_selected_video_bytes_uncompressed": 344268302,
+  "all_midpoint_frames_decoded": true,
+  "all_frame_counts_match_timestamp_rows": true,
+  "split_status": "unassigned; candidate pool from the official validation archive; no train/dev/test assignment is implied",
+  "label_limit": "Conflict/no-conflict values are DOT run/scenario labels only. They do not identify event times, actor pairs, or per-camera event labels. Event-level labels must be created separately under the manual annotation protocol.",
+  "scope_limit": "This compact DOT subset covers only DOT's VRU–vehicle scenario domain. It does not supply source ground truth for vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, or pedestrian–fixed-object events.",
+  "runs": [
+    {
+      "run_id": "Run_1290",
+      "source_label": "conflict",
+      "view": "VisualCamera7",
+      "midpoint_light_review": "daylight",
+      "midpoint_review_frame_index": 402,
+      "midpoint_review_timestamp_source": "2024-03-14-14-09-21_083138",
+      "timestamp_span_seconds": 28.982109,
+      "frame_count": 805,
+      "video_bytes": 12611261
+    },
+    {
+      "run_id": "Run_359",
+      "source_label": "conflict",
+      "view": "VisualCamera7",
+      "midpoint_light_review": "daylight",
+      "midpoint_review_frame_index": 509,
+      "midpoint_review_timestamp_source": "2024-02-08-11-06-40_620282",
+      "timestamp_span_seconds": 37.582106,
+      "frame_count": 1018,
+      "video_bytes": 32208211
+    },
+    {
+      "run_id": "Run_315",
+      "source_label": "conflict",
+      "view": "VisualCamera7",
+      "midpoint_light_review": "low-light",
+      "midpoint_review_frame_index": 669,
+      "midpoint_review_timestamp_source": "2024-02-21-19-32-59_615522",
+      "timestamp_span_seconds": 49.146056,
+      "frame_count": 1338,
+      "video_bytes": 38607313
+    },
+    {
+      "run_id": "Run_1023",
+      "source_label": "conflict",
+      "view": "VisualCamera7",
+      "midpoint_light_review": "low-light",
+      "midpoint_review_frame_index": 841,
+      "midpoint_review_timestamp_source": "2024-02-22-20-15-58_482434",
+      "timestamp_span_seconds": 61.905112,
+      "frame_count": 1683,
+      "video_bytes": 50396736
+    },
+    {
+      "run_id": "Run_856",
+      "source_label": "conflict",
+      "view": "VisualCamera7",
+      "midpoint_light_review": "daylight",
+      "midpoint_review_frame_index": 794,
+      "midpoint_review_timestamp_source": "2023-12-06-14-49-36_700982",
+      "timestamp_span_seconds": 58.9672,
+      "frame_count": 1588,
+      "video_bytes": 33906331
+    },
+    {
+      "run_id": "Run_179",
+      "source_label": "no conflict",
+      "view": "VisualCamera7",
+      "midpoint_light_review": "low-light",
+      "midpoint_review_frame_index": 465,
+      "midpoint_review_timestamp_source": "2024-02-06-20-27-45_436516",
+      "timestamp_span_seconds": 33.957041,
+      "frame_count": 931,
+      "video_bytes": 28296171
+    },
+    {
+      "run_id": "Run_761",
+      "source_label": "no conflict",
+      "view": "VisualCamera7",
+      "midpoint_light_review": "daylight",
+      "midpoint_review_frame_index": 473,
+      "midpoint_review_timestamp_source": "2024-02-06-17-19-39_151401",
+      "timestamp_span_seconds": 34.232839,
+      "frame_count": 946,
+      "video_bytes": 18835011
+    },
+    {
+      "run_id": "Run_410",
+      "source_label": "no conflict",
+      "view": "VisualCamera7",
+      "midpoint_light_review": "daylight",
+      "midpoint_review_frame_index": 618,
+      "midpoint_review_timestamp_source": "2023-11-19-10-55-22_379311",
+      "timestamp_span_seconds": 46.5433,
+      "frame_count": 1236,
+      "video_bytes": 50387903
+    },
+    {
+      "run_id": "Run_48",
+      "source_label": "no conflict",
+      "view": "VisualCamera7",
+      "midpoint_light_review": "daylight",
+      "midpoint_review_frame_index": 640,
+      "midpoint_review_timestamp_source": "2024-01-31-11-28-16_469579",
+      "timestamp_span_seconds": 47.304369,
+      "frame_count": 1280,
+      "video_bytes": 21832949
+    },
+    {
+      "run_id": "Run_965",
+      "source_label": "no conflict",
+      "view": "VisualCamera7",
+      "midpoint_light_review": "low-light",
+      "midpoint_review_frame_index": 581,
+      "midpoint_review_timestamp_source": "2023-12-14-17-40-48_078154",
+      "timestamp_span_seconds": 42.802314,
+      "frame_count": 1163,
+      "video_bytes": 57186416
+    }
+  ]
+}
