@@ -15,16 +15,17 @@
 - Five runs, downloaded archive size **3,540,625,371 bytes**.
 - Inventory: 65 MP4 videos, 82 CSV files, 10 JSON files, and 13 PCAP files.
 - The five run IDs listed in the sample label file are `Run_1003`, `Run_1023`, `Run_108`, `Run_1290`, and `Run_850`.
-- For `Run_1003`, `VisualCamera7_Run_1003.mp4` is 1280×720, reports 30 FPS, and decodes 1,968 frames. Its matching frame-timing CSV has 1,968 rows. The timestamp span is about 73 seconds; investigate the difference from nominal container FPS before defining temporal thresholds.
-- The inspected GT CSV has timestamped 3D world-coordinate box fields. The Run_1003 header includes `Passenger_Vehicle`, `VRU_Child`, and `VRU_Adult_Using_Walker`; the full class inventory remains to be confirmed from the data dictionary.
+- For `Run_1003`, `VisualCamera7_Run_1003.mp4` is 1280×720, reports 30 FPS, and decodes 1,968 frames. Its matching frame-timing CSV has 1,968 rows. The timestamp span is 73.044 seconds; mean frame interval is 37.135 ms (about 26.93 Hz), with intervals from 5.451 to 113.329 ms. The nominal 30 FPS duration is 65.6 seconds. Use frame timestamps rather than nominal FPS for timing.
+- The inspected GT CSV has 758 timestamp rows and three run-specific class blocks: `Passenger_Vehicle`, `VRU_Child`, and `VRU_Adult_Using_Walker`. The metadata defines 18 subclasses overall. GT contains 3D box centers, dimensions, and orientations in the LiDAR 2 reference frame.
 
 ## Labels and intended prediction target
 
 - The validation data includes a binary **run-level** conflict/no-conflict label and timestamped 3D road-user boxes.
 - The five-run sample has **two conflict runs and three non-conflict runs**.
 - The run label does not identify event start/end times or automatically assign a conflict label to each detected actor pair. Manual event annotation and adjudication are required for event-level SVM training/evaluation.
-- DOT is one evidence source for the four-category MVP, not complete coverage: its description establishes VRU–vehicle scenarios but not labels for vehicle–vehicle, pedestrian–pedestrian, or vehicle–fixed-object events.
-- The 3D GT file uses world-coordinate centers, dimensions, and orientations. Projection to image coordinates depends on camera calibration; this project has not yet verified that transformation.
+- DOT is one evidence source for the five-type MVP, not complete coverage: its description establishes VRU–vehicle scenarios but not labels for vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, or pedestrian–fixed-object events.
+- **Projection feasibility:** The metadata states that GT coordinates are in the LiDAR 2 frame. Supporting workbooks provide a LiDAR 2–Visual Camera 6 extrinsic (reported mean reprojection error 3.89 px), a Visual Camera 6–Visual Camera 7 pairwise extrinsic (0.50 px), and Visual Camera 7 intrinsics/distortion (intrinsic reprojection error 0.2150 px). The chain allows a mathematical projection into the selected RGB camera.
+- **Projection usability decision (15 November 2026):** Camera 7 calibration intrinsics are reported for 1920×1080, while the selected MP4 is 1280×720; the intrinsic matrix was scaled by 2/3 for the audit, with distortion coefficients retained and ordered for OpenCV. GT UTC timestamps were aligned to camera timestamps using the recording date's Eastern Standard Time offset, and nearby frames were compared. Across several timestamp-matched frames, projected actor centers/boxes fell on empty image regions or outside the image rather than clearly matching visible road users. The failure may be due to visibility/occlusion, timestamp/frame correspondence, calibration chain direction/quality, or GT semantics; this audit does not identify which cause is responsible. **Do not use these projections as image-space detection ground truth for Run_1003 / Visual Camera 7.** Keep the source GT in its LiDAR 2 frame, and use independently reviewed 2D annotations for RGB evaluation until a validated overlay is obtained. Method and evidence: [`projection-audit.md`](projection-audit.md).
 
 ## Intended preprocessing and data split
 

@@ -1,7 +1,7 @@
 # LiveCross — Acceptance Targets
 
 **Status:** Initial targets recorded before any held-out test results are viewed.  
-**Dataset metadata and five-run sample inspected:** U.S. DOT Intersection Safety Challenge Stage 1B, 14 November 2026. The public sample is adequate for an engineering pilot, not for strong final performance claims. Inspect the public 41-run validation asset and complete annotation dictionary before freezing the final protocol. The four-category evidence plan is in [`dataset-expansion-plan.md`](dataset-expansion-plan.md).
+**Dataset metadata and five-run sample inspected:** U.S. DOT Intersection Safety Challenge Stage 1B, 14 November 2026. The public sample is adequate for an engineering pilot, not for strong final performance claims. The five-type evidence plan is in [`dataset-expansion-plan.md`](dataset-expansion-plan.md); RGB projection is not approved for Run_1003 / Visual Camera 7 until the mismatch documented in [`projection-audit.md`](projection-audit.md) is resolved or an alternate annotation route is selected.
 
 ## Dataset facts that affect evaluation
 
@@ -10,7 +10,7 @@ The official DOT pages describe separate training and validation assets. Trainin
 Therefore:
 
 - The run-level labels can support a run-level conflict/no-conflict measure.
-- The MVP includes all four pair types. DOT-backed evaluation applies only to VRU–vehicle; vehicle–vehicle, pedestrian–pedestrian, and vehicle–fixed-object need a separate permission-cleared, manually annotated set and category-specific evaluation.
+- The MVP includes five interaction types. DOT-backed evaluation applies only to VRU–vehicle; vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object need separate suitable annotations and category-specific evaluation.
 - They do not, by themselves, provide event start/end times. Event-level precision/recall and alert delay need a separately documented manual event annotation set.
 - Do not treat the unlabeled training runs as supervised conflict labels, and do not report event-level metrics against run labels.
 - If inspection of the five-run sample cannot support the minimum event set below, keep event-level results exploratory and record the limitation; do not weaken thresholds after looking at test results.

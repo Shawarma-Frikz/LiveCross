@@ -1,6 +1,6 @@
 # LiveCross — MVP Boundary
 
-**Purpose:** Define a feasible first version for one fixed camera scene. The MVP supports and demonstrates all four requested interaction types: pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–configured fixed object. The DOT benchmark directly validates only the vulnerable-road-user–vehicle category, so every other category uses its own manually annotated clips and its own results.
+**Purpose:** Define a feasible first version for one fixed camera scene. The MVP supports and demonstrates five requested interaction types: pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, vehicle–configured fixed object, and pedestrian–configured fixed object. The DOT benchmark directly validates only the vulnerable-road-user–vehicle category, so every other category uses suitable separately annotated footage and its own results.
 
 ## MVP — required
 
@@ -26,9 +26,9 @@
 - **Pedestrian/bicyclist–vehicle:** DOT Stage 1B is the primary benchmark. Its run-level conflict label is not an event label, so event intervals and actor-pair identities must be manually reviewed before event-level scoring.
 - **Vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object:** Create a small, documented supplemental annotation set from suitable recorded footage and safe staged clips. Keep its source, consent/permission status, split, and annotation rules distinct from DOT.
 - Use complete source clips/runs for train/development/test separation. Do not use held-out clips for threshold tuning or hard-negative mining.
-- Support all four categories in the demo even if some category-level metrics must be reported as exploratory. Do not imply that DOT validates unsupported categories.
+- Support all five categories in the demo even if some category-level metrics must be reported as exploratory. Do not imply that DOT validates unsupported categories.
 
-## Stretch — only after all four MVP paths work
+## Stretch — only after all five MVP paths work
 
 | Feature | Add only when | Boundary |
 |---|---|---|
@@ -47,7 +47,7 @@
 
 ## Completion gate
 
-The MVP is complete when all four typed paths can produce reviewable events on recorded or staged clips; the rule baseline and linear SVM have been compared on eligible labeled data; hard-negative mining is evaluated without split leakage; event explanations, uncertainty, and local logging work; and the responsive interface handles both clip replay and a staged webcam feed. Category-specific evidence and limitations must be reported separately. Clip replay remains the reliable demonstration path if webcam capture fails.
+The MVP is complete when all five typed paths can produce reviewable events on recorded or staged clips; the rule baseline and linear SVM have been compared on eligible labeled data; hard-negative mining is evaluated without split leakage; event explanations, uncertainty, and local logging work; and the responsive interface handles both clip replay and a staged webcam feed. Category-specific evidence and limitations must be reported separately. Clip replay remains the reliable demonstration path if webcam capture fails.
 
 ## Approval and feasibility gates
 

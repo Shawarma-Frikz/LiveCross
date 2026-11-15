@@ -13,7 +13,7 @@ The separate official final-project guide lists three topics and normally expect
 
 | Requirement | Current evidence | Status / remaining action |
 |---|---|---|
-| Project is a Computer Vision problem | Fixed-camera video detection, tracking, and temporal interaction analysis across four interaction types. | Met technically; the student reports instructor approval for LiveCross as a custom topic and solo work. |
+| Project is a Computer Vision problem | Fixed-camera video detection, tracking, and temporal interaction analysis across five interaction types. | Met technically; the student reports instructor approval for LiveCross as a custom topic and solo work. |
 | One group registration; group has no more than four; names, proposed topic, repository URL | Solo-owner section is in README; instructor approval of solo work is reported. | Add the owner’s full name; submit exactly one response through the [group registration form](https://docs.google.com/forms/d/e/1FAIpQLSeqyBKRs7Z6bG1bUUiYG58xgq4pNOn26Rx-gznIW8xMN0dEIA/viewform), including the approved topic and working repository URL. |
 | Dedicated, non-empty, understandable GitHub repository | README and project docs explain scope and data. | Met as a planning repository; continue regular meaningful commits. |
 | README: context/problem, objectives, solution, approaches/architecture, dataset/source/link, steps, team, technologies, install/run | Expanded project README. | Mostly met. Launch command is clearly marked planned until the app exists; fill in members and finalize versions before submission. |
