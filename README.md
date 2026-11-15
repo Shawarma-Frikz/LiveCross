@@ -6,7 +6,7 @@
 
 ## Problem and intended use
 
-Reviewers may need to replay crossing footage repeatedly to find moments when road users or vehicles approach the same crossing area at nearly the same time, or when a vehicle path appears to intersect a fixed hazard. LiveCross is planned as a local video-review tool that flags candidate pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–fixed-object interactions, displays the motion evidence, and lets a human reviewer inspect the event.
+Reviewers may need to replay crossing footage repeatedly to find moments when road users or vehicles approach the same crossing area at nearly the same time, or when a road-user path appears to intersect a fixed hazard. LiveCross is planned as a local video-review tool that flags candidate pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object interactions, displays the motion evidence, and lets a human reviewer inspect the event.
 
 It is a **safety-analysis prototype**, not a driver warning or a claim that a collision will occur. DOT labels support only vulnerable-road-user–vehicle evaluation. The other categories stay in the MVP as distinct candidate-detection paths and will use a separately documented, manually annotated clip set; metrics and claims will be reported per category and marked exploratory when sample counts are insufficient.
 
@@ -24,8 +24,8 @@ It is a **safety-analysis prototype**, not a driver warning or a claim that a co
 1. **Video preparation:** decode frames, keep the camera’s frame-timestamp CSV aligned, resize consistently, and record the scene and crossing polygon.
 2. **Road-user detection:** start with a pretrained YOLO-family detector; compare its classes and license to the dataset and course constraints before locking a checkpoint.
 3. **Tracking:** associate detections into temporary within-clip tracks and record track quality and ID switches.
-4. **Typed interactions:** compare predicted paths for moving pairs (pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian) and compare vehicle paths with configured fixed-hazard regions. Use pair-specific conflict geometry and retain pair type in every record.
-5. **Experiments:** compare a deterministic rule baseline and a linear SVM on manually reviewed interaction windows across the four categories. Mine false-positive safe windows only from training clips; keep source clips/runs separated for evaluation and report per-category counts and metrics.
+4. **Typed interactions:** compare predicted paths for moving pairs (pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian) and compare vehicle/pedestrian paths with configured fixed-hazard regions. Use pair-specific conflict geometry and retain pair type in every record.
+5. **Experiments:** compare a deterministic rule baseline and a linear SVM on manually reviewed interaction windows across the five interaction types. Mine false-positive safe windows only from training clips; keep source clips/runs separated for evaluation and report per-type counts and metrics.
 6. **Explainability:** show the video tracks and rule factors; expose the linear SVM’s signed feature contributions for each decision. Keep an explicit uncertain state.
 7. **Demo:** review uploaded clips first and add one staged local webcam feed when replay works reliably.
 
@@ -43,7 +43,17 @@ The learned interaction classifier and the pretrained detector have different jo
 
 See [data/README.md](data/README.md) for download and local organization instructions and [dataset access notes](docs/dataset-access.md) for the inspected sample, terms, and citation.
 The sample’s current source, label, and limitation summary is in the [data card](docs/data-card.md).
-The [dataset expansion plan](docs/dataset-expansion-plan.md) records what evidence is still needed for four-category evaluation and how each data source will be used.
+The [dataset expansion plan](docs/dataset-expansion-plan.md) records what evidence is still needed for the five interaction types and how each data source will be used.
+
+## Traceable sample audit
+
+Recreate the machine-checkable inventory, frame decode/timestamp comparison, run-label counts, and selected-run GT summary with:
+
+```powershell
+python scripts/audit_sample_data.py
+```
+
+The script reads existing files under the Git-ignored `data/raw/` directory and writes `results/audits/dot-sample-audit.json`. It downloads nothing. Human label interpretation and the camera-projection decision remain documented separately in `docs/event-vocabulary.md` and `docs/projection-audit.md`.
 
 To download the planned public datasets into the ignored `data/raw/` folder, run:
 
@@ -56,9 +66,9 @@ The fetch script downloads the 41-run DOT validation archive, both public DOT tr
 ## Planned milestones
 
 1. Keep the reported instructor approval of LiveCross and solo work in the course registration/project record if requested.
-2. Audit the sample’s data dictionary, class coverage, timestamps, and labels; decide whether full validation is needed.
+2. Audit the sample’s data dictionary, class coverage, timestamps, and labels; decide whether full validation is needed. Re-run `scripts/audit_sample_data.py` to reproduce the inventory and raw counts.
 3. Build a reproducible video reader, scene configuration, detection, and tracking pipeline.
-4. Define and manually review interaction windows for all four categories; freeze source-clip/run-separated train/development/test splits.
+4. Define and manually review interaction windows for all five interaction types; freeze source-clip/run-separated train/development/test splits.
 5. Implement rule scoring, interaction features, the linear SVM, and training-only hard-negative mining.
 6. Add explanations, uncertainty, event log, and responsive desktop/phone review screens.
 7. Evaluate, analyze failure cases, rehearse the live demo, and prepare the report and slides.
@@ -87,7 +97,9 @@ LiveCross/
 ├── models/
 │   └── README.md
 ├── results/
-│   └── README.md
+│   ├── README.md
+│   └── audits/
+│       └── dot-sample-audit.json
 └── docs/
     ├── references.md
     ├── professor-guide-alignment.md
@@ -121,7 +133,7 @@ Repository remote: [github.com/Shawarma-Frikz/LiveCross](https://github.com/Shaw
 
 - The five-run sample is too small for strong performance claims and has only run-level conflict labels.
 - Event-level reference intervals must be annotated for every evaluated pair type.
-- All four categories are in the MVP; the three non-VRU–vehicle categories require separate, manually labeled clips and category-specific evaluation. Treat results as exploratory if a category has too few examples.
+- All five interaction types are in the MVP; the four non-VRU–vehicle types require separate, suitable annotations and category-specific evaluation. Treat results as exploratory if a category has too few examples.
 - No model is trained, and no UI or launch command is implemented yet.
 
 ## Documentation

@@ -28,6 +28,8 @@ The separately downloaded DOT five-run sample was also extracted selectively for
 
 ## Sample audit
 
+Regenerate the machine-checkable archive inventory, Run_1003 video/timestamp comparison, raw label counts, and GT column summary with `python scripts/audit_sample_data.py`. It writes the environment and measurements to [`results/audits/dot-sample-audit.json`](../results/audits/dot-sample-audit.json). The script does not assign semantic labels or judge projected-box alignment; those decisions stay in the versioned documentation.
+
 - The five-run validation ZIP contains **170 files**: 65 MP4s, 82 CSVs, 10 JSON files, and 13 PCAP files.
 - The selected `Run_1003/VisualCamera7_Run_1003.mp4` is 1280×720, reports 30 FPS in its container, and decodes **1,968 frames**. Its matching `VisualCamera7_Run_1003_frame-timing.csv` has **1,968 timestamp rows**.
 - The frame timestamps are strictly increasing but irregular: span **73.044 s**, mean interval **37.135 ms** (about **26.93 frames/s**), median interval **34.753 ms**, minimum **5.451 ms**, maximum **113.329 ms**. At the container's nominal 30 FPS, 1,968 frames imply only 65.6 s. Use the supplied per-frame timestamps as source time; do not reconstruct event times from nominal FPS.

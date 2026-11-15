@@ -1,0 +1,91 @@
+{
+  "audit_schema": "1.0",
+  "scope": "Machine-checkable inventory, video decode, timestamp, and raw-label summary for DOT ISC Stage 1B validation sample.",
+  "inputs": {
+    "sample_archive": {
+      "path": "data/raw/validation-sample.zip",
+      "bytes": 3540625371,
+      "member_count": 170,
+      "members_by_extension": {
+        ".csv": 82,
+        ".json": 10,
+        ".mp4": 65,
+        ".pcap": 13
+      },
+      "run_ids": [
+        "Run_1003",
+        "Run_1023",
+        "Run_108",
+        "Run_1290",
+        "Run_850"
+      ]
+    },
+    "run_labels": {
+      "path": "data/raw/inspection/conflict_no_conflict_labels_sample_validation_runs.csv",
+      "annotation_level": "run-level (semantic interpretation documented separately)",
+      "rows": 5,
+      "labels_by_original_value": {
+        "conflict": 2,
+        "no conflict": 3
+      },
+      "runs_by_original_value": {
+        "conflict": [
+          "Run_1023",
+          "Run_1290"
+        ],
+        "no conflict": [
+          "Run_1003",
+          "Run_108",
+          "Run_850"
+        ]
+      }
+    },
+    "selected_run_camera": {
+      "video": {
+        "path": "data/raw/inspection/VisualCamera7_Run_1003.mp4",
+        "bytes": 31852808,
+        "width": 1280,
+        "height": 720,
+        "container_fps": 30.0,
+        "container_frame_count": 1968,
+        "decoded_frame_count": 1968
+      },
+      "frame_timing_csv": {
+        "path": "data/raw/inspection/VisualCamera7_Run_1003_frame-timing.csv",
+        "bytes": 62999,
+        "rows": 1968,
+        "first_timestamp": "2023-11-20-14-53-02_985637",
+        "last_timestamp": "2023-11-20-14-54-16_029714",
+        "span_seconds": 73.044077,
+        "strictly_increasing": true,
+        "mean_interval_ms": 37.135,
+        "median_interval_ms": 34.753,
+        "minimum_interval_ms": 5.451,
+        "maximum_interval_ms": 113.329,
+        "timestamp_rate_hz_from_mean_interval": 26.929
+      },
+      "frame_count_matches_timestamp_rows": true
+    },
+    "selected_run_ground_truth": {
+      "path": "data/raw/inspection/Run_1003_GT.csv",
+      "bytes": 171883,
+      "rows": 758,
+      "subclass_blocks_in_this_run": [
+        "Passenger_Vehicle",
+        "VRU_Adult_Using_Walker",
+        "VRU_Child"
+      ],
+      "rows_with_nonempty_center_by_subclass": {
+        "Passenger_Vehicle": 223,
+        "VRU_Adult_Using_Walker": 758,
+        "VRU_Child": 758
+      },
+      "coordinate_frame_and_projection_status": "See docs/data-card.md and docs/projection-audit.md; not inferred by this script."
+    }
+  },
+  "interpretation_boundary": "This report does not convert run-level labels into event labels and does not validate 3D-to-image projection. See docs/event-vocabulary.md and docs/projection-audit.md.",
+  "environment": {
+    "python": "3.14.5",
+    "opencv": "5.0.0"
+  }
+}

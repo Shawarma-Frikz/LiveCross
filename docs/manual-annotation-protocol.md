@@ -20,6 +20,7 @@ Do not label an event positive merely because LiveCross flagged it. Annotate fro
 | Vehicle–vehicle | Two distinct vehicle tracks using the same intersection/conflict area. | Their paths overlap in space and time within the same frozen rule. | Both tracks are observable, but their paths/timing do not converge within the window. |
 | Pedestrian–pedestrian | Two distinct pedestrian tracks whose paths approach or cross in the analyzed area. | Their paths approach/cross within the frozen spatial/temporal rule. | Both tracks are observable but remain separated or pass without meeting the rule. |
 | Vehicle–fixed-object | A vehicle track and a configured static obstacle with a stable scene ID and footprint/buffer polygon. | The vehicle’s predicted/observed path intersects that configured footprint/buffer within the analysis window. | The vehicle is visible near the object but its path remains outside the configured hazard region. |
+| Pedestrian–fixed-object | A pedestrian track and a configured static obstacle with a stable scene ID and footprint/buffer polygon. | The pedestrian’s observed/predicted path intersects the configured footprint/buffer within the analysis window. | The pedestrian is visible near the object but remains outside the configured hazard region. |
 
 Freeze the actual time, distance/proximity, and persistence thresholds after video/dictionary inspection and before held-out predictions are reviewed. If calibration is absent, record geometry in image coordinates and call it a proxy.
 
