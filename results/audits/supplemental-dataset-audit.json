@@ -23,6 +23,7 @@
         "width_smoothed",
         "type_most_common"
       ],
+      "expected_columns_match": true,
       "unique_track_ids": 20511,
       "time_seconds_min_max": [
         60.2,
@@ -68,6 +69,42 @@
         {
           "interval": 1.2,
           "count": 17
+        }
+      ],
+      "nonpositive_per_track_time_intervals": 151,
+      "nonpositive_interval_breakdown": {
+        "backward_timestamp": 151
+      },
+      "first_backward_interval_examples_in_file_order": [
+        {
+          "track_id": "2",
+          "previous_time_seconds": 163.2,
+          "current_time_seconds": 83.2,
+          "interval_seconds": -80.0
+        },
+        {
+          "track_id": "15",
+          "previous_time_seconds": 873.1,
+          "current_time_seconds": 364.0,
+          "interval_seconds": -509.1
+        },
+        {
+          "track_id": "54",
+          "previous_time_seconds": 1325.6,
+          "current_time_seconds": 1312.5,
+          "interval_seconds": -13.1
+        },
+        {
+          "track_id": "81",
+          "previous_time_seconds": 1800.6,
+          "current_time_seconds": 1749.0,
+          "interval_seconds": -51.6
+        },
+        {
+          "track_id": "83",
+          "previous_time_seconds": 1824.3,
+          "current_time_seconds": 1769.0,
+          "interval_seconds": -55.3
         }
       ],
       "type_code_counts": [
@@ -122,6 +159,11 @@
         "bytes": 25063270
       },
       "archive_entries_including_directories": 8184,
+      "archive_file_count": 8081,
+      "file_counts_by_extension": {
+        ".csv": 1,
+        ".json": 8080
+      },
       "trajectory_json_frame_files": 8080,
       "event_folders_with_json": 101,
       "label_csv": {

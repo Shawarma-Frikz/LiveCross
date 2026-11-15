@@ -3,6 +3,8 @@
 **Audit date:** 15 November 2026  
 **Purpose:** Decide what the already-downloaded non-DOT datasets can support in LiveCross. This is a source/format/label audit, not a model evaluation or permission to redistribute data.
 
+Official source pages were checked on 15 November 2026. Local counts below come from the downloaded files and are reproducible with the script; collection descriptions and reuse statements come from the linked publishers/catalog records.
+
 The machine-readable local inventory is [`results/audits/supplemental-dataset-audit.json`](../results/audits/supplemental-dataset-audit.json). Recreate it from the repository root with:
 
 ```powershell
@@ -17,8 +19,8 @@ The script uses only Python's standard library. It reads the TGSIM CSV, opens th
 |---|---|---|---|---|
 | DOT ISC Stage 1B | Primary RGB benchmark candidate; details in [`data-card.md`](data-card.md) | Video pipeline and a limited VRU–vehicle track, subject to the documented label/projection limits | Event-level labels or ground truth for all five planned interaction categories | Public access; follow DOT citation and source terms in [`dataset-access.md`](dataset-access.md) |
 | FHWA TGSIM Foggy Bottom | 2,492,261 trajectory rows, 20,511 IDs, eight road-user types, approximately 0.1 s sampling | Motion-feature experiments and candidate-window generation; useful for pedestrian/vehicle and other dynamic-agent pairs | RGB video, source conflict labels, or any fixed-object interaction labels | DOT catalog marks it public and provides a public-domain license field; cite the data story and retain source metadata |
-| ROCO sample | 101 labeled vehicle-conflict events, 8,080 trajectory-frame JSON files | Vehicle–vehicle conflict-trajectory analysis; external event-label source for a separate trajectory-only experiment | RGB video, pedestrian conflicts, fixed-object conflicts, detector performance, or image-space XAI | Repository states CC BY-SA 4.0 plus dataset terms; preserve attribution and share-alike obligations for adapted material |
-| Waterloo Intersection | 14 AVI videos paired by stem with 14 SQLite databases; representative DB includes car and pedestrian tracks | Potential visual/tracking and multimodal demo; route/intersection context and behavior labels | Annotated conflict events: `CONFLICT_POINTS` are geometric path intersections, not observed near misses or crashes | **Unresolved:** publisher page does not specify a license/reuse terms. Do not redistribute or publish clips/derived media until terms are confirmed |
+| ROCO sample | 101 labeled vehicle-conflict events, 8,080 trajectory-frame JSON files; publisher describes 30-second event clips sampled at 2.5 Hz | Vehicle–vehicle conflict-trajectory analysis; external event-label source for a separate trajectory-only experiment | RGB video, pedestrian conflicts, fixed-object conflicts, detector performance, or image-space XAI | Repository states CC BY-SA 4.0 plus dataset terms; preserve attribution and share-alike obligations for adapted material |
+| Waterloo Intersection | 14 AVI videos paired by stem with 14 SQLite databases; representative DB includes car and pedestrian tracks; publisher describes about one hour of overhead-drone footage | Potential visual/tracking and multimodal demo; route/intersection context and behavior labels | Annotated conflict events: `CONFLICT_POINTS` are geometric path intersections, not observed near misses or crashes | **Unresolved:** publisher page does not specify a license/reuse terms. Do not redistribute or publish clips/derived media until terms are confirmed |
 
 These sources do not close the five-category visual ground-truth gap. Keep results separated by source and evidence type. Do not pool surrogate or route-based labels with DOT run labels or ROCO event labels.
 
@@ -28,6 +30,7 @@ These sources do not close the five-category visual ground-truth gap. Keep resul
 
 - File: `data/raw/tgsim-foggy-bottom.csv`, **342,323,446 bytes**.
 - Parsed **2,492,261 rows**, **20,511 unique IDs**, 12 columns, and no blank cells in the inspected CSV.
+- The audit checks the exact 12-column header against the expected source schema and checks consecutive timestamps in the raw CSV order within each ID. It finds **151 backward-time transitions and no duplicate-time transitions**; the report preserves the first five examples. These are ordering anomalies in the file traversal, not proof of invalid trajectories. Any temporal feature pipeline must explicitly group and sort by ID/time, then investigate whether repeated IDs span discontinuous sequences; the audit does not reorder or rewrite source data.
 - Columns: `id`, `time`, `xloc_kf`, `yloc_kf`, `lane_kf`, `speed_kf_x`, `speed_kf_y`, `acceleration_kf_x`, `acceleration_kf_y`, `length_smoothed`, `width_smoothed`, `type_most_common`.
 - Time values range from 60.2 to 7,200 seconds. The most common within-track interval is 0.1 seconds (2,470,386 intervals); larger gaps exist and must not be silently interpolated.
 - Observed type-code row counts: 0/person 766,876; 1/bicycle 8,453; 2/scooter 1,739; 3/passenger car 1,581,551; 4/automated vehicle 34,020; 5/motorcycle 652; 6/bus 17,631; 7/truck 81,339. Meanings are from the official project data dictionary, not inferred from the CSV.
@@ -35,7 +38,7 @@ These sources do not close the five-category visual ground-truth gap. Keep resul
 
 ### Suitability and limits
 
-This is motion data rather than a video dataset. It is suitable for testing trajectory calculations, checking sampling-gap handling, and proposing windows for later human review. The CSV itself contains no conflict-event labels. Any TTC/PET/distance threshold added by LiveCross would create a **project-defined surrogate target**, not an observed collision or source-annotated near miss. It cannot train or evaluate a visual detector or validate visual explanations.
+The official [FHWA catalog record](https://catalog.data.gov/dataset/third-generation-simulation-data-tgsim-foggy-bottom-trajectories) describes 12 stationary 4K infrastructure cameras covering four intersections/crosswalks/segments in Foggy Bottom during sunny weekday afternoon commutes (3–5 p.m. Eastern). The downloaded local asset audited here is the trajectory CSV, not the camera video. This is motion data rather than a video dataset. It is suitable for testing trajectory calculations, checking sampling-gap handling, and proposing windows for later human review. The CSV itself contains no conflict-event labels. Any TTC/PET/distance threshold added by LiveCross would create a **project-defined surrogate target**, not an observed collision or source-annotated near miss. It cannot train or evaluate a visual detector or validate visual explanations.
 
 ### Source, terms, and citation
 
@@ -47,14 +50,14 @@ Recommended citation: U.S. Department of Transportation Federal Highway Administ
 
 ### Local file inspection
 
-- File: `data/raw/roco/ROCO.zip`, **25,063,270 bytes**; 8,080 JSON frame files in 101 event folders.
+- File: `data/raw/roco/ROCO.zip`, **25,063,270 bytes**; 8,080 JSON frame files in 101 event folders. The reproducible archive inventory counts every file by extension to make the absence of image/video frame files explicit.
 - `conflict_label.csv` contains **101 event rows**: 98 severity-1 near misses and 3 severity-2 traffic accidents. Reason codes: 0=53, 1=7, 2=14, 3=12, 4=15. Effect codes: 0=24, 1=47, 2=30. Definitions are in the upstream README.
 - The sample JSON has a `fusion` list with track ID, confidence, latitude/longitude, UUID, category, speed, and heading; the upstream README describes categories as cars and trucks/buses/trailers.
 - **CSV parsing/source-version defect:** The local physical header has five columns (`event_time`, `severity`, `reason`, `conflict trajectory pair`, `effect`), while the repository README documents six (`event_timestamp`, `severity`, `reason`, `conflict trajectory pair`, `effect`, `time offset`). All 101 local data rows have six fields because the pair tuple is unquoted and splits across two columns. A normal `DictReader` therefore shifts pair/effect interpretation. The audit script reconstructs the two pair IDs and final effect field by position, and fails if the row shape changes. The local package also lacks the README-described `time offset` field; do not infer or synthesize it.
 
 ### Suitability and limits
 
-ROCO is the strongest downloaded supplement for source-labeled **vehicle–vehicle conflict trajectories**. Its release provides trajectory JSON and event metadata, not RGB frames, so it cannot be used to evaluate LiveCross's image detector, video tracking, or image overlays. Its labels reflect the dataset authors' conflict-event process; do not relabel them as collision certainty. The sample has only three severity-2 accident events, so do not make an accident-class performance claim from this sample.
+The official [ROCO repository](https://github.com/michigan-traffic-lab/ROCO) describes a one-week sample from a roundabout at State Street and West Ellsworth Road in Ann Arbor, with 30 seconds per event sampled at 2.5 Hz. ROCO is the strongest downloaded supplement for source-labeled **vehicle–vehicle conflict trajectories**. Its local release provides trajectory JSON and event metadata, not RGB frames, so it cannot be used to evaluate LiveCross's image detector, video tracking, or image overlays. Its labels reflect the dataset authors' conflict-event process; do not relabel them as collision certainty. The sample has only three severity-2 accident events, so do not make an accident-class performance claim from this sample.
 
 ### Source, terms, and citation
 
@@ -73,7 +76,7 @@ Recommended citation: D. Meng, O. Sayer, R. Zhang, S. Shen, H. Li, and H. X. Liu
 
 ### Suitability and limits
 
-The [WISE Lab page](https://uwaterloo.ca/waterloo-intelligent-systems-engineering-lab/datasets/waterloo-multi-agent-traffic-dataset-intersection) describes an hour of overhead-drone recording and ID-annotated videos paired with trajectory databases. This makes Waterloo a promising **visual tracking or qualitative demo** candidate after checking video decoding, resolution, ID-to-frame alignment, and license terms. The `CONFLICT_POINTS` table identifies geometric intersections between routes; it does not say a particular pair had a near miss or collision. The trajectory tables and behavior labels can support motion analysis, but they are not automatically pair-level conflict ground truth.
+The [WISE Lab page](https://uwaterloo.ca/waterloo-intelligent-systems-engineering-lab/datasets/waterloo-multi-agent-traffic-dataset-intersection) describes about one hour of overhead-drone recording and ID-annotated videos paired with trajectory databases. This makes Waterloo a promising **visual tracking or qualitative demo** candidate after checking video decoding, resolution, ID-to-frame alignment, and license terms. The `CONFLICT_POINTS` table identifies geometric intersections between routes; it does not say a particular pair had a near miss or collision. The trajectory tables and behavior labels can support motion analysis, but they are not automatically pair-level conflict ground truth.
 
 ### Access and rights decision
 

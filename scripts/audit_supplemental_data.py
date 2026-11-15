@@ -31,6 +31,11 @@ TGSIM_TYPES = {
     "6": "bus",
     "7": "truck",
 }
+TGSIM_COLUMNS = [
+    "id", "time", "xloc_kf", "yloc_kf", "lane_kf", "speed_kf_x",
+    "speed_kf_y", "acceleration_kf_x", "acceleration_kf_y",
+    "length_smoothed", "width_smoothed", "type_most_common",
+]
 
 
 def file_record(path: pathlib.Path) -> dict:
@@ -48,6 +53,9 @@ def audit_tgsim() -> dict:
     time_max = float("-inf")
     previous: dict[str, float] = {}
     intervals: Counter[float] = Counter()
+    nonpositive_intervals = 0
+    interval_anomalies: Counter[str] = Counter()
+    backward_interval_examples: list[dict] = []
     missing: Counter[str] = Counter()
     columns: list[str] = []
     with path.open("r", encoding="utf-8-sig", newline="") as stream:
@@ -63,7 +71,18 @@ def audit_tgsim() -> dict:
             time_min = min(time_min, timestamp)
             time_max = max(time_max, timestamp)
             if track_id in previous:
-                intervals[round(timestamp - previous[track_id], 3)] += 1
+                interval = round(timestamp - previous[track_id], 3)
+                intervals[interval] += 1
+                if interval <= 0:
+                    nonpositive_intervals += 1
+                    interval_anomalies["duplicate_timestamp" if interval == 0 else "backward_timestamp"] += 1
+                    if interval < 0 and len(backward_interval_examples) < 5:
+                        backward_interval_examples.append({
+                            "track_id": track_id,
+                            "previous_time_seconds": previous[track_id],
+                            "current_time_seconds": timestamp,
+                            "interval_seconds": interval,
+                        })
             previous[track_id] = timestamp
             for key, value in row.items():
                 if value is None or not value.strip():
@@ -73,12 +92,16 @@ def audit_tgsim() -> dict:
         "file": file_record(path),
         "rows": rows,
         "columns": columns,
+        "expected_columns_match": columns == TGSIM_COLUMNS,
         "unique_track_ids": len(ids),
         "time_seconds_min_max": [time_min, time_max],
         "most_common_per_track_time_intervals_seconds": [
             {"interval": interval, "count": count}
             for interval, count in intervals.most_common(10)
         ],
+        "nonpositive_per_track_time_intervals": nonpositive_intervals,
+        "nonpositive_interval_breakdown": dict(sorted(interval_anomalies.items())),
+        "first_backward_interval_examples_in_file_order": backward_interval_examples,
         "type_code_counts": [
             {"code": code, "meaning_from_official_data_dictionary": TGSIM_TYPES.get(code, "unmapped"), "rows": count}
             for code, count in sorted(type_counts.items())
@@ -94,6 +117,8 @@ def audit_roco() -> dict:
         return {"available": False, "expected_path": path.relative_to(ROOT).as_posix()}
     with zipfile.ZipFile(path) as archive:
         members = archive.infolist()
+        file_members = [item for item in members if not item.is_dir()]
+        extension_counts = Counter(pathlib.PurePosixPath(item.filename).suffix.lower() or "[no extension]" for item in file_members)
         label_name = next(name for name in archive.namelist() if name.endswith("conflict_label.csv"))
         text = io.TextIOWrapper(archive.open(label_name), encoding="utf-8-sig", newline="")
         reader = csv.reader(text)
@@ -126,6 +151,8 @@ def audit_roco() -> dict:
         "available": True,
         "file": file_record(path),
         "archive_entries_including_directories": len(members),
+        "archive_file_count": len(file_members),
+        "file_counts_by_extension": dict(sorted(extension_counts.items())),
         "trajectory_json_frame_files": len(json_files),
         "event_folders_with_json": len(event_dirs),
         "label_csv": {
