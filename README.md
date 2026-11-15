@@ -46,6 +46,7 @@ The sample’s current source, label, and limitation summary is in the [data car
 The [dataset expansion plan](docs/dataset-expansion-plan.md) records what evidence is still needed for the five interaction types and how each data source will be used.
 The [dataset-alignment decision](docs/dataset-decision.md) explains why DOT remains the video source, why PIE does not match this project's conflict-event target, and the manual annotation route required before event-level training.
 The compact 10-run validation candidate pool is documented in [compact-subset-selection.md](docs/compact-subset-selection.md), with a reproducible run/camera/duration manifest. Whole-run assignments are recorded in [splits.csv](data/manifests/splits.csv) and can be regenerated with `python scripts/create_sequence_split.py`.
+Generate the timestamped, local inspection gallery across all three splits with `python scripts/build_inspection_gallery.py`; see [inspection-gallery.md](docs/inspection-gallery.md) for the label-scope limits and output location.
 
 Supplementary data have their own [terms/schema/label audit](docs/supplemental-data-audit.md). Recreate the local inventories for TGSIM, ROCO, and a representative Waterloo database with:
 
