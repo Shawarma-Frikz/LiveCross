@@ -48,7 +48,7 @@ Recreate the row-level list in [`manifests/compact-subset.csv`](manifests/compac
 python scripts/build_compact_subset_manifest.py
 ```
 
-The subset is an **unassigned validation candidate pool**, not the finished train/development/test split. Its source labels remain run-level only; event times, actor pairs, and the other four interaction types still require separately reviewed annotations.
+The selected 10-run subset is a balanced **candidate pool inside the held-out test partition**. Its source labels remain run-level only; event times, actor pairs, and the other four interaction types still require separately reviewed annotations.
 
 ### Extract the selected video pairs
 
@@ -59,6 +59,22 @@ python scripts/extract_compact_subset.py
 ```
 
 The script reads the reviewed subset manifest, checks the archived video sizes against it, extracts complete files with ZIP CRC verification, and writes them under `data/raw/selected-validation/<Run_ID>/`. The destination is Git-ignored. The extraction is repeatable and does not create labels or a train/development/test split. Do not extract the unrelated sensor streams for the RGB MVP.
+
+## Sequence-level split
+
+The split manifest covers all **61 unique source runs** in the two downloaded public training samples and the full 41-run validation archive. It assigns 16 training-sample runs to `train`, 4 to `validation` (development), and all 41 official validation runs to `test`. Within each 10-run training archive, a deterministic SHA-256 ranking with seed **42** selects 2 development runs and 8 training runs. The official validation labels are preserved at their native run-level scope (12 conflict, 29 no conflict); all 10 runs in the compact subset are in `test`.
+
+This source-aware split prevents run leakage and protects the official validation archive from training, tuning, and hard-negative mining. The two training samples are unlabeled, so class stratification is not possible for the 16/4 train/development split; the manifest records that limitation. The five-run sample is omitted as a separate source because its runs are included in the full validation archive. The split covers the downloaded DOT run archives only; calibration files, trajectory-only supplements, Waterloo footage with unresolved reuse terms, and future staged recordings are outside this manifest. Add any future visual recording sessions to the split procedure before model predictions are inspected. Recreate the split CSV and audit report with:
+
+```powershell
+python scripts/create_sequence_split.py
+```
+
+This writes [`manifests/splits.csv`](manifests/splits.csv) and [`results/audits/sequence-split-audit.json`](../results/audits/sequence-split-audit.json). The split assigns source runs, not event labels. Human event annotations are still needed before supervised event training, and the known run-level test labels must not be used to tune event-level predictions.
+
+For a clean regeneration of both subset and split records, run `python scripts/build_compact_subset_manifest.py`, then `python scripts/create_sequence_split.py`, then `python scripts/build_compact_subset_manifest.py` once more. The final subset manifest will then carry its `test` assignment from the global split file.
+
+For a clean regeneration of both subset and split records, run `python scripts/build_compact_subset_manifest.py`, then `python scripts/create_sequence_split.py`, then `python scripts/build_compact_subset_manifest.py` once more. The final subset manifest will then carry its `test` assignment from the global split file.
 
 ## Local organization
 

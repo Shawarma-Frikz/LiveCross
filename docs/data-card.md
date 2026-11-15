@@ -33,7 +33,7 @@
 
 Use one documented visual camera, decode its MP4, and align every frame with its supplied timestamp CSV. Store camera resolution, measured video metadata, dropped/duplicate-frame handling, crossing-zone configuration, and preprocessing parameters in the experiment manifest. Do not treat nominal FPS as the timestamp source.
 
-The five-run sample is for access and pipeline feasibility only. A separate compact candidate pool of 10 complete VisualCamera7 runs has now been selected from the full 41-run validation archive; its 5/5 run-label balance and limits are in [`compact-subset-selection.md`](compact-subset-selection.md) and its row manifest is [`data/manifests/compact-subset.csv`](../data/manifests/compact-subset.csv). Before final experiments, use separate public training-sample runs for manually labeled train/development windows and keep validation runs for held-out evaluation. The training sample is unlabeled, so any interaction-level target must be manually verified; preserve whole runs in one split. Freeze the final split only after class counts and usable event intervals are known. See [`dataset-decision.md`](dataset-decision.md) for the DOT-versus-PIE choice and [`dataset-expansion-plan.md`](dataset-expansion-plan.md) for separate supplemental sources and coverage gaps.
+The five-run sample is for access and pipeline feasibility only. A compact candidate pool of 10 complete VisualCamera7 runs has been selected from the full 41-run validation archive; its 5/5 run-label balance and limits are in [`compact-subset-selection.md`](compact-subset-selection.md), with a row manifest at [`data/manifests/compact-subset.csv`](../data/manifests/compact-subset.csv). The sequence-level split is frozen in [`data/manifests/splits.csv`](../data/manifests/splits.csv): 16 unlabeled public training-sample runs for train, 4 for development, and all 41 official validation runs held out for test. The split uses seed 42 and groups complete source runs. Class stratification is unavailable for the unlabeled training samples; the 41-run test labels are known run-level source labels (12 conflict, 29 no conflict), not event labels. Keep any project-created event annotations for test runs out of model and threshold selection. This split does not create event labels: manually reviewed event/pair annotations are still required before supervised event training or event-level evaluation. See [`dataset-decision.md`](dataset-decision.md) for the DOT-versus-PIE decision and [`dataset-expansion-plan.md`](dataset-expansion-plan.md) for separate supplemental sources and coverage gaps.
 
 ## Known biases and limits
 
@@ -45,7 +45,7 @@ The five-run sample is for access and pipeline feasibility only. A separate comp
 
 ## Changes to record
 
-Update this card when the full annotation dictionary has been reviewed, a dataset subset is fixed, manual labels are created, camera projection is validated, or train/development/test run IDs are frozen.
+Update this card when manual labels are created, camera projection is validated, or a frozen run split must be revised under a documented pre-test reason.
 
 ## Supplemental sources are separate evidence tracks
 

@@ -1,11 +1,11 @@
 # Compact subset selection
 
-**Status:** Selected for data preparation; event annotations and sequence split are pending.  
+**Status:** Selected and assigned to the held-out test partition; event annotations are pending.
 **Source:** DOT Intersection Safety Challenge Stage 1B full validation archive, 41 complete source runs.
 
 ## Selection decision
 
-Use a compact, class-balanced candidate pool of **10 complete runs** from the downloaded DOT validation archive, reading only the full `VisualCamera7` video and its paired timestamp CSV for each run. Keep this as an evaluation-candidate pool; do not use its official validation runs for model training or hard-negative mining. The later sequence-split task must assign whole source runs and keep validation/test examples out of model selection as specified by the frozen protocol.
+Use a compact, source-label-balanced candidate pool of **10 complete runs** from the downloaded DOT validation archive, reading only the full `VisualCamera7` video and its paired timestamp CSV for each run. These 10 runs are assigned to the held-out test partition in [`data/manifests/splits.csv`](../data/manifests/splits.csv); do not use them for model training, threshold tuning, or hard-negative mining.
 
 The selected view is a consistent fixed roadside view across these runs: all 10 VisualCamera7 MP4s are 1280×720 and report 30 FPS. Each camera stream is retained in full; no temporal crop or adjacent-frame split is made. Midpoint frames were reviewed to check that the scene remains visible and to stratify daylight/low-light examples. Their exact frame index and verbatim source timestamp are saved in the manifest so the visual judgment can be repeated. The timestamp CSV does not specify a timezone; the manifest does not assign one. The light assessment is a qualitative description of one reviewed midpoint per run, not a source annotation or a claim about the whole recording.
 
@@ -35,8 +35,8 @@ The row-level manifest is [`data/manifests/compact-subset.csv`](../data/manifest
 python scripts/build_compact_subset_manifest.py
 ```
 
-The manifest builder reads the existing `data/raw/validation-full.zip`, verifies the 41-run source-label inventory, selected-run label values, presence of VisualCamera7 video/timestamp pairs, video metadata and midpoint decodability, monotonic timestamps, and frame-count/timestamp-row equality. It writes metadata only; it does not annotate events or assign train/development/test splits.
+The manifest builder reads the existing `data/raw/validation-full.zip`, verifies the 41-run source-label inventory, selected-run label values, presence of VisualCamera7 video/timestamp pairs, video metadata and midpoint decodability, monotonic timestamps, and frame-count/timestamp-row equality. It writes metadata only; it does not annotate events or create the global train/development/test split. When `data/manifests/splits.csv` exists, it records each selected run's assigned split. After regenerating the global split, run the builder once more to synchronize that column.
 
 The selected 10 complete MP4/timestamp pairs are now extracted locally under `data/raw/selected-validation/<Run_ID>/` for review and annotation. Recreate that ignored local copy with `python scripts/extract_compact_subset.py`. The script extracts only those 20 archive members, checks the source video sizes against the manifest, and reads each selected member fully so ZIP CRC errors are detected. It does not alter or expand the source archive, annotate events, or assign splits. The extracted source video payload is 344,268,302 bytes (about 328.4 MiB), plus the timestamp CSVs.
 
-The explicit row list and split status are also visible in the CSV. The next distinct data actions are the sequence-level split and the project-created event annotations; the manifest does not mark either as complete.
+The global sequence split is in [`data/manifests/splits.csv`](../data/manifests/splits.csv), with its reproducible policy and source counts in [`results/audits/sequence-split-audit.json`](../results/audits/sequence-split-audit.json). The remaining data action is to create project-reviewed event annotations; the DOT run labels are not event labels.

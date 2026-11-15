@@ -2,14 +2,14 @@
 
 **Decision:** The data currently downloaded is **not sufficient for final evaluation** of the five-interaction MVP. Keep the DOT five-run sample as the access and pipeline pilot. Expand evaluation in separate, auditable tracks; no single source currently supplies labeled video ground truth for all five interaction types.
 
-A 10-run, one-camera DOT validation candidate pool has been selected for the limited VRU–vehicle track. Its balance, duration, frame/timestamp checks, and run-level label limits are documented in [`compact-subset-selection.md`](compact-subset-selection.md); it is not event-labeled or split yet.
+A 10-run, one-camera DOT validation candidate pool has been selected for the limited VRU–vehicle track. Its balance, duration, frame/timestamp checks, and run-level label limits are documented in [`compact-subset-selection.md`](compact-subset-selection.md); it is reserved in the test partition in [`data/manifests/splits.csv`](../data/manifests/splits.csv). It is not event-labeled yet.
 
 ## Existing data
 
 | Source | What it can support | What it cannot support | Project use |
 |---|---|---|---|
 | U.S. DOT Intersection Safety Challenge Stage 1B five-run validation sample (3.54 GB locally) | RGB video and timestamps; VRU–vehicle scenario labels at run level; timestamped 3D road-user boxes | Event-boundary labels are absent in the inspected sample; labels do not establish vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, or pedestrian–fixed-object truth | Pipeline smoke check and manual event-window pilot; not strong final metric evidence |
-| Full DOT Stage 1B validation set (41 runs, about 28.64 GB locally) | Larger held-out validation pool for DOT’s VRU–vehicle scenarios; same source-specific labels | Does not validate vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, or pedestrian–fixed-object; still requires event-level annotation and validated RGB projection | Benchmark track for DOT VRU–vehicle results, with whole-run splits |
+| Full DOT Stage 1B validation set (41 runs, 28,642,566,098 bytes locally) | Held-out test pool for DOT’s VRU–vehicle scenarios; same source-specific labels | Does not validate vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, or pedestrian–fixed-object; still requires event-level annotation and validated RGB projection | Final held-out DOT track; all 41 runs are in `test` in [`data/manifests/splits.csv`](../data/manifests/splits.csv) |
 | DOT public training samples 1 and 2 (about 12.9 GB combined) | Additional recorded runs for training/development clips and hard-negative mining after manual review; useful RGB footage if the relevant views are present | Official training data is unlabeled; it cannot supply conflict labels without human review and it is not a test set | Use as training/development source only; preserve run separation from validation |
 
 ## Downloaded motion/conflict supplements (audited 15 November 2026)

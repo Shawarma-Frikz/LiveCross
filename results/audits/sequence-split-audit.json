@@ -1,0 +1,40 @@
+{
+  "audit_date": "2026-11-15",
+  "split_manifest": "data/manifests/splits.csv",
+  "split_universe": "All source runs in the two downloaded DOT public training-sample archives and the full DOT validation archive.",
+  "seed": 42,
+  "split_counts": {
+    "test": 41,
+    "train": 16,
+    "validation": 4
+  },
+  "source_run_count": 61,
+  "source_counts_by_split": {
+    "data/raw/training-sample-1.zip": {
+      "train": 8,
+      "validation": 2
+    },
+    "data/raw/training-sample-2.zip": {
+      "train": 8,
+      "validation": 2
+    },
+    "data/raw/validation-full.zip": {
+      "test": 41
+    }
+  },
+  "official_validation_test_run_label_counts": {
+    "conflict": 12,
+    "no conflict": 29
+  },
+  "compact_subset_runs_in_test": 10,
+  "unlabeled_training_data_note": "The 20 public training-sample runs have no source conflict classes; train/dev assignment is deterministic and archive-balanced, not class-stratified. Manually reviewed event labels are still required before supervised training.",
+  "leakage_policy": "Whole source runs are assigned once. Both public training archives supply train/dev only; every official validation run is reserved for test. The five-run sample is not counted separately because it duplicates runs in the full validation archive.",
+  "limitations": [
+    "All 41 official validation runs are reserved for test, and their run-level labels are known from the source; event-level labels remain uncreated.",
+    "The 16 train and 4 development runs are unlabeled until project review; no learned event model is ready to train from this split alone.",
+    "The test distribution is the source distribution (12 conflict, 29 no conflict), while the selected 10-run compact subset is a deliberately balanced candidate subset and not prevalence-representative.",
+    "This is a single controlled intersection dataset split, not an independent location-level generalization test.",
+    "The five-run validation sample is excluded as a separate source because its runs duplicate the full validation archive. Calibration files, trajectory-only supplements, Waterloo media with unresolved reuse terms, and future staged recordings are outside this DOT split universe.",
+    "Before adding any supplemental visual recordings to model development/evaluation, extend this split procedure with source/session IDs and assign each complete recording session before inspecting model predictions; never append them to an existing partition based on outcomes."
+  ]
+}

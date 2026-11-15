@@ -24,8 +24,8 @@ Before training or viewing test-set results:
 1. Inspect the full validation sample/metadata and confirm camera MP4s, timestamp CSVs, run labels, 3D-box contents, and frame-to-time behavior. A representative MP4/CSV has already been verified; its timestamps span about 73 seconds for 1,968 frames while the MP4 reports 30 FPS.
 2. Create manual event intervals only for the subset used for event-level evaluation. Record reviewer, run, time bounds, involved tracks when identifiable, label, and uncertainty reason.
 3. Apply the minimum separately to each pair type: at least **20 conflict and 20 non-conflict interaction windows across at least five distinct source clips/runs**, with source clips/runs held out from tuning. The current DOT sample has only two conflict and three non-conflict run labels and does not meet this event-window target. If a category cannot meet it with permission-cleared footage, report its event metrics as exploratory and show counts and failure cases; do not pool categories to hide sparse evidence.
-4. Assign complete runs to train/development/test before tuning thresholds. Keep the test-run IDs sealed from hard-negative mining and model selection.
-5. Freeze this target sheet and the event-matching rule before opening test predictions.
+4. The source-run split is recorded in [`data/manifests/splits.csv`](../data/manifests/splits.csv): train and development come only from the two unlabeled public training samples; all 41 official validation runs are reserved for test. Keep test runs out of hard-negative mining, model selection, and threshold tuning. DOT's run-level source labels are already known and may be reported only as a separate coarse source-label result; they are not event labels.
+5. Freeze this target sheet and the event-matching rule before opening test predictions or project-created test event annotations. Keep the test event labels unavailable to model/threshold selection.
 
 ## Primary acceptance targets
 

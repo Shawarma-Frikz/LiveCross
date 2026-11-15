@@ -38,14 +38,14 @@ The learned interaction classifier and the pretrained detector have different jo
 - The official five-run validation sample is downloaded locally (3,540,625,371 bytes) and excluded from Git.
 - It contains visual-camera MP4s and per-frame timestamp CSVs; a selected Run 1003 Visual Camera 7 clip was opened and decoded successfully at 1280×720.
 - The sample’s validation labels are conflict/no-conflict **per run**, not event intervals. The five-run sample has two conflict runs and three non-conflict runs, so it is for pipeline feasibility, not a strong final evaluation by itself.
-- The full validation dataset is listed as 41 runs (about 30 GB). Inspect its label balance before deciding the final evaluation set. The 1,104-run training set is unlabeled and about 1 TB; it is not needed to start this prototype.
+- The downloaded full validation archive contains 41 runs (28,642,566,098 bytes; about 26.7 GiB) and is reserved as LiveCross's held-out test partition. Its source labels are 12 conflict and 29 no-conflict runs, at run level only. The two public unlabeled training samples contain 20 additional runs, split into 16 train and 4 development runs.
 - DOT conflict labels cover vulnerable-road-user/vehicle scenarios only. The other interaction types need separate video annotations and evaluation; never present those results as DOT-validated.
 
 See [data/README.md](data/README.md) for download and local organization instructions and [dataset access notes](docs/dataset-access.md) for the inspected sample, terms, and citation.
 The sample’s current source, label, and limitation summary is in the [data card](docs/data-card.md).
 The [dataset expansion plan](docs/dataset-expansion-plan.md) records what evidence is still needed for the five interaction types and how each data source will be used.
 The [dataset-alignment decision](docs/dataset-decision.md) explains why DOT remains the video source, why PIE does not match this project's conflict-event target, and the manual annotation route required before event-level training.
-The current compact validation candidate pool is documented in [compact-subset-selection.md](docs/compact-subset-selection.md), with a reproducible run/camera/duration manifest.
+The compact 10-run validation candidate pool is documented in [compact-subset-selection.md](docs/compact-subset-selection.md), with a reproducible run/camera/duration manifest. Whole-run assignments are recorded in [splits.csv](data/manifests/splits.csv) and can be regenerated with `python scripts/create_sequence_split.py`.
 
 Supplementary data have their own [terms/schema/label audit](docs/supplemental-data-audit.md). Recreate the local inventories for TGSIM, ROCO, and a representative Waterloo database with:
 
@@ -61,7 +61,7 @@ Rebuild the selected DOT run/camera inventory and timestamp-duration manifest (r
 python scripts/build_compact_subset_manifest.py
 ```
 
-This verifies the selected videos and timestamp rows and writes `data/manifests/compact-subset.csv` plus `results/audits/compact-subset-audit.json`. It does not assign splits or create event labels.
+This verifies the selected videos and timestamp rows and writes `data/manifests/compact-subset.csv` plus `results/audits/compact-subset-audit.json`. It does not create event labels. Regenerate the run-level split separately with `python scripts/create_sequence_split.py`.
 
 ## Traceable sample audit
 
@@ -84,9 +84,9 @@ The fetch script downloads the 41-run DOT validation archive, both public DOT tr
 ## Planned milestones
 
 1. Keep the reported instructor approval of LiveCross and solo work in the course registration/project record if requested.
-2. Audit the sample’s data dictionary, class coverage, timestamps, and labels; decide whether full validation is needed. Re-run `scripts/audit_sample_data.py` to reproduce the inventory and raw counts.
+2. Audit the DOT sample, full validation set, label semantics, and supplementary data; select the compact pool and freeze the whole-run split. Re-run the audit and split scripts to reproduce these records.
 3. Build a reproducible video reader, scene configuration, detection, and tracking pipeline.
-4. Define and manually review interaction windows for all five interaction types; freeze source-clip/run-separated train/development/test splits.
+4. Define and manually review interaction windows for all five interaction types using the frozen source-run split; keep event annotations and model results out of the test partition until final evaluation. The source-run split is already recorded in `data/manifests/splits.csv`.
 5. Implement rule scoring, interaction features, the linear SVM, and training-only hard-negative mining.
 6. Add explanations, uncertainty, event log, and responsive desktop/phone review screens.
 7. Evaluate, analyze failure cases, rehearse the live demo, and prepare the report and slides.

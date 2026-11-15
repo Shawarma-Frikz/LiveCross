@@ -23,6 +23,7 @@ RAW = ROOT / "data" / "raw"
 SOURCE_ARCHIVE = RAW / "validation-full.zip"
 MANIFEST = ROOT / "data" / "manifests" / "compact-subset.csv"
 REPORT = ROOT / "results" / "audits" / "compact-subset-audit.json"
+SPLIT_MANIFEST = ROOT / "data" / "manifests" / "splits.csv"
 CAMERA = 7
 
 # Five source-positive and five source-negative complete runs. The selection
@@ -123,6 +124,10 @@ def main() -> None:
         )
 
     rows: list[dict] = []
+    split_by_run: dict[str, str] = {}
+    if SPLIT_MANIFEST.is_file():
+        with SPLIT_MANIFEST.open(encoding="utf-8-sig", newline="") as source:
+            split_by_run = {row["sequence_id"]: row["split"] for row in csv.DictReader(source)}
     available_labels: dict[str, str] = {}
     with zipfile.ZipFile(SOURCE_ARCHIVE) as archive:
         label_info = member_for(archive, "conflict_no_conflict_labels_all_validation_runs.csv")
@@ -185,7 +190,7 @@ def main() -> None:
                     "timestamp_max_interval_ms": round(max(intervals) * 1000, 3),
                     "reviewed_midpoint_light": selection["midpoint_light"],
                     "sequence_integrity": "complete camera stream; no temporal crop",
-                    "split_assignment": "unassigned; validation candidate pool; preserve source run as the split group",
+                    "split_assignment": split_by_run.get(run_id, "not assigned; preserve complete source run as the split group"),
                     "selection_note": "Balanced compact candidate pool; source label remains run-level.",
                 })
 
@@ -213,7 +218,7 @@ def main() -> None:
             "Use VisualCamera7 consistently (same recorded fixed roadside view across selected runs).",
             "Balance reviewed midpoint appearance at three daylight and two low-light runs in each source-label class.",
             "Retain each selected camera stream in full; do not sample or crop temporal segments.",
-            "Leave split assignment unassigned for the separate sequence-level split task.",
+            "Preserve each complete source run as one split group; see splits.csv when the sequence-level split is assigned.",
         ],
         "source_label_inventory_full_validation": dict(sorted(counts.items())),
         "selected_run_count": len(rows),
@@ -230,7 +235,13 @@ def main() -> None:
         "total_selected_video_bytes_uncompressed": sum(r["video_uncompressed_bytes"] for r in rows),
         "all_midpoint_frames_decoded": all(r["midpoint_frame_decoded"] for r in rows),
         "all_frame_counts_match_timestamp_rows": all(r["video_frame_count"] == r["timestamp_row_count"] for r in rows),
-        "split_status": "unassigned; candidate pool from the official validation archive; no train/dev/test assignment is implied",
+        "split_status": (
+            "selected runs assigned to test in data/manifests/splits.csv"
+            if split_by_run and all(split_by_run.get(run_id) == "test" for run_id in SELECTED)
+            else "candidate pool from official validation; consult data/manifests/splits.csv for assignments"
+            if split_by_run
+            else "not assigned; candidate pool from the official validation archive"
+        ),
         "label_limit": "Conflict/no-conflict values are DOT run/scenario labels only. They do not identify event times, actor pairs, or per-camera event labels. Event-level labels must be created separately under the manual annotation protocol.",
         "scope_limit": "This compact DOT subset covers only DOT's VRU–vehicle scenario domain. It does not supply source ground truth for vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, or pedestrian–fixed-object events.",
         "runs": [
