@@ -45,6 +45,14 @@ See [data/README.md](data/README.md) for download and local organization instruc
 The sample’s current source, label, and limitation summary is in the [data card](docs/data-card.md).
 The [dataset expansion plan](docs/dataset-expansion-plan.md) records what evidence is still needed for the five interaction types and how each data source will be used.
 
+Supplementary data have their own [terms/schema/label audit](docs/supplemental-data-audit.md). Recreate the local inventories for TGSIM, ROCO, and a representative Waterloo database with:
+
+```powershell
+python scripts/audit_supplemental_data.py
+```
+
+The audit writes `results/audits/supplemental-dataset-audit.json`. It does not train a model or treat trajectory-derived candidates as source conflict ground truth. Waterloo redistribution terms remain unresolved; keep those media files out of Git.
+
 ## Traceable sample audit
 
 Recreate the machine-checkable inventory, frame decode/timestamp comparison, run-label counts, and selected-run GT summary with:
@@ -99,7 +107,8 @@ LiveCross/
 ├── results/
 │   ├── README.md
 │   └── audits/
-│       └── dot-sample-audit.json
+│       ├── dot-sample-audit.json
+│       └── supplemental-dataset-audit.json
 └── docs/
     ├── references.md
     ├── professor-guide-alignment.md
@@ -145,6 +154,7 @@ Repository remote: [github.com/Shawarma-Frikz/LiveCross](https://github.com/Shaw
 - [Acceptance targets](docs/acceptance-targets.md)
 - [Dataset access and terms](docs/dataset-access.md)
 - [DOT data card](docs/data-card.md)
+- [Supplemental dataset audit](docs/supplemental-data-audit.md)
 - [Professor-guide alignment and submission checklist](docs/professor-guide-alignment.md)
 - [Risk and ethics register](docs/risk-register.md)
 - [References](docs/references.md)

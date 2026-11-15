@@ -10,15 +10,21 @@
 | Full DOT Stage 1B validation set (41 runs, about 28.64 GB locally) | Larger held-out validation pool for DOT’s VRU–vehicle scenarios; same source-specific labels | Does not validate vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, or pedestrian–fixed-object; still requires event-level annotation and validated RGB projection | Benchmark track for DOT VRU–vehicle results, with whole-run splits |
 | DOT public training samples 1 and 2 (about 12.9 GB combined) | Additional recorded runs for training/development clips and hard-negative mining after manual review; useful RGB footage if the relevant views are present | Official training data is unlabeled; it cannot supply conflict labels without human review and it is not a test set | Use as training/development source only; preserve run separation from validation |
 
-## Add a public motion-data supplement
+## Downloaded motion/conflict supplements (audited 15 November 2026)
 
-Use **FHWA TGSIM Foggy Bottom trajectory data** as a separate motion-analysis supplement. The official catalog lists a roughly 350 MB trajectory CSV covering pedestrians, bicycles, scooters, cars, automated vehicles, motorcycles, buses, and trucks, sampled every 0.1 seconds, along with an aerial reference image and roadway-region polygons. It is public and has four intersections in the collection. This provides a practical source for generating and manually checking candidate pedestrian–vehicle, vehicle–vehicle, and pedestrian–pedestrian trajectory windows, then testing motion features and pair-aware rules across those dynamic-agent interactions. It does not provide visual evidence or fixed-object pair labels.
+Three downloaded sources have now been inspected locally. Full counts, schema, parsing caveats, and rights decisions are recorded in [`supplemental-data-audit.md`](supplemental-data-audit.md) and reproducible via [`scripts/audit_supplemental_data.py`](../scripts/audit_supplemental_data.py).
 
-Important boundary: the catalog describes trajectories and reference/region files, not a ready-to-use collection of per-event conflict labels or downloadable RGB clips. Treat any conflict labels derived from distance, time-to-collision, or post-encroachment rules as **surrogate labels**, define the rule before evaluation, and do not call them observed collisions or human-validated near misses. This supplement can test motion scoring; it cannot test the video detector or replace DOT video.
+### FHWA TGSIM Foggy Bottom
 
-- Official FHWA catalog: [TGSIM Foggy Bottom Trajectories](https://catalog.data.gov/dataset/third-generation-simulation-data-tgsim-foggy-bottom-trajectories)
-- Dataset landing page/resource access: [DOT data portal](https://data.transportation.gov/d/brzy-6zfh)
-- Before use: inspect columns, units, participant IDs, missingness, region semantics, attribution, and use terms; save the access date and checksum in the experiment manifest.
+The local CSV is 342,323,446 bytes with 2,492,261 rows, 20,511 IDs, eight road-user types, and mostly 0.1-second within-track intervals. It has trajectory coordinates and motion fields, no RGB video, and no source conflict-event labels. Use it for trajectory feature experiments and candidate generation only. Any TTC/PET threshold is a project-defined surrogate, not observed or author-labeled ground truth. See the [official FHWA catalog](https://catalog.data.gov/dataset/third-generation-simulation-data-tgsim-foggy-bottom-trajectories) and [DOT TGSIM data story](https://data.transportation.gov/stories/s/Third-Generation-Simulation-Data-TGSIM-/uwv8-dpvx/) for units, code meanings, citation, and terms.
+
+### ROCO
+
+The local sample contains 101 vehicle conflict events and 8,080 trajectory JSON frame files, with author-provided severity/reason/effect labels. It has no video frames and only vehicle events, so it can support a **separate trajectory-only vehicle conflict experiment**, not video detection, pedestrian interactions, fixed-object interactions, or image-space XAI. Its label CSV has a format quirk: unquoted pair IDs cause six physical fields under a five-column header; use the documented parser in the audit script. It is licensed CC BY-SA 4.0 with additional dataset terms; preserve attribution/share-alike. Source: [official ROCO repository](https://github.com/michigan-traffic-lab/ROCO).
+
+### Waterloo Intersection
+
+The local download contains 14 matched AVI/SQLite pairs. A representative database includes pedestrian tracks, vehicle tracks, and per-frame motion data. The publisher's `CONFLICT_POINTS` are intersections of planned/geometric paths, **not event labels** for a tracked pair. This is a candidate visual/tracking demo, pending validation of frame/ID alignment and explicit reuse permission. The [WISE Lab dataset page](https://uwaterloo.ca/waterloo-intelligent-systems-engineering-lab/datasets/waterloo-multi-agent-traffic-dataset-intersection) does not state a license; do not redistribute or make it a required public deliverable until terms are confirmed.
 
 ## Fill the fixed-object and visual-evidence gap
 
@@ -29,10 +35,12 @@ For every clip, record source, permission/consent, scene, category, pair IDs, ti
 ## Evaluation plan and stop/go gate
 
 1. Keep the DOT benchmark results for VRU–vehicle separate from all supplementary results.
-2. Use TGSIM only for trajectory/motion-feature evaluation unless visual videos and redistribution/use permissions are independently confirmed.
-3. Use staged/cleared video to exercise and evaluate the visual pipeline for all five interaction types, reporting its small sample size and non-independent annotation limitation clearly.
-4. Preserve complete runs or recording sessions as groups across train/development/test. Mine hard negatives from training only.
-5. Report per-category counts, event precision/recall/F1, false alerts per minute, and delay only where annotations support them. If a category has too few independent test examples, mark it exploratory; do not pool it with another category.
-6. Before claiming final benchmark-level performance, inspect DOT’s full 41-run validation set, read the complete annotation guide, and confirm whether the relevant 3D boxes can be projected into the chosen RGB camera.
+2. Report TGSIM motion-feature experiments separately; clearly tag any derived conflict outcome as a surrogate.
+3. Use ROCO only for a separate vehicle-trajectory event-label analysis; do not report it as visual model evaluation.
+4. Keep Waterloo out of public redistribution and core evaluation until its reuse terms and video/ID alignment are confirmed.
+5. Use staged/cleared video to exercise and evaluate the visual pipeline for all five interaction types, reporting its small sample size and non-independent annotation limitation clearly.
+6. Preserve complete runs or recording sessions as groups across train/development/test. Mine hard negatives from training only.
+7. Report per-category counts, event precision/recall/F1, false alerts per minute, and delay only where annotations support them. If a category has too few independent test examples, mark it exploratory; do not pool it with another category.
+8. Before claiming final benchmark-level performance, inspect DOT’s full 41-run validation data, read the complete annotation guide, and confirm whether the relevant 3D boxes can be projected into the chosen RGB camera.
 
 **Current readiness:** MVP implementation can proceed on the current sample, but a strong final five-type evaluation cannot. The data expansion above is now a project task and the necessary evidence boundary is part of the plan. The public DOT training samples are included for practical manual training/mining data; the roughly 1 TB full training archive remains unnecessary for this student-scale project.

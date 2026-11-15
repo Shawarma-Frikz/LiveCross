@@ -1,0 +1,398 @@
+{
+  "audit_date": "2026-11-15",
+  "purpose": "Local inventory/schema/label audit of downloaded supplementary candidate datasets; not a model evaluation.",
+  "sources": {
+    "tgsim_foggy_bottom": {
+      "file": {
+        "path": "data/raw/tgsim-foggy-bottom.csv",
+        "bytes": 342323446
+      },
+      "rows": 2492261,
+      "columns": [
+        "id",
+        "time",
+        "xloc_kf",
+        "yloc_kf",
+        "lane_kf",
+        "speed_kf_x",
+        "speed_kf_y",
+        "acceleration_kf_x",
+        "acceleration_kf_y",
+        "length_smoothed",
+        "width_smoothed",
+        "type_most_common"
+      ],
+      "unique_track_ids": 20511,
+      "time_seconds_min_max": [
+        60.2,
+        7200.0
+      ],
+      "most_common_per_track_time_intervals_seconds": [
+        {
+          "interval": 0.1,
+          "count": 2470386
+        },
+        {
+          "interval": 0.2,
+          "count": 437
+        },
+        {
+          "interval": 0.3,
+          "count": 111
+        },
+        {
+          "interval": 0.4,
+          "count": 60
+        },
+        {
+          "interval": 0.5,
+          "count": 47
+        },
+        {
+          "interval": 0.6,
+          "count": 37
+        },
+        {
+          "interval": 0.8,
+          "count": 24
+        },
+        {
+          "interval": 0.9,
+          "count": 21
+        },
+        {
+          "interval": 0.7,
+          "count": 19
+        },
+        {
+          "interval": 1.2,
+          "count": 17
+        }
+      ],
+      "type_code_counts": [
+        {
+          "code": "0",
+          "meaning_from_official_data_dictionary": "person/pedestrian",
+          "rows": 766876
+        },
+        {
+          "code": "1",
+          "meaning_from_official_data_dictionary": "bicycle",
+          "rows": 8453
+        },
+        {
+          "code": "2",
+          "meaning_from_official_data_dictionary": "scooter",
+          "rows": 1739
+        },
+        {
+          "code": "3",
+          "meaning_from_official_data_dictionary": "passenger car",
+          "rows": 1581551
+        },
+        {
+          "code": "4",
+          "meaning_from_official_data_dictionary": "automated vehicle",
+          "rows": 34020
+        },
+        {
+          "code": "5",
+          "meaning_from_official_data_dictionary": "motorcycle",
+          "rows": 652
+        },
+        {
+          "code": "6",
+          "meaning_from_official_data_dictionary": "bus",
+          "rows": 17631
+        },
+        {
+          "code": "7",
+          "meaning_from_official_data_dictionary": "truck",
+          "rows": 81339
+        }
+      ],
+      "missing_cell_counts": {},
+      "interpretation": "Trajectory observations only; no RGB video or source-provided conflict-event labels in this CSV."
+    },
+    "roco_sample": {
+      "file": {
+        "path": "data/raw/roco/ROCO.zip",
+        "bytes": 25063270
+      },
+      "archive_entries_including_directories": 8184,
+      "trajectory_json_frame_files": 8080,
+      "event_folders_with_json": 101,
+      "label_csv": {
+        "path_in_archive": "ROCO/conflict_label.csv",
+        "header_as_published": [
+          "event_time",
+          "severity",
+          "reason",
+          "conflict trajectory pair",
+          "effect"
+        ],
+        "rows": 101,
+        "physical_row_width_counts": {
+          "6": 101
+        },
+        "severity_code_counts": {
+          "1": 98,
+          "2": 3
+        },
+        "reason_code_counts": {
+          "0": 53,
+          "1": 7,
+          "2": 14,
+          "3": 12,
+          "4": 15
+        },
+        "effect_code_counts": {
+          "0": 24,
+          "1": 47,
+          "2": 30
+        },
+        "sample_normalized_row": {
+          "event_time": "2023-07-08_15:32:45",
+          "severity": "1",
+          "reason": "2",
+          "pair_ids": [
+            "2305",
+            "2307"
+          ],
+          "effect": "1"
+        },
+        "format_note": "Each local data row has six fields although its physical header has five: the conflict-pair tuple is unquoted and splits across two fields. The local header also differs from the upstream README: event_time vs event_timestamp, and no time offset field. The audit reconstructs pair IDs and effect by position; do not infer a missing offset."
+      },
+      "sample_trajectory_frame": {
+        "path_in_archive": "ROCO/conflict_trajectories/2023-07-12_11-23-10/2023-07-12 11-22-54-864353.json",
+        "top_level_keys": [
+          "fusion"
+        ],
+        "fusion_agent_count": 20,
+        "agent_fields": [
+          "id",
+          "confidence",
+          "lat",
+          "lon",
+          "uuid",
+          "category",
+          "speed",
+          "speed_heading"
+        ]
+      },
+      "interpretation": "Vehicle conflict-event trajectories and labels; no RGB frames in this sample archive, so it cannot validate visual detection or image-space explanations."
+    },
+    "waterloo_intersection": {
+      "database_archive": {
+        "path": "data/raw/waterloo/intersection_dbfiles.zip",
+        "bytes": 610803071
+      },
+      "annotated_video_archive": {
+        "path": "data/raw/waterloo/annotated_videos.zip",
+        "bytes": 4673980140
+      },
+      "database_files": 14,
+      "video_files": 14,
+      "matched_file_stems": [
+        "769",
+        "770",
+        "771",
+        "775",
+        "776",
+        "777",
+        "778",
+        "779",
+        "780",
+        "781",
+        "782",
+        "783",
+        "784",
+        "785"
+      ],
+      "representative_database": {
+        "path_in_archive": "intsc_data_769.db",
+        "tables": {
+          "CONFLICT_POINTS": {
+            "rows": 51,
+            "columns": [
+              "ID",
+              "PATH_1",
+              "PATH_1_GATES",
+              "PATH_2",
+              "PATH_2_GATES",
+              "X_POSITION",
+              "Y_POSITION",
+              "RADIUS",
+              "SIGNAL_STATE_PATH_1",
+              "SIGNAL_STATE_PATH_2",
+              "POINT_LOCATION"
+            ]
+          },
+          "GATE_CROSSING_EVENTS": {
+            "rows": 983,
+            "columns": [
+              "FILE_ID",
+              "GATE_ID",
+              "GATE_TYPE",
+              "TRACK_ID",
+              "TYPE",
+              "IMAGE_ID",
+              "TIME",
+              "SPEED",
+              "TAN_ACC",
+              "LAT_ACC",
+              "HEADWAY_S",
+              "HEADWAY_M",
+              "YAW"
+            ]
+          },
+          "L1_ACTIONS": {
+            "rows": 2279,
+            "columns": [
+              "TIME",
+              "TRACK_ID",
+              "L1_ACTION"
+            ]
+          },
+          "SEGMENT_SEQ_MAP": {
+            "rows": 22,
+            "columns": [
+              "SEGMENT_ID",
+              "ENTRY_GATE",
+              "EXIT_GATE",
+              "SEGMENT_SEQ",
+              "DIRECTION"
+            ]
+          },
+          "TRACKS": {
+            "rows": 283,
+            "columns": [
+              "FILE_ID",
+              "TRACK_ID",
+              "TYPE",
+              "TRACK_WIDTH",
+              "TRACK_LENGTH",
+              "ENTRY_GATE",
+              "ENTRY_TIME",
+              "EXIT_GATE",
+              "EXIT_TIME",
+              "TRAVELED_DIST",
+              "AVG_SPEED"
+            ]
+          },
+          "TRAFFIC_LIGHTS": {
+            "rows": 18,
+            "columns": [
+              "FILE_ID",
+              "L_N_E",
+              "L_N_S",
+              "L_S_N",
+              "L_E_W",
+              "L_W_E",
+              "L_S_W",
+              "L_E_S",
+              "L_W_N",
+              "L_S_E",
+              "L_W_S",
+              "TIME"
+            ]
+          },
+          "TRAFFIC_REGIONS_DEF": {
+            "rows": 130,
+            "columns": [
+              "NAME",
+              "REGION_ID",
+              "SHAPE",
+              "REGION_PROPERTY",
+              "X_POSITIONS",
+              "Y_POSITIONS"
+            ]
+          },
+          "TRAJECTORIES_0769": {
+            "rows": 196678,
+            "columns": [
+              "TRACK_ID",
+              "X",
+              "Y",
+              "SPEED",
+              "TAN_ACC",
+              "LAT_ACC",
+              "TIME",
+              "ANGLE",
+              "TRAFFIC_REGIONS"
+            ]
+          },
+          "TRAJECTORIES_0769_EXT": {
+            "rows": 141814,
+            "columns": [
+              "TRACK_ID",
+              "TIME",
+              "ASSIGNED_SEGMENT",
+              "L1_ACTION",
+              "L2_ACTION"
+            ]
+          },
+          "TRAJECTORY_MOVEMENTS": {
+            "rows": 283,
+            "columns": [
+              "FILE_ID",
+              "TRACK_ID",
+              "TYPE",
+              "ENTRY_GATE",
+              "EXIT_GATE",
+              "GATES_PASSED",
+              "TIME_BTW_GATES",
+              "DISTANCE_BTW_GATES",
+              "TIME_TOTAL",
+              "DISTANCE_TOTAL",
+              "MIN_SPEED_BTW_GATES",
+              "AVG_SPEED_BTW_GATES",
+              "MAX_SPEED_BTW_GATES",
+              "MIN_SPEED_TOTAL",
+              "AVG_SPEED_TOTAL",
+              "MAX_SPEED_TOTAL",
+              "MIN_TOTAL_ACC_BTW_GATES",
+              "AVG_TOTAL_ACC_BTW_GATES",
+              "MAX_TOTAL_ACC_BTW_GATES",
+              "MIN_TOTAL_ACC_TOTAL",
+              "AVG_TOTAL_ACC_TOTAL",
+              "MAX_TOTAL_ACC_TOTAL",
+              "MIN_LATERAL_ACC_BTW_GATES",
+              "AVG_LATERAL_ACC_BTW_GATES",
+              "MAX_LATERAL_ACC_BTW_GATES",
+              "MIN_LATERAL_ACC_TOTAL",
+              "AVG_LATERAL_ACC_TOTAL",
+              "MAX_LATERAL_ACC_TOTAL",
+              "MIN_TANGENTIAL_ACC_BTW_GATES",
+              "AVG_TANGENTIAL_ACC_BTW_GATES",
+              "MAX_TANGENTIAL_ACC_BTW_GATES",
+              "MIN_TANGENTIAL_ACC_TOTAL",
+              "AVG_TANGENTIAL_ACC_TOTAL",
+              "MAX_TANGENTIAL_ACC_TOTAL",
+              "TOTAL_STATIONARY_TIME",
+              "LONGEST_STATIONARY_TIM",
+              "TRAFFIC_SEGMENT_SEQ"
+            ]
+          }
+        },
+        "track_type_counts": {
+          "Bicycle": 1,
+          "Bus": 1,
+          "Car": 249,
+          "Heavy Vehicle": 3,
+          "Medium Vehicle": 6,
+          "Pedestrian": 23
+        },
+        "trajectory_movement_type_counts": {
+          "Bicycle": 1,
+          "Bus": 1,
+          "Car": 249,
+          "Heavy Vehicle": 3,
+          "Medium Vehicle": 6,
+          "Pedestrian": 23
+        }
+      },
+      "interpretation": "Includes ID-annotated video and pedestrian/vehicle trajectories. CONFLICT_POINTS describe geometric route intersections, not observed pair-level near-miss/collision labels. Publisher page currently states no reuse license; treat reuse/redistribution permission as unresolved."
+    }
+  }
+}

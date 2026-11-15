@@ -5,7 +5,7 @@
 
 ## Problem statement
 
-Road-safety teams often review video after a concern has been reported. Finding moments when people or vehicles converge on a crossing area—or when a vehicle path approaches a fixed roadside hazard—can take careful, repeated viewing. LiveCross will analyze fixed-camera video and bring four typed event candidates forward for human review: pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–fixed-object.
+Road-safety teams often review video after a concern has been reported. Finding moments when people or vehicles converge on a crossing area—or when a road-user path approaches a fixed roadside hazard—can take careful, repeated viewing. LiveCross will analyze fixed-camera video and bring five typed event candidates forward for human review: pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object.
 
 The project asks: **Can a course-sized computer-vision pipeline find and explain several types of potential crossing conflicts, and can hard-negative mining reduce false alerts without hiding failures in less common pair types?**
 
@@ -19,7 +19,7 @@ The primary user is a **campus, municipal, or road-safety reviewer** examining a
 - **Input:** A recorded video clip first, followed by one staged local laptop-webcam feed through the same pipeline.
 - **Moving actors:** Pedestrians and motor vehicles; bicycles only if the selected data and detector support them reliably.
 - **Fixed hazards:** User-configured scene objects such as trees or light poles. They are static landmarks/regions, not objects expected to move or receive a tracked identity.
-- **MVP interaction coverage:** Pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, and vehicle–fixed-object (such as a tree or light pole). Include bicyclist–vehicle when detection and clip annotations support it.
+- **MVP interaction coverage:** Pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object (for example, an approach to a configured tree or light-pole region). Include bicyclist–vehicle within the VRU–vehicle group when detection and clip annotations support it.
 - **Data boundary:** DOT is the benchmark for its documented vulnerable-road-user–vehicle scenarios. The other pair types use a separate, manually annotated clip set and are reported independently; they are not described as DOT-validated.
 - **Initial conditions:** Begin with a small, documented set of usable sequences. Record frame rate, resolution, lighting, occlusion, camera view, and annotation coverage.
 
@@ -50,7 +50,7 @@ LiveCross will not diagnose intent, determine fault, predict that a crash will o
 
 ## Data and approval note
 
-The preferred benchmark is the **U.S. DOT Intersection Safety Challenge Stage 1B**. Its official description covers conflict/non-conflict scenarios between vulnerable road users (such as pedestrians and bicyclists) and vehicles. Its five-run sample has been inspected, but its labels are run-level; event intervals need manual annotations, and the sample alone is too small for strong final claims. Inspect the public 41-run validation asset before freezing its evaluation plan. The three other interaction types use a separate manual clip set. Per the student, the instructor approved LiveCross as a custom topic and approved solo work. Operational definitions are in [`event-vocabulary.md`](event-vocabulary.md), with a proposed labeling process in [`manual-annotation-protocol.md`](manual-annotation-protocol.md).
+The preferred benchmark is the **U.S. DOT Intersection Safety Challenge Stage 1B**. Its official description covers conflict/non-conflict scenarios between vulnerable road users (such as pedestrians and bicyclists) and vehicles. Its five-run sample has been inspected, but its labels are run-level; event intervals need manual annotations, and the sample alone is too small for strong final claims. Inspect the public 41-run validation asset before freezing its evaluation plan. Vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object use separate suitable annotations. Per the student, the instructor approved LiveCross as a custom topic and approved solo work. Operational definitions are in [`event-vocabulary.md`](event-vocabulary.md), with a proposed labeling process in [`manual-annotation-protocol.md`](manual-annotation-protocol.md).
 
 Initial measurable evaluation thresholds and the DOT label-level limitation are recorded in [`acceptance-targets.md`](acceptance-targets.md); confirm sample contents before freezing the final test protocol.
 

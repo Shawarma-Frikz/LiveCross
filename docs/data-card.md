@@ -46,3 +46,7 @@ The five-run sample is for access and pipeline feasibility only. Before final ex
 ## Changes to record
 
 Update this card when the full annotation dictionary has been reviewed, a dataset subset is fixed, manual labels are created, camera projection is validated, or train/development/test run IDs are frozen.
+
+## Supplemental sources are separate evidence tracks
+
+The downloaded TGSIM, ROCO, and Waterloo files are not part of the DOT validation sample and must not be merged into its labels. Their local inventory, schema, terms, and intended use are documented separately in [`supplemental-data-audit.md`](supplemental-data-audit.md), with a reproducible output at [`results/audits/supplemental-dataset-audit.json`](../results/audits/supplemental-dataset-audit.json). In short: TGSIM and ROCO are trajectory data without RGB; ROCO has vehicle conflict-event labels; Waterloo has video and tracks but its reuse terms remain unresolved, and its route conflict points are not observed conflict-event labels.
