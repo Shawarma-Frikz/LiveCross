@@ -6,7 +6,7 @@
 
 ## Summary
 
-LiveCross currently has a fixed-camera DOT video source with run-level scenario labels, plus trajectory-only supplements. No source currently supplies an adjudicated, pair-level RGB event set ready for both target categories. Raw data remain local and excluded from Git. See [`dataset-access.md`](dataset-access.md) for access, terms, citations, and archive details; [`dataset-decision.md`](dataset-decision.md) for source roles.
+LiveCross currently has a fixed-camera DOT video source with run-level scenario labels, plus trajectory-only supplements. A small manually curated pair-level RGB event pilot exists, but it is not sufficient or diverse enough for supervised training or primary metrics in both target categories. Raw data remain local and excluded from Git. See [`dataset-access.md`](dataset-access.md) for access, terms, citations, and archive details; [`dataset-decision.md`](dataset-decision.md) for source roles.
 
 ## DOT ISC Stage 1B
 
@@ -22,6 +22,7 @@ LiveCross currently has a fixed-camera DOT video source with run-level scenario 
 - Public training samples: 20 runs total; 16 assigned to `train`, 4 to `validation`/development.
 - Compact subset: 10 complete VisualCamera7 test runs, deliberately balanced 5/5 by DOT run-level source label and sampled for visual conditions. This design is not prevalence-representative.
 - Inspection contact sheets were generated for runs in all splits, including test. Whether a person viewed each test sheet is not logged; therefore the test data cannot be described as fully unseen or content-blind.
+- All 10 ZIP archives currently present locally have been CRC-checked and extracted/reused under `data/raw/`; see [`raw-archive-extraction.json`](../results/audits/raw-archive-extraction.json). The extractions total 71,469,554,117 bytes (about 66.6 GiB). The separately described ~1 TB official full training archive is not downloaded.
 
 Recreate inventories and splits using the scripts listed in [`phase0-phase1-freeze.md`](phase0-phase1-freeze.md). Results depend on locally present raw archives.
 
@@ -29,8 +30,8 @@ Recreate inventories and splits using the scripts listed in [`phase0-phase1-free
 
 - DOT's `conflict` / `no conflict` labels apply at run/scenario level, not to individual events, frames, or actor pairs.
 - The audited VisualCamera7 3D-label projection is not approved as RGB image-space ground truth.
-- The project table contains two assistant-draft pedestrian–vehicle candidate windows, neither student-adjudicated, and zero vehicle–vehicle video event rows.
-- Both categories are exploratory. Do not use draft records as ground truth, supervised labels, or evaluation truth.
+- The project table contains three student-adjudicated pedestrian–vehicle potential-conflict windows, one pedestrian–vehicle non-conflict window, and one uncertain vehicle–vehicle window. Three rows were explicitly adopted from assistant proposals without separate student playback; this is disclosed in their notes and the review log.
+- Both categories remain exploratory and fail their predeclared sample gates. Do not present the pilot as sufficient for supervised training or primary evaluation; retain the assistant-assisted and solo-review limitations in reporting.
 
 ### Biases and limitations
 

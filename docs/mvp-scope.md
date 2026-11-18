@@ -1,7 +1,7 @@
 # LiveCross — MVP Boundary & Scope Specification
 
 **Version:** 2.1
-**Status:** The two-category project scope is frozen. Dataset/event-label readiness is incomplete; see [`phase0-phase1-freeze.md`](phase0-phase1-freeze.md).
+**Status:** The two-category project scope is frozen. Phase 1 is closed on the documented exploratory fallback; the event-label pilot is still too small for supervised event training or primary metrics. See [`phase0-phase1-freeze.md`](phase0-phase1-freeze.md).
 
 ## 1. Scope
 
@@ -10,7 +10,7 @@ LiveCross is a course-scale, explainable computer-vision prototype for reviewing
 1. **Pedestrian–vehicle** interactions.
 2. **Vehicle–vehicle** interactions.
 
-These are the intended analysis categories, not categories with already-validated event-level benchmarks. DOT supplies fixed-camera video and documented scenario-level labels for its own scenarios, but no event times or native pairwise conflict labels. ROCO supplies labeled vehicle–vehicle trajectories but no RGB video. Waterloo is excluded from the public benchmark until reuse terms are confirmed. The current event-label set remains a draft.
+These are the intended analysis categories, not categories with already-validated event-level benchmarks. DOT supplies fixed-camera video and documented scenario-level labels for its own scenarios, but no event times or native pairwise conflict labels. ROCO supplies labeled vehicle–vehicle trajectories but no RGB video. Waterloo is excluded from the public benchmark until reuse terms are confirmed. The current versioned event-label set is a small exploratory draft.
 
 Pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object interactions are out of scope for this version.
 
@@ -32,8 +32,8 @@ Pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object i
 
 | Category | Video source | Additional evidence | Current event-label status |
 |---|---|---|---|
-| Pedestrian–vehicle | DOT ISC Stage 1B VisualCamera7 | DOT run-level scenario label only; not event ground truth | Two assistant-draft records; zero student-adjudicated records. |
-| Vehicle–vehicle | DOT training/development video, subject to continuous manual review | ROCO provides a separate trajectory-only comparison (101 source event records), not RGB/video evaluation | Zero vehicle–vehicle video event records. |
+| Pedestrian–vehicle | DOT ISC Stage 1B VisualCamera7 | DOT run-level scenario label only; not event ground truth | Three adjudicated potential-conflict windows and one non-conflict window; two are direct student video reviews and two are assistant-assisted adoptions. Exploratory only. |
+| Vehicle–vehicle | DOT training/development video | ROCO provides a separate trajectory-only comparison (101 source event records), not RGB/video evaluation | One assistant-assisted uncertain window; no binary video label. Exploratory only. |
 
 Do not use DOT run-level labels as frame or actor-pair labels. Do not report ROCO trajectory scores as visual model scores. Do not use Waterloo in a public artifact unless reuse is cleared. See [`dataset-decision.md`](dataset-decision.md) and [`supplemental-data-audit.md`](supplemental-data-audit.md).
 

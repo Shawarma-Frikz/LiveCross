@@ -6,7 +6,7 @@ Use the [U.S. DOT Intersection Safety Challenge Stage 1B Validation Data](https:
 
 The data is a multi-sensor set, but the MVP can read a selected visual-camera `.mp4` and its corresponding frame-timestamp `.csv`. The ZIP also contains thermal-camera MP4s, calibration/data files, LiDAR PCAPs, and other sensor records; LiveCross does not need to load these for its RGB-video MVP. Keep all downloaded and extracted raw data under `data/raw/`; that directory is Git-ignored.
 
-## Download inventory (checked locally on 15 November 2026)
+## Download inventory (checked locally on 18 November 2026)
 
 All files below are under the Git-ignored `data/raw/` directory. The DOT fetch script recorded the five primary downloads in `download-manifest.json`; it verifies the listed byte sizes and checks archive CRCs before recording completion. The Waterloo and ROCO ZIPs are present and their ZIP directories can be read; their archives have not been CRC-scanned here.
 
@@ -23,8 +23,13 @@ All files below are under the Git-ignored `data/raw/` directory. The DOT fetch s
 | `waterloo/annotated_videos.zip` | 4,673,980,140 | Waterloo Multi-Agent Traffic Dataset: Intersection | Annotated road-user video; tracks are not conflict-event labels |
 | `waterloo/intersection_dbfiles.zip` | 610,803,071 | Waterloo intersection trajectory/context databases | Road-user trajectories and context; no complete near-conflict event labels |
 | `roco/ROCO.zip` | 25,063,270 | ROCO sample | Labeled vehicle-conflict trajectories; not video and not evidence for other interaction types |
+| `dota/DoTA_annotations.zip` | 10,357,806 | DoTA annotation package | Audited alternative source; not selected for primary evaluation because its taxonomy/perspective do not match the fixed-camera LiveCross target |
 
 The separately downloaded DOT five-run sample was also extracted selectively for inspection. Temporary range-check binary files in `data/raw/` are download diagnostics, not project data.
+
+### Full local archive extraction
+
+On 18 November 2026, every ZIP archive already present under `data/raw/` was safely inventoried and CRC-checked. Archives that were not already extracted were unpacked into source-specific directories under the ignored `data/raw/extracted/`; the two training samples were verified against their existing `data/raw/Run_*/` extraction and were not duplicated. The reproducible command is `python scripts/extract_available_archives.py`; it writes [`raw-archive-extraction.json`](../results/audits/raw-archive-extraction.json). This covers only locally available archives. The separate 1,104-run DOT full training archive (~1 TB) is not downloaded. Extraction does not change source rights, suitability, split membership, or annotation status; the official validation archive remains test-only and Waterloo remains excluded from project-label use pending rights clarification.
 
 ## Sample audit
 

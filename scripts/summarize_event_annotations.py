@@ -126,6 +126,21 @@ def main() -> None:
                 "annotated_window_duration_seconds": round(sum(float(row["window_duration_seconds"]) for row in selected), 6),
             }
 
+    review_stage_counts = Counter(row["review_stage"] for row in event_rows)
+    assistant_drafts_by_pair_type = {
+        pair_type: sum(
+            1 for row in event_rows
+            if row["pair_type"] == pair_type
+            and row["review_stage"] == "assistant_first_pass_requires_student_adjudication"
+        )
+        for pair_type in PAIR_TYPES
+    }
+    assistant_assisted_student_adjudications = sum(
+        1 for row in event_rows
+        if row["review_stage"] == "student_adjudicated"
+        and "-ASSIST-" in row["event_id"]
+    )
+
     category_gate = {}
     for pair_type in PAIR_TYPES:
         selected = [row for row in event_rows if row["pair_type"] == pair_type]
@@ -185,7 +200,8 @@ def main() -> None:
         reviewers[reviewer] = {
             "records": len(rows),
             "source_runs": sorted({row["source_run"] for row in rows}),
-            "is_independent_human_annotator": False,
+            "is_human_annotator": reviewer != "codex_visual_first_pass",
+            "is_independent_second_annotator": False,
             "adjudication_required": any(row["review_stage"] != "student_adjudicated" for row in rows),
         }
 
@@ -196,6 +212,9 @@ def main() -> None:
         "annotation_table": EVENTS.relative_to(ROOT).as_posix(),
         "annotation_table_sha256": hashlib.sha256(EVENTS.read_bytes()).hexdigest(),
         "events_by_split_and_pair_type": counts,
+        "event_rows_by_review_stage": dict(sorted(review_stage_counts.items())),
+        "assistant_first_pass_drafts_by_pair_type": assistant_drafts_by_pair_type,
+        "assistant_assisted_student_adjudications": assistant_assisted_student_adjudications,
         "category_sample_gates": category_gate,
         "uncertain_examples": [row for row in event_rows if row["status"] == "uncertain"],
         "excluded_examples": exclusion_rows,
@@ -207,13 +226,23 @@ def main() -> None:
         "reviewer_coverage": {
             "by_annotator": reviewers,
             "independent_second_annotator_count": 0,
-            "student_adjudication_complete": False,
+            "all_existing_event_rows_adjudicated": bool(event_rows) and all(
+                row["review_stage"] == "student_adjudicated" for row in event_rows
+            ),
         },
         "test_label_control": {
             "test_event_rows_in_table": sum(1 for row in event_rows if row["split"] == "test"),
-            "test_event_labels": "sealed; not annotated or used for model/threshold selection in this pilot",
+            "test_event_labels": "no test event rows or model predictions are present; policy excludes test from tuning. Test context frames exist in the generated gallery and viewing history is unrecorded.",
         },
-        "interpretation": "Both core pair types (pedestrian_vehicle and vehicle_vehicle) remain exploratory. Assistant first-pass rows are not eligible for training or primary metrics until student frame-level adjudication. Uncertain/excluded windows are never counted as non-conflict examples.",
+        "interpretation": (
+            "The annotation table contains "
+            f"{sum(1 for row in event_rows if row['review_stage'] == 'student_adjudicated')} student-adjudicated rows and "
+            f"{review_stage_counts['assistant_first_pass_requires_student_adjudication']} pending assistant first-pass draft rows; "
+            f"{assistant_assisted_student_adjudications} adjudicated records were explicitly adopted from assistant first-pass proposals. "
+            "That assistant-assisted provenance does not constitute independent review. "
+            "Each category remains exploratory until its student-adjudicated positive/negative sample gate is met. "
+            "The table is not ready for primary metrics. Uncertain/excluded windows are never counted as non-conflict examples."
+        ),
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

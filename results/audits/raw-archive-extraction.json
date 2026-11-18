@@ -1,0 +1,113 @@
+{
+  "generated_at_utc": "2026-11-18T10:22:32.810855+00:00",
+  "archives_found": 10,
+  "all_archives_crc_verified": true,
+  "total_expanded_bytes": 71469554117,
+  "archives": [
+    {
+      "archive": "data/raw/calibration.zip",
+      "archive_bytes": 8502530399,
+      "members": 7875,
+      "expanded_bytes": 10534944586,
+      "destination": "data/raw/extracted/calibration",
+      "action": "extracted_or_resumed",
+      "files_crc_verified": 7847,
+      "crc_verified": true
+    },
+    {
+      "archive": "data/raw/dota/DoTA_annotations.zip",
+      "archive_bytes": 10357806,
+      "members": 4678,
+      "expanded_bytes": 137382764,
+      "destination": "data/raw/extracted/dota/DoTA_annotations",
+      "action": "extracted_or_resumed",
+      "files_crc_verified": 4677,
+      "crc_verified": true
+    },
+    {
+      "archive": "data/raw/metadata-and-supporting-docs.zip",
+      "archive_bytes": 9723626,
+      "members": 16,
+      "expanded_bytes": 9719712,
+      "destination": "data/raw/extracted/metadata-and-supporting-docs",
+      "action": "extracted_or_resumed",
+      "files_crc_verified": 16,
+      "crc_verified": true
+    },
+    {
+      "archive": "data/raw/roco/ROCO.zip",
+      "archive_bytes": 25063270,
+      "members": 8184,
+      "expanded_bytes": 76582301,
+      "destination": "data/raw/extracted/roco/ROCO",
+      "action": "extracted_or_resumed",
+      "files_crc_verified": 8081,
+      "crc_verified": true
+    },
+    {
+      "archive": "data/raw/training-sample-1.zip",
+      "archive_bytes": 8161594056,
+      "members": 328,
+      "expanded_bytes": 9047580155,
+      "destination": "data/raw/Run_* (pre-existing complete extraction)",
+      "action": "reused_existing_extraction",
+      "files_crc_verified": 318,
+      "crc_verified": true
+    },
+    {
+      "archive": "data/raw/training-sample-2.zip",
+      "archive_bytes": 5148222990,
+      "members": 380,
+      "expanded_bytes": 5968229689,
+      "destination": "data/raw/Run_* (pre-existing complete extraction)",
+      "action": "reused_existing_extraction",
+      "files_crc_verified": 370,
+      "crc_verified": true
+    },
+    {
+      "archive": "data/raw/validation-full.zip",
+      "archive_bytes": 28642566098,
+      "members": 1466,
+      "expanded_bytes": 32258119657,
+      "destination": "data/raw/extracted/validation-full",
+      "action": "extracted_or_resumed",
+      "files_crc_verified": 1425,
+      "crc_verified": true
+    },
+    {
+      "archive": "data/raw/validation-sample.zip",
+      "archive_bytes": 3540625371,
+      "members": 176,
+      "expanded_bytes": 4002490045,
+      "destination": "data/raw/extracted/validation-sample",
+      "action": "extracted_or_resumed",
+      "files_crc_verified": 170,
+      "crc_verified": true
+    },
+    {
+      "archive": "data/raw/waterloo/annotated_videos.zip",
+      "archive_bytes": 4673980140,
+      "members": 14,
+      "expanded_bytes": 4678891512,
+      "destination": "data/raw/extracted/waterloo/annotated_videos",
+      "action": "extracted_or_resumed",
+      "files_crc_verified": 14,
+      "crc_verified": true
+    },
+    {
+      "archive": "data/raw/waterloo/intersection_dbfiles.zip",
+      "archive_bytes": 610803071,
+      "members": 14,
+      "expanded_bytes": 4755613696,
+      "destination": "data/raw/extracted/waterloo/intersection_dbfiles",
+      "action": "extracted_or_resumed",
+      "files_crc_verified": 14,
+      "crc_verified": true
+    }
+  ],
+  "limitations": [
+    "This covers ZIP archives already present locally; the separately described 1,104-run DOT full training archive (~1 TB) is not downloaded.",
+    "Extraction does not make a dataset permitted for redistribution or suitable for LiveCross labels.",
+    "No extracted test footage is annotated or used for model/threshold decisions."
+  ]
+}

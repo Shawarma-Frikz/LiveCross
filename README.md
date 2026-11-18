@@ -2,7 +2,7 @@
 
 **An explainable computer-vision prototype for reviewing potential road conflicts at a fixed crossing.**
 
-> **Status (18 November 2026):** Phase 0 specifications are documented and scope-frozen. Phase 1 data inventory and audits are substantially documented, but **Phase 1 is not complete**: event ground truth is still an unadjudicated pilot, and vehicle–vehicle video events have not been labeled. See [`docs/phase0-phase1-freeze.md`](docs/phase0-phase1-freeze.md) for itemized status and remaining actions. Do not treat the current annotations as training or evaluation ground truth.
+> **Status (18 November 2026):** Phase 0 is scope-frozen. Phase 1 is closed on its documented exploratory fallback: all locally available ZIP archives are inventoried, CRC-checked, and extracted, and the small event-label pilot has explicit provenance. Both target categories remain exploratory and the labels are not sufficient for supervised training or primary metrics. The separate ~1 TB DOT training archive has not been requested or downloaded. See [`docs/phase0-phase1-freeze.md`](docs/phase0-phase1-freeze.md) for itemized status.
 
 ---
 
@@ -52,7 +52,7 @@ The project repository records the following dataset roles. Raw-data paths are l
 
 | Interaction Category | Primary Dataset | Modality | Local Storage | Ground Truth Reference |
 |---|---|---|---|---|
-| **Pedestrian–Vehicle video** | **U.S. DOT ISC Stage 1B** | Fixed roadside camera, VisualCamera7 | 10 complete runs selected for review; source archives hold train/dev and test partitions | DOT labels are run/scenario-level only. Event windows in `data/annotations/v1/events.csv` remain drafts pending continuous-video adjudication. |
+| **Pedestrian–Vehicle video** | **U.S. DOT ISC Stage 1B** | Fixed roadside camera, VisualCamera7 | 10 complete runs selected for review; source archives hold train/dev and test partitions | DOT labels are run/scenario-level only. Two project potential-conflict windows are student-adjudicated; qualifying negatives and adequate sample coverage remain outstanding. |
 | **Vehicle–Vehicle video** | **DOT training-sample footage, pending manual annotation** | Fixed intersection video | Training/development runs are available locally | No DOT vehicle–vehicle conflict event labels exist yet; annotate from continuous train/dev video before supervised use. |
 | **Vehicle–Vehicle trajectory comparator** | **ROCO** | Vehicle trajectories, 2.5 Hz; no RGB video | `data/raw/roco/ROCO.zip` | 101 source-labeled events support a separate trajectory-only analysis, not video detection/tracking evaluation. |
 | **Exploratory perception reference** | **TUMTraf-Accid3nD** | Roadside highway images and labels | Small verified sample | Perception reference only; highway accident domain is not LiveCross intersection conflict ground truth. |

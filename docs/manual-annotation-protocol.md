@@ -26,11 +26,13 @@ The operational geometry, time/proximity, persistence, and alert-merge threshold
 For each event/window, record the fields in `data/annotations/v1/events.csv`: source dataset/archive/run, split, pair type, actor classes and IDs where defensible, exact source start/end frame and timestamp, status, confidence, uncertainty reason, notes, annotator, annotation version, and review stage. Keep temporary reviewer IDs clearly distinguished from source track IDs.
 
 1. Confirm the source is permitted for project use and preserve its citation/terms.
-2. Review the continuous source clip, not just sampled contact sheets, around the whole interaction.
+2. Prefer reviewing the continuous source clip, not just sampled contact sheets, around the whole interaction. If the student explicitly adopts an assistant-proposed label without separate playback, record that as assistant-assisted adjudication and disclose the limitation.
 3. Confirm both actors and the pair type. Record uncertain or excluded when evidence is insufficient.
 4. Save the decision and exact boundaries before consulting model output where practical.
 5. Keep every excerpt from a source recording in the same split. Mine negatives from training data only.
 6. Since the project is solo, record the student as annotator only for work the student personally performs. Do not claim independent review or inter-rater agreement.
 7. Regenerate and inspect the machine summary after each annotation update. Draft assistant rows are not training labels or evaluation ground truth.
+
+Assistant-proposed candidate windows and their visual-review limitations are recorded separately in [`assistant-first-pass-review-log.md`](assistant-first-pass-review-log.md). Keep that provenance record with the annotation table. A student may explicitly adopt a specific proposal, but the record must say that the label is assistant-assisted and must not imply independent student visual review or a second annotator.
 
 The generic annotation schema retains a fixed-hazard field for possible later work, but fixed-object and pedestrian–pedestrian categories are out of scope for this version.

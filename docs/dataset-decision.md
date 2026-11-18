@@ -6,7 +6,7 @@
 
 ## Decision
 
-The project targets two interaction categories, but the available data do **not** currently provide complete event-level video ground truth for either category. The source roles below are deliberately separated by modality and label meaning.
+The project targets two interaction categories. The available sources do **not** provide a sufficiently large native event-level video ground-truth benchmark for either category; a small manually curated DOT pilot is recorded separately. The source roles below are deliberately separated by modality and label meaning.
 
 | Source | Current role | What it supports | What it does not support |
 |---|---|---|---|
@@ -21,11 +21,11 @@ The project targets two interaction categories, but the available data do **not*
 
 ### Pedestrian–vehicle
 
-Use DOT VisualCamera7 footage. Preserve the source conflict/no-conflict field as a **run-level scenario label** only. It must not be copied to every frame, actor pair, or event. Create project event windows only by reviewing continuous source video and recording timestamps, actors, uncertainty, split, and reviewer provenance. The existing two draft event records are not adjudicated and are ineligible for training or primary metrics.
+Use DOT VisualCamera7 footage. Preserve the source conflict/no-conflict field as a **run-level scenario label** only. It must not be copied to every frame, actor pair, or event. The current pilot records three potential-conflict windows and one non-conflict interaction. Two windows are based on direct student continuous-video review; two assistant-assisted recommendations were explicitly adopted by the student, with that limitation disclosed. Coverage remains insufficient for primary metrics.
 
 ### Vehicle–vehicle
 
-Use DOT training/development video for the visual pipeline only after manually annotating vehicle pairs from continuous footage. DOT does not supply source vehicle–vehicle event labels. Use ROCO only as a distinct trajectory-only comparator; report its results separately and do not present them as visual benchmark performance. There are currently **zero** vehicle–vehicle video event rows.
+Use DOT training/development video for the visual pipeline only with traceable annotation. DOT does not supply source vehicle–vehicle event labels. The current pilot has one assistant-assisted student-adopted `uncertain` window and no binary vehicle–vehicle event label. Use ROCO only as a distinct trajectory-only comparator; report its results separately and do not present them as visual benchmark performance.
 
 ## Split and evaluation policy
 
@@ -40,4 +40,4 @@ Pedestrian–pedestrian and vehicle-/pedestrian–fixed-object interactions are 
 
 ## Decision status
 
-The **category scope is frozen**. Dataset readiness is **not frozen as complete**: DOT event labels require human review, and the visual vehicle–vehicle label set is absent. This decision supersedes earlier wording that described Waterloo as an active demo source or ROCO as an RGB/video benchmark.
+The **category scope is frozen**. Phase 1 is closed on the explicitly exploratory fallback because neither category meets its annotation minimum; the current pilot is not sufficient for supervised event training or primary metrics. The local archive extraction status is recorded in `results/audits/raw-archive-extraction.json`. This decision supersedes earlier wording that described Waterloo as an active demo source or ROCO as an RGB/video benchmark.
