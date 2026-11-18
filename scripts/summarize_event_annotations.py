@@ -21,9 +21,6 @@ OUT = ROOT / "results" / "annotation-summary-v1.json"
 PAIR_TYPES = (
     "pedestrian_vehicle",
     "vehicle_vehicle",
-    "pedestrian_pedestrian",
-    "vehicle_fixed_object",
-    "pedestrian_fixed_object",
 )
 SPLIT_NAMES = ("train", "validation", "test")
 POSITIVE = "potential_conflict"
@@ -216,7 +213,7 @@ def main() -> None:
             "test_event_rows_in_table": sum(1 for row in event_rows if row["split"] == "test"),
             "test_event_labels": "sealed; not annotated or used for model/threshold selection in this pilot",
         },
-        "interpretation": "All five pair types remain exploratory. Assistant first-pass rows are not eligible for training or primary metrics until student frame-level adjudication. Uncertain/excluded windows are never counted as non-conflict examples.",
+        "interpretation": "Both core pair types (pedestrian_vehicle and vehicle_vehicle) remain exploratory. Assistant first-pass rows are not eligible for training or primary metrics until student frame-level adjudication. Uncertain/excluded windows are never counted as non-conflict examples.",
     }
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

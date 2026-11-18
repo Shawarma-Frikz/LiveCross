@@ -1,5 +1,5 @@
 {
-  "audit_date": "2026-11-15",
+  "audit_date": "2026-11-18",
   "purpose": "Local inventory/schema/label audit of downloaded supplementary candidate datasets; not a model evaluation.",
   "sources": {
     "tgsim_foggy_bottom": {

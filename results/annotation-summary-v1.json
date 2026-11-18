@@ -1,9 +1,9 @@
 {
-  "generated_on": "2026-11-15",
+  "generated_on": "2026-11-18",
   "annotation_version": "1.0.0-draft",
   "manual_rule_version": "visual-categorical-v1.0.0",
   "annotation_table": "data/annotations/v1/events.csv",
-  "annotation_table_sha256": "ed4488525f8f188c6729b7ab2e255e08bbe65dba9fa48c776e997a2e1d143861",
+  "annotation_table_sha256": "5b55e364e86dc10b0496b45769ec522cd3ba1c7ed7daa17893cb99156df53e76",
   "events_by_split_and_pair_type": {
     "train": {
       "pedestrian_vehicle": {
@@ -13,24 +13,6 @@
         "annotated_window_duration_seconds": 4.011825
       },
       "vehicle_vehicle": {
-        "potential_conflict_count": 0,
-        "non_conflict_interaction_count": 0,
-        "uncertain_count": 0,
-        "annotated_window_duration_seconds": 0
-      },
-      "pedestrian_pedestrian": {
-        "potential_conflict_count": 0,
-        "non_conflict_interaction_count": 0,
-        "uncertain_count": 0,
-        "annotated_window_duration_seconds": 0
-      },
-      "vehicle_fixed_object": {
-        "potential_conflict_count": 0,
-        "non_conflict_interaction_count": 0,
-        "uncertain_count": 0,
-        "annotated_window_duration_seconds": 0
-      },
-      "pedestrian_fixed_object": {
         "potential_conflict_count": 0,
         "non_conflict_interaction_count": 0,
         "uncertain_count": 0,
@@ -49,24 +31,6 @@
         "non_conflict_interaction_count": 0,
         "uncertain_count": 0,
         "annotated_window_duration_seconds": 0
-      },
-      "pedestrian_pedestrian": {
-        "potential_conflict_count": 0,
-        "non_conflict_interaction_count": 0,
-        "uncertain_count": 1,
-        "annotated_window_duration_seconds": 5.954668
-      },
-      "vehicle_fixed_object": {
-        "potential_conflict_count": 0,
-        "non_conflict_interaction_count": 0,
-        "uncertain_count": 0,
-        "annotated_window_duration_seconds": 0
-      },
-      "pedestrian_fixed_object": {
-        "potential_conflict_count": 0,
-        "non_conflict_interaction_count": 0,
-        "uncertain_count": 0,
-        "annotated_window_duration_seconds": 0
       }
     },
     "test": {
@@ -77,24 +41,6 @@
         "annotated_window_duration_seconds": 0
       },
       "vehicle_vehicle": {
-        "potential_conflict_count": 0,
-        "non_conflict_interaction_count": 0,
-        "uncertain_count": 0,
-        "annotated_window_duration_seconds": 0
-      },
-      "pedestrian_pedestrian": {
-        "potential_conflict_count": 0,
-        "non_conflict_interaction_count": 0,
-        "uncertain_count": 0,
-        "annotated_window_duration_seconds": 0
-      },
-      "vehicle_fixed_object": {
-        "potential_conflict_count": 0,
-        "non_conflict_interaction_count": 0,
-        "uncertain_count": 0,
-        "annotated_window_duration_seconds": 0
-      },
-      "pedestrian_fixed_object": {
         "potential_conflict_count": 0,
         "non_conflict_interaction_count": 0,
         "uncertain_count": 0,
@@ -120,65 +66,9 @@
       "target_distinct_source_runs": 5,
       "sample_gate_met": false,
       "reporting_status": "exploratory"
-    },
-    "pedestrian_pedestrian": {
-      "adjudicated_potential_conflict_windows": 0,
-      "adjudicated_non_conflict_windows": 0,
-      "distinct_source_runs": 0,
-      "target_per_status": 20,
-      "target_distinct_source_runs": 5,
-      "sample_gate_met": false,
-      "reporting_status": "exploratory"
-    },
-    "vehicle_fixed_object": {
-      "adjudicated_potential_conflict_windows": 0,
-      "adjudicated_non_conflict_windows": 0,
-      "distinct_source_runs": 0,
-      "target_per_status": 20,
-      "target_distinct_source_runs": 5,
-      "sample_gate_met": false,
-      "reporting_status": "exploratory"
-    },
-    "pedestrian_fixed_object": {
-      "adjudicated_potential_conflict_windows": 0,
-      "adjudicated_non_conflict_windows": 0,
-      "distinct_source_runs": 0,
-      "target_per_status": 20,
-      "target_distinct_source_runs": 5,
-      "sample_gate_met": false,
-      "reporting_status": "exploratory"
     }
   },
-  "uncertain_examples": [
-    {
-      "event_id": "LC-DOT-Run_841-PP-001",
-      "source_dataset": "DOT ISC Stage 1B",
-      "source_archive": "training-sample-1.zip",
-      "source_video_path": "Run_841/VisualCamera7_Run_841.mp4",
-      "source_run": "Run_841",
-      "split": "validation",
-      "source_label": "not provided",
-      "source_label_scope": "unlabeled training run",
-      "pair_type": "pedestrian_pedestrian",
-      "actor_a_class": "pedestrian",
-      "actor_a_track_id": "",
-      "actor_b_class": "pedestrian",
-      "actor_b_track_id": "",
-      "fixed_hazard_id": "",
-      "start_frame": "139",
-      "end_frame": "288",
-      "start_timestamp": "2023-11-28-11-17-34_274807",
-      "end_timestamp": "2023-11-28-11-17-40_229475",
-      "window_duration_seconds": "5.954668",
-      "status": "uncertain",
-      "confidence": "low",
-      "uncertainty_reason": "Individual actor identities and paths cannot be established from coarse samples; adjudicate from continuous frames.",
-      "annotation_notes": "A small group is visible close together near the curb/crosswalk in the one-second review pack. Individual identities and pair paths cannot be tracked reliably from these samples, so this is retained as an uncertain review window and excluded from binary counts.",
-      "annotator_id": "codex_visual_first_pass",
-      "annotation_version": "1.0.0-draft",
-      "review_stage": "assistant_first_pass_requires_student_adjudication"
-    }
-  ],
+  "uncertain_examples": [],
   "excluded_examples": [
     {
       "exclusion_id": "EXC-DOT-Run_632-001",
@@ -217,7 +107,7 @@
       "validation": {
         "sequence_count_with_pack": 4,
         "sampled_source_timeline_seconds": 210.956089,
-        "event_annotation_records": 2
+        "event_annotation_records": 1
       },
       "test": {
         "sequence_count_with_pack": 0,
@@ -519,11 +409,10 @@
   "reviewer_coverage": {
     "by_annotator": {
       "codex_visual_first_pass": {
-        "records": 3,
+        "records": 2,
         "source_runs": [
           "Run_1165",
-          "Run_294",
-          "Run_841"
+          "Run_294"
         ],
         "is_independent_human_annotator": false,
         "adjudication_required": true
@@ -536,5 +425,5 @@
     "test_event_rows_in_table": 0,
     "test_event_labels": "sealed; not annotated or used for model/threshold selection in this pilot"
   },
-  "interpretation": "All five pair types remain exploratory. Assistant first-pass rows are not eligible for training or primary metrics until student frame-level adjudication. Uncertain/excluded windows are never counted as non-conflict examples."
+  "interpretation": "Both core pair types (pedestrian_vehicle and vehicle_vehicle) remain exploratory. Assistant first-pass rows are not eligible for training or primary metrics until student frame-level adjudication. Uncertain/excluded windows are never counted as non-conflict examples."
 }

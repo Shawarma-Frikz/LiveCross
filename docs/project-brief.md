@@ -1,57 +1,56 @@
 # LiveCross — Project Brief
 
-**Status:** Draft for implementation
+**Status:** Approved for implementation (Scope Refined: 2 Core Interaction Categories)
 **Project type:** Explainable computer-vision prototype for road-safety review
 
 ## Problem statement
 
-Road-safety teams often review video after a concern has been reported. Finding moments when people or vehicles converge on a crossing area—or when a road-user path approaches a fixed roadside hazard—can take careful, repeated viewing. LiveCross will analyze fixed-camera video and bring five typed event candidates forward for human review: pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object.
+Road-safety teams and civil engineers often review fixed-camera traffic video after a concern or near-miss has been reported. Identifying the exact moments when road users converge on a shared conflict area—and understanding whether their paths pose a collision risk—demands repetitive, time-consuming manual inspection.
 
-The project asks: **Can a course-sized computer-vision pipeline find and explain several types of potential crossing conflicts, and can hard-negative mining reduce false alerts without hiding failures in less common pair types?**
+LiveCross analyzes fixed-camera intersection video to automatically detect, track, and bring forward reviewable interaction candidates for two primary high-risk traffic categories:
+1. **Pedestrian–Vehicle conflicts** (the core vulnerable road user / Vision Zero safety priority).
+2. **Vehicle–Vehicle conflicts** (junction turning and crossing collisions).
+
+The project asks: **Can an explainable, course-scale computer vision pipeline reliably detect and explain potential crossing conflicts from fixed-camera video, and can hard-negative mining reduce false alarms while preserving critical event recall?**
 
 ## Intended user and use
 
-The primary user is a **campus, municipal, or road-safety reviewer** examining a particular crossing or walkway. LiveCross is intended to help that reviewer locate and understand candidate events in recorded footage. A live camera view is a demonstration mode; the core result remains a reviewable event with its source time and visual evidence.
+The primary user is a **campus, municipal, or road-safety reviewer** monitoring a designated crossing or intersection. LiveCross processes recorded video footage to locate, timestamp, and explain candidate conflict events. A live camera feed is supported as a real-time demonstration mode; the core analytical deliverable remains a reviewable event log supported by visual and temporal evidence.
 
 ## Scene and input
 
-- **Scene:** One fixed, stable camera view containing a visible crossing or marked conflict zone.
-- **Input:** A recorded video clip first, followed by one staged local laptop-webcam feed through the same pipeline.
-- **Moving actors:** Pedestrians and motor vehicles; bicycles only if the selected data and detector support them reliably.
-- **Fixed hazards:** User-configured scene objects such as trees or light poles. They are static landmarks/regions, not objects expected to move or receive a tracked identity.
-- **MVP interaction coverage:** Pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object (for example, an approach to a configured tree or light-pole region). Include bicyclist–vehicle within the VRU–vehicle group when detection and clip annotations support it.
-- **Data boundary:** DOT is the benchmark for its documented vulnerable-road-user–vehicle scenarios. The other pair types use a separate, manually annotated clip set and are reported independently; they are not described as DOT-validated.
-- **Initial conditions:** Begin with a small, documented set of usable sequences. Record frame rate, resolution, lighting, occlusion, camera view, and annotation coverage.
+- **Scene:** One fixed, calibrated or uncalibrated camera view observing an intersection or designated crosswalk conflict zone.
+- **Input:** Recorded intersection video streams (offline review mode) and local webcam capture (staged live demo mode).
+- **Actors:**
+  - *Pedestrians:* Foot-travelers crossing roadway boundaries.
+  - *Vehicles:* Passenger cars, vans, trucks, and buses.
+- **Core Interaction Scope:**
+  - **Category 1 (Pedestrian–Vehicle):** Moving pedestrian and vehicle whose reviewed or predicted trajectories may converge on a marked crosswalk or roadway conflict zone. Numeric timing and proximity cutoffs are not frozen yet.
+  - **Category 2 (Vehicle–Vehicle):** Two moving vehicles approaching an intersecting trajectory or junction zone with potentially converging arrival times. Numeric cutoffs are not frozen yet.
+- **Explicit Scope Boundary (Non-MVP Extensions):**
+  Pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object interactions are explicitly documented as out-of-scope for the core MVP benchmark. Extensive audits of external candidates (JRDB, DoTA, TUMTraf) demonstrated that public datasets for these either present critical domain shifts (moving robot campus corridors, moving dashcams with 94.1% split leakage) or lack true conflict annotations. In accordance with the course guideline (*« Privilégiez la qualité à la complexité »*), the project concentrates exclusively on rigorous evaluation of the two vital vehicle-interaction types.
 
-## Output
+## Output and explainability
 
-For each candidate event, LiveCross will show:
+For each flagged event, LiveCross presents an **inspectable event card**:
+- Start timestamp, peak risk timestamp, and end timestamp.
+- Interacting actor track IDs and class categories.
+- Visual overlay showing actor bounding boxes, motion history trails, and the designated conflict polygon.
+- Surrogate safety metrics: estimated Time-to-Zone ($TTZ$), Post-Encroachment Time ($PET$) proxy, and minimum spatial distance.
+- Plain-language explanation derived directly from decision logic and linear model contributions (e.g. *"Vehicle #3 and Pedestrian #7 predicted to enter crosswalk 0.8s apart; spatial proximity below safety margin"*).
+- Explicit uncertainty flag (`uncertain_view`) triggered when occlusion, track fragmentation, or low detection confidence prevents confident assessment.
 
-- the event time range, pair type, and involved track IDs or configured fixed-object ID;
-- the configured crossing/conflict zone and recent motion trails;
-- the measured factors that triggered the flag, such as estimated zone-entry timing and path proximity;
-- an uncertainty/review state when tracking, visibility, or geometry is insufficient.
+## Project goals and milestones
 
-Distances and time-to-collision values derived from image coordinates will be labelled **image-plane estimates** unless camera calibration supports physical measurements. A candidate is a review flag, not a confirmed collision or a live public warning.
+1. **Reproducible Pipeline:** Build a modular Python pipeline for video ingestion, object detection, multi-object tracking, and trajectory feature extraction.
+2. **Transparent Risk Reasoning:** Implement an interpretable rule-based baseline and train an interaction-level linear SVM classifier on motion features.
+3. **Hard-Negative Mining:** Run the signature mining loop on training clips to collect high-risk non-conflict interactions (e.g. staggered crossings, pedestrian walking parallel to vehicle, stopped cars) and demonstrate a measurable reduction in false alarms per video hour.
+4. **Explainable AI (XAI):** Show that every alert is supported by verified mathematical factors and decision boundaries, rather than uninterpretable heatmaps.
+5. **Interactive Review Dashboard:** Provide an accessible Streamlit web application supporting clip replay, interactive timeline scrubbing, and live alert inspection.
 
-## Project goals
+## Non-goals and ethical guardrails
 
-1. Build a reproducible video pipeline for detection, tracking, interaction features, and event visualization.
-2. Compare a transparent rule baseline with a learned conflict filter; use verified hard negatives from training sequences to study false-alert reduction.
-3. Explain each flag with the measurements and conditions that contributed to it.
-4. Evaluate each pair type separately on source-separated data using event-level precision, recall, F1, false alerts per video duration, detection delay, and processing speed. Mark sparse categories exploratory.
-5. Deliver a responsive browser demo with clip replay and a staged local laptop-webcam mode; keep clip replay as a reliable fallback.
-
-The complete feature-by-feature boundary is recorded in [`mvp-scope.md`](mvp-scope.md). The minimum version uses one fixed scene, a pretrained detector, tracking, transparent conflict scoring, a trained linear SVM interaction filter, reviewed hard negatives, a local event log, and an explainable responsive review interface.
-
-## Non-goals and limits
-
-LiveCross will not diagnose intent, determine fault, predict that a crash will occur, issue a certified driver warning, or replace expert review. It will not claim reliable physical distances without calibration or generalize beyond the cameras and conditions evaluated. No real person will be placed in danger for the demonstration.
-
-## Data and approval note
-
-The preferred video source is the **U.S. DOT Intersection Safety Challenge Stage 1B**. Its official description covers conflict/non-conflict scenarios between vulnerable road users (such as pedestrians and bicyclists) and vehicles. Its five-run sample has been inspected, but its labels are run-level; they do not directly supervise event-level pair predictions. LiveCross's event target will therefore be created by human review of permission-cleared video using the documented three-state annotation protocol. The DOT run label remains a separate, coarse source reference. The sample alone is too small for strong final claims. Inspect the public 41-run validation asset before freezing the evaluation set. Vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object require their own suitable reviewed clips. The [dataset decision](dataset-decision.md) records why PIE is not a fallback unless the project changes to pedestrian crossing-intention prediction. Per the student, the instructor approved LiveCross as a custom topic and approved solo work. Operational definitions are in [`event-vocabulary.md`](event-vocabulary.md), with the labeling process in [`manual-annotation-protocol.md`](manual-annotation-protocol.md).
-
-Initial measurable evaluation thresholds and the DOT label-level limitation are recorded in [`acceptance-targets.md`](acceptance-targets.md); confirm sample contents before freezing the final test protocol.
-
-Privacy, misuse, data-handling, and domain-shift risks are tracked in [`risk-register.md`](risk-register.md).
+- LiveCross is a **retrospective safety-review prototype**, not an in-vehicle collision avoidance system, traffic signal controller, or automated enforcement tool.
+- It does **not** claim to predict unavoidable crashes, assign legal fault, or infer human psychological intent.
+- Distances and times derived from uncalibrated 2D video are explicitly designated as **image-plane proxies**; metric units are reported only when validated camera calibration is established.
+- Video privacy: raw recordings are stored locally and excluded from version control; no facial recognition or license plate identification is performed.

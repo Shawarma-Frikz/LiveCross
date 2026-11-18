@@ -1,6 +1,6 @@
 # Supplemental dataset audit
 
-**Audit date:** 15 November 2026  
+**Audit date:** 15 November 2026
 **Purpose:** Decide what the already-downloaded non-DOT datasets can support in LiveCross. This is a source/format/label audit, not a model evaluation or permission to redistribute data.
 
 Official source pages were checked on 15 November 2026. Local counts below come from the downloaded files and are reproducible with the script; collection descriptions and reuse statements come from the linked publishers/catalog records.
@@ -17,12 +17,12 @@ The script uses only Python's standard library. It reads the TGSIM CSV, opens th
 
 | Dataset | Local audit | Appropriate LiveCross role | What it does not establish | Reuse status |
 |---|---|---|---|---|
-| DOT ISC Stage 1B | Primary RGB benchmark candidate; details in [`data-card.md`](data-card.md) | Video pipeline and a limited VRU–vehicle track, subject to the documented label/projection limits | Event-level labels or ground truth for all five planned interaction categories | Public access; follow DOT citation and source terms in [`dataset-access.md`](dataset-access.md) |
+| DOT ISC Stage 1B | Primary RGB video source; details in [`data-card.md`](data-card.md) | Video pipeline and future manual annotations for the two in-scope categories | Native event-level or actor-pair conflict labels; run labels cannot be reused as event labels | Public access; follow DOT citation and source terms in [`dataset-access.md`](dataset-access.md) |
 | FHWA TGSIM Foggy Bottom | 2,492,261 trajectory rows, 20,511 IDs, eight road-user types, approximately 0.1 s sampling | Motion-feature experiments and candidate-window generation; useful for pedestrian/vehicle and other dynamic-agent pairs | RGB video, source conflict labels, or any fixed-object interaction labels | DOT catalog marks it public and provides a public-domain license field; cite the data story and retain source metadata |
 | ROCO sample | 101 labeled vehicle-conflict events, 8,080 trajectory-frame JSON files; publisher describes 30-second event clips sampled at 2.5 Hz | Vehicle–vehicle conflict-trajectory analysis; external event-label source for a separate trajectory-only experiment | RGB video, pedestrian conflicts, fixed-object conflicts, detector performance, or image-space XAI | Repository states CC BY-SA 4.0 plus dataset terms; preserve attribution and share-alike obligations for adapted material |
-| Waterloo Intersection | 14 AVI videos paired by stem with 14 SQLite databases; representative DB includes car and pedestrian tracks; publisher describes about one hour of overhead-drone footage | Potential visual/tracking and multimodal demo; route/intersection context and behavior labels | Annotated conflict events: `CONFLICT_POINTS` are geometric path intersections, not observed near misses or crashes | **Unresolved:** publisher page does not specify a license/reuse terms. Do not redistribute or publish clips/derived media until terms are confirmed |
+| Waterloo Intersection | 14 AVI videos paired by stem with 14 SQLite databases; representative DB includes car and pedestrian tracks; publisher describes about one hour of overhead-drone footage | Audited locally for format and content only | Public use, redistribution, demo, or conflict ground truth; `CONFLICT_POINTS` are geometric route intersections, not observed near misses or crashes | **Unresolved:** publisher page does not specify a license/reuse terms. Excluded from the public benchmark and deliverables until authoritative terms are confirmed |
 
-These sources do not close the five-category visual ground-truth gap. Keep results separated by source and evidence type. Do not pool surrogate or route-based labels with DOT run labels or ROCO event labels.
+These sources do not close the two-category event-ground-truth gap. Keep results separated by source and evidence type. Do not pool surrogate or route-based labels with DOT run labels or ROCO event labels.
 
 ## FHWA TGSIM Foggy Bottom
 
@@ -76,7 +76,7 @@ Recommended citation: D. Meng, O. Sayer, R. Zhang, S. Shen, H. Li, and H. X. Liu
 
 ### Suitability and limits
 
-The [WISE Lab page](https://uwaterloo.ca/waterloo-intelligent-systems-engineering-lab/datasets/waterloo-multi-agent-traffic-dataset-intersection) describes about one hour of overhead-drone recording and ID-annotated videos paired with trajectory databases. This makes Waterloo a promising **visual tracking or qualitative demo** candidate after checking video decoding, resolution, ID-to-frame alignment, and license terms. The `CONFLICT_POINTS` table identifies geometric intersections between routes; it does not say a particular pair had a near miss or collision. The trajectory tables and behavior labels can support motion analysis, but they are not automatically pair-level conflict ground truth.
+The [WISE Lab page](https://uwaterloo.ca/waterloo-intelligent-systems-engineering-lab/datasets/waterloo-multi-agent-traffic-dataset-intersection) describes about one hour of overhead-drone recording and ID-annotated videos paired with trajectory databases. Local inspection supports an inventory of video/database pairs, but Waterloo is **not selected for the public project benchmark or demo** while reuse terms remain unresolved. The `CONFLICT_POINTS` table identifies geometric intersections between routes; it does not say a particular pair had a near miss or collision. The trajectory tables and behavior labels are not automatically pair-level conflict ground truth.
 
 ### Access and rights decision
 
@@ -87,5 +87,5 @@ The publisher's dataset page links directly to the database and annotated-video 
 1. Use DOT footage for the primary visual pipeline only within its documented run-label and projection limits.
 2. Use ROCO for a separate, trajectory-only vehicle conflict analysis; account for the CSV quirk and class imbalance.
 3. Use TGSIM for clearly marked trajectory-feature experiments or candidate generation, never as visual/event ground truth.
-4. Do not depend on Waterloo in the public deliverable until reuse terms are confirmed; if cleared, first verify frame/track alignment and annotate actual events separately.
+4. Exclude Waterloo from public artifacts and evaluation until authoritative reuse terms are confirmed; if later cleared, verify frame/track alignment and annotate actual events separately.
 5. For all four sources, keep source and annotation type attached to every result. A detector score, a heuristic surrogate, a route intersection, a run-level label, and an event-level conflict label are different evidence and must be reported separately.

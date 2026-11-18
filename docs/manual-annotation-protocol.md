@@ -1,46 +1,36 @@
-# Manual Interaction Annotation Protocol
+# LiveCross Manual Annotation Protocol
 
-**Purpose:** Provide consistent event labels for interaction categories not fully labeled in the DOT benchmark, and event boundaries for DOT runs whose labels are only run-level.
-**Status:** General protocol is defined. The first versioned pilot is documented in [event-label-set-v1.md](event-label-set-v1.md). It contains assistant first-pass drafts awaiting student adjudication; it is not project ground truth or a finalized training/evaluation set. The qualitative manual-label rule is frozen as visual-categorical-v1.0.0. Numeric model time/proximity/scoring thresholds remain unfrozen and must be set using training/development data before held-out predictions or test results are viewed. Review contact sheets are sampled for discovery; accepted labels require continuous-video review.
+**Scope:** Pedestrian–vehicle and vehicle–vehicle only.
+**Status:** Qualitative pilot rule defined; numeric thresholds and v1 labels are not finalized ground truth.
 
-## Labels
+## Label states
 
-Use three statuses:
+- **potential_conflict:** Continuous visual evidence supports plausible shared-space conflict for the pair under review. This is a review label, not proof of collision or crash inevitability.
+- **non_conflict_interaction:** The pair is visible and relevant over the full window, and reviewed evidence supports that the conflict condition is absent.
+- **uncertain:** Occlusion, identity, timing, or motion evidence is too weak to decide. Exclude from binary training and primary metrics unless resolved.
+- **excluded:** The window is unusable or outside scope. It is not a negative.
 
-- **Potential conflict:** The visible motion/path evidence meets the category rule below within the configured analysis window. This is a safety-review label, not proof of a near miss or collision.
-- **Non-conflict interaction:** The same actor/object pair is observable and relevant to the scene, but its paths do not meet the category conflict rule during the full review window.
-- **Uncertain:** Occlusion, timing mismatch, missing actor/object identity, or weak evidence prevents a reliable decision. Exclude from binary training and primary metrics unless adjudicated later.
+Do not assign labels from model alerts, proximity alone, DOT run-level labels, or ROCO trajectory labels. Review from source video without model predictions where practical.
 
-Do not label an event positive merely because LiveCross flagged it. Annotate from the source clip without viewing model scores where practical. Keep the raw DOT run label separate from the manual event label.
+## Pair definitions
 
-## Category rules
+| Pair | Review rule | Example negative |
+|---|---|---|
+| Pedestrian–vehicle | A visible pedestrian and vehicle approach/use a shared crossing or conflict region; review their trajectories and timing over the continuous window. | Both are observable but pass without the project-defined convergence condition. |
+| Vehicle–vehicle | Two visible vehicle tracks approach/use an intersecting path or junction region; review their trajectories and timing over the continuous window. | Both are observable but remain spatially or temporally separated. |
 
-| Pair type | What to annotate | Positive evidence | Negative example |
-|---|---|---|---|
-| Pedestrian–vehicle | A pedestrian/bicyclist track and a vehicle track approaching or using the same crossing/conflict area. | Their observed or projected paths overlap in the configured zone within the frozen temporal/proximity rule. | Both actors are observable, but their paths/timing remain separated through the window. |
-| Vehicle–vehicle | Two distinct vehicle tracks using the same intersection/conflict area. | Their paths overlap in space and time within the same frozen rule. | Both tracks are observable, but their paths/timing do not converge within the window. |
-| Pedestrian–pedestrian | Two distinct pedestrian tracks whose paths approach or cross in the analyzed area. | Their paths approach/cross within the frozen spatial/temporal rule. | Both tracks are observable but remain separated or pass without meeting the rule. |
-| Vehicle–fixed-object | A vehicle track and a configured static obstacle with a stable scene ID and footprint/buffer polygon. | The vehicle’s predicted/observed path intersects that configured footprint/buffer within the analysis window. | The vehicle is visible near the object but its path remains outside the configured hazard region. |
-| Pedestrian–fixed-object | A pedestrian track and a configured static obstacle with a stable scene ID and footprint/buffer polygon. | The pedestrian’s observed/predicted path intersects the configured footprint/buffer within the analysis window. | The pedestrian is visible near the object but remains outside the configured hazard region. |
+The operational geometry, time/proximity, persistence, and alert-merge thresholds are not yet frozen. Define and version them from training/development evidence before held-out evaluation. Without valid camera calibration, express spatial quantities as image-plane proxies.
 
-Freeze the actual time, distance/proximity, and persistence thresholds after video/dictionary inspection and before held-out predictions are reviewed. If calibration is absent, record geometry in image coordinates and call it a proxy.
+## Annotation fields and review procedure
 
-## Annotation record
+For each event/window, record the fields in `data/annotations/v1/events.csv`: source dataset/archive/run, split, pair type, actor classes and IDs where defensible, exact source start/end frame and timestamp, status, confidence, uncertainty reason, notes, annotator, annotation version, and review stage. Keep temporary reviewer IDs clearly distinguished from source track IDs.
 
-Store one event/window per continuous interaction interval with at least:
+1. Confirm the source is permitted for project use and preserve its citation/terms.
+2. Review the continuous source clip, not just sampled contact sheets, around the whole interaction.
+3. Confirm both actors and the pair type. Record uncertain or excluded when evidence is insufficient.
+4. Save the decision and exact boundaries before consulting model output where practical.
+5. Keep every excerpt from a source recording in the same split. Mine negatives from training data only.
+6. Since the project is solo, record the student as annotator only for work the student personally performs. Do not claim independent review or inter-rater agreement.
+7. Regenerate and inspect the machine summary after each annotation update. Draft assistant rows are not training labels or evaluation ground truth.
 
-`event_id`, `source_dataset`, `source_clip`, `source_run`, `split`, `pair_type`, `actor_a_class`, `actor_a_track_id`, `actor_b_class`, `actor_b_track_id`, `fixed_hazard_id`, `start_timestamp`, `end_timestamp`, `status`, `confidence`, `uncertainty_reason`, `annotation_notes`, `annotator_id`, `annotation_version`, and `source_label`.
-
-For a fixed object, `fixed_hazard_id` and the saved scene geometry replace a second moving track ID. Preserve the original frame index and timestamp string; do not derive event time from nominal FPS when a frame-time CSV exists.
-
-Versioned table v1 also preserves `source_archive`, `source_video_path`, `source_label_scope`, `start_frame`, `end_frame`, `window_duration_seconds`, and `review_stage`. Temporary reviewer-assigned IDs must be explicitly marked as non-source IDs. Unadjudicated assistant drafts remain ineligible for training and primary metrics.
-
-## Review and split controls
-
-1. Confirm the clip is permitted for project use and document its source.
-2. Review the full window around each candidate, not only the frame that triggered the rule.
-3. Save conflict, non-conflict, or uncertain before reading model predictions whenever practical.
-4. Have a second person review a subset if available; if solo review is used, record that there was no independent annotator and discuss this limitation.
-5. Group all excerpts from the same source run/recording in one train/development/test split.
-6. Mine hard negatives from training clips only. A reviewer must verify each mined safe example before adding it to classifier training.
-7. Report every pair type separately. Do not pool categories into a single score that conceals a category with inadequate labels.
+The generic annotation schema retains a fixed-hazard field for possible later work, but fixed-object and pedestrian–pedestrian categories are out of scope for this version.

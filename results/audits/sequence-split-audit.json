@@ -1,5 +1,5 @@
 {
-  "audit_date": "2026-11-15",
+  "audit_date": "2026-11-18",
   "split_manifest": "data/manifests/splits.csv",
   "split_universe": "All source runs in the two downloaded DOT public training-sample archives and the full DOT validation archive.",
   "seed": 42,

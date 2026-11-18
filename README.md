@@ -1,112 +1,80 @@
 # LiveCross
 
-**An explainable computer-vision prototype for reviewing potential conflicts at a fixed road crossing.**
+**An explainable computer-vision prototype for reviewing potential road conflicts at a fixed crossing.**
 
-> **Status:** Project proposal and data-feasibility stage. Per the student, the instructor approved LiveCross as a custom topic and approved working alone. The analysis pipeline and web demo are not implemented yet.
+> **Status (18 November 2026):** Phase 0 specifications are documented and scope-frozen. Phase 1 data inventory and audits are substantially documented, but **Phase 1 is not complete**: event ground truth is still an unadjudicated pilot, and vehicle–vehicle video events have not been labeled. See [`docs/phase0-phase1-freeze.md`](docs/phase0-phase1-freeze.md) for itemized status and remaining actions. Do not treat the current annotations as training or evaluation ground truth.
 
-## Problem and intended use
+---
 
-Reviewers may need to replay crossing footage repeatedly to find moments when road users or vehicles approach the same crossing area at nearly the same time, or when a road-user path appears to intersect a fixed hazard. LiveCross is planned as a local video-review tool that flags candidate pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object interactions, displays the motion evidence, and lets a human reviewer inspect the event.
+## 1. Problem and Scope
 
-It is a **safety-analysis prototype**, not a driver warning or a claim that a collision will occur. DOT's native labels support only run-level reporting for vulnerable-road-user–vehicle scenarios; they are not event-level labels. The other categories stay in the MVP as distinct candidate-detection paths and will use a separately documented, manually annotated clip set; metrics and claims will be reported per category and marked exploratory when sample counts are insufficient.
+Road-safety teams and civil reviewers frequently examine recorded traffic video to identify high-risk moments when moving actors converge on a shared roadway zone. LiveCross is an inspectable computer vision tool designed to process fixed-camera intersection video and flag reviewable candidate events across two core high-risk interaction types:
 
-## Objectives
+1. **Pedestrian–Vehicle Conflicts** (Vision Zero vulnerable road user safety).
+2. **Vehicle–Vehicle Conflicts** (Intersection turning and crossing encounters).
 
-- Process a recorded clip and a staged local webcam feed through one fixed-camera pipeline.
-- Detect and track people, bicycles when supported, and vehicles; represent fixed hazards as configured scene geometry.
-- Compare a transparent motion-rule baseline with a trained interaction-level classifier.
-- Study whether reviewed hard-negative mining reduces false alerts while preserving conflict recall.
-- Explain each candidate using track paths, timing, proximity features, the decision factors, and uncertainty.
-- Present and review events in a responsive local web interface.
+*Scope boundary:* Pedestrian–pedestrian and fixed-object interactions are out of scope for this MVP. The intended categories are pedestrian–vehicle and vehicle–vehicle. Their event-level evidence is still being assembled and reviewed; the project does not yet claim validated conflict detection or end-to-end evaluation.
 
-## Proposed approach
+---
 
-1. **Video preparation:** decode frames, keep the camera’s frame-timestamp CSV aligned, resize consistently, and record the scene and crossing polygon.
-2. **Road-user detection:** start with a pretrained YOLO-family detector; compare its classes and license to the dataset and course constraints before locking a checkpoint.
-3. **Tracking:** associate detections into temporary within-clip tracks and record track quality and ID switches.
-4. **Typed interactions:** compare predicted paths for moving pairs (pedestrian–vehicle, vehicle–vehicle, pedestrian–pedestrian) and compare vehicle/pedestrian paths with configured fixed-hazard regions. Use pair-specific conflict geometry and retain pair type in every record.
-5. **Experiments:** compare a deterministic rule baseline and a linear SVM on manually reviewed interaction windows across the five interaction types. Mine false-positive safe windows only from training clips; keep source clips/runs separated for evaluation and report per-type counts and metrics.
-6. **Explainability:** show the video tracks and rule factors; expose the linear SVM’s signed feature contributions for each decision. Keep an explicit uncertain state.
-7. **Demo:** review uploaded clips first and add one staged local webcam feed when replay works reliably.
+## 2. Core Methodological Pipeline
 
-The learned interaction classifier and the pretrained detector have different jobs. The pretrained detector is not the project’s sole contribution: the project will implement and evaluate the motion features, event logic, hard-negative mining, and explanations. A CNN risk comparator is optional and only considered if annotation volume and time justify it.
-
-## Dataset
-
-**Primary benchmark:** [U.S. DOT Intersection Safety Challenge Stage 1B Validation Data](https://data.transportation.gov/Roadways-and-Bridges/Intersection-Safety-Challenge-Stage-1B-Validation-/j58q-ymi4).
-
-- The official five-run validation sample is downloaded locally (3,540,625,371 bytes) and excluded from Git.
-- It contains visual-camera MP4s and per-frame timestamp CSVs; a selected Run 1003 Visual Camera 7 clip was opened and decoded successfully at 1280×720.
-- The sample’s validation labels are conflict/no-conflict **per run**, not event intervals. The five-run sample has two conflict runs and three non-conflict runs, so it is for pipeline feasibility, not a strong final evaluation by itself.
-- The downloaded full validation archive contains 41 runs (28,642,566,098 bytes; about 26.7 GiB) and is reserved as LiveCross's held-out test partition. Its source labels are 12 conflict and 29 no-conflict runs, at run level only. The two public unlabeled training samples contain 20 additional runs, split into 16 train and 4 development runs.
-- The split is recorded once per complete source run in `data/manifests/splits.csv`, using seed 42 for the training/development assignments. Class stratification is impossible for the unlabeled training samples; all compact-subset runs remain in test. The DOT source labels are known run-level labels and must not be used to tune event-level predictions.
-- DOT conflict labels cover vulnerable-road-user/vehicle scenarios only. The other interaction types need separate video annotations and evaluation; never present those results as DOT-validated.
-
-See [data/README.md](data/README.md) for download and local organization instructions and [dataset access notes](docs/dataset-access.md) for the inspected sample, terms, and citation.
-The current source inventory, label boundaries, split policy, privacy handling, and data limitations are summarized in the [data card](docs/data-card.md).
-The [dataset expansion plan](docs/dataset-expansion-plan.md) records what evidence is still needed for the five interaction types and how each data source will be used.
-The [dataset-alignment decision](docs/dataset-decision.md) explains why DOT remains the video source, why PIE does not match this project's conflict-event target, and the manual annotation route required before event-level training.
-The [event-label pilot](docs/event-label-set-v1.md) includes a versioned draft table, uncertainty/exclusion records, a reproducible summary, and test-excluded train/development review sheets. It is **not yet project ground truth**: assistant first-pass labels require student frame-level adjudication; all five categories remain exploratory and no test event labels are included.
-The compact 10-run validation candidate pool is documented in [compact-subset-selection.md](docs/compact-subset-selection.md), with a reproducible run/camera/duration manifest. Whole-run assignments are recorded in [splits.csv](data/manifests/splits.csv) and can be regenerated with `python scripts/create_sequence_split.py`.
-Generate the timestamped, local inspection gallery across all three splits with `python scripts/build_inspection_gallery.py`; see [inspection-gallery.md](docs/inspection-gallery.md) for the label-scope limits and output location.
-
-Supplementary data have their own [terms/schema/label audit](docs/supplemental-data-audit.md). Recreate the local inventories for TGSIM, ROCO, and a representative Waterloo database with:
-
-```powershell
-python scripts/audit_supplemental_data.py
+```
+[Fixed Camera Video]
+        │
+        ▼
+[1. Perception]  ─── Pretrained YOLO (Pedestrians, Cars, Trucks, Buses, Bicycles)
+        │
+        ▼
+[2. Tracking]    ─── Multi-Object Tracking (IoU/ByteTrack association + trajectory history)
+        │
+        ▼
+[3. Geometry]    ─── User-configured Conflict Polygon (Crosswalk / Junction Zone)
+        │
+        ▼
+[4. Risk Model]  ─── Transparent Baseline Rule + Trained Linear SVM:
+                     • Time-to-Zone (TTZ) delta calculation
+                     • Spatial proximity & trajectory convergence vectors
+                     • Signature Hard-Negative Mining loop on training sequences
+        │
+        ▼
+[5. Explainable] ─── Inspectable Event Cards (Plain-language reasons, XAI signed weights)
+        │
+        ▼
+[6. Dashboard]   ─── Streamlit Review Dashboard (Replay scrubber, alert timeline, risk badge)
 ```
 
-The audit writes `results/audits/supplemental-dataset-audit.json`. It does not train a model or treat trajectory-derived candidates as source conflict ground truth. Waterloo redistribution terms remain unresolved; keep those media files out of Git.
+---
 
-Rebuild the selected DOT run/camera inventory and timestamp-duration manifest (requires the local `data/raw/validation-full.zip`):
+## 3. Dataset sources and their current roles
 
-```powershell
-python scripts/build_compact_subset_manifest.py
-```
+The project repository records the following dataset roles. Raw-data paths are local and Git-ignored; availability on another checkout depends on separate downloads:
 
-This verifies the selected videos and timestamp rows and writes `data/manifests/compact-subset.csv` plus `results/audits/compact-subset-audit.json`. It does not create event labels. Regenerate the run-level split separately with `python scripts/create_sequence_split.py`.
+| Interaction Category | Primary Dataset | Modality | Local Storage | Ground Truth Reference |
+|---|---|---|---|---|
+| **Pedestrian–Vehicle video** | **U.S. DOT ISC Stage 1B** | Fixed roadside camera, VisualCamera7 | 10 complete runs selected for review; source archives hold train/dev and test partitions | DOT labels are run/scenario-level only. Event windows in `data/annotations/v1/events.csv` remain drafts pending continuous-video adjudication. |
+| **Vehicle–Vehicle video** | **DOT training-sample footage, pending manual annotation** | Fixed intersection video | Training/development runs are available locally | No DOT vehicle–vehicle conflict event labels exist yet; annotate from continuous train/dev video before supervised use. |
+| **Vehicle–Vehicle trajectory comparator** | **ROCO** | Vehicle trajectories, 2.5 Hz; no RGB video | `data/raw/roco/ROCO.zip` | 101 source-labeled events support a separate trajectory-only analysis, not video detection/tracking evaluation. |
+| **Exploratory perception reference** | **TUMTraf-Accid3nD** | Roadside highway images and labels | Small verified sample | Perception reference only; highway accident domain is not LiveCross intersection conflict ground truth. |
 
-To rebuild the test-excluded training and development annotation contact sheets, run `python scripts/build_annotation_review_pack.py --splits train validation`; to refresh split/category counts after an annotation-table change, run `python scripts/summarize_event_annotations.py`. See [`docs/event-label-set-v1.md`](docs/event-label-set-v1.md). Contact sheets are candidate-finding aids; ground-truth labels require continuous-video student review. The review-pack script rejects test runs; no test event labels are in the current table.
+Waterloo footage is excluded from the public project benchmark because reuse terms remain unresolved. Do not use or redistribute it unless written permission or authoritative terms are obtained.
 
-To regenerate the subset and split metadata in order, run `python scripts/build_compact_subset_manifest.py`, `python scripts/create_sequence_split.py`, then `python scripts/build_compact_subset_manifest.py` again so the subset manifest records its test assignment.
+---
 
-## Traceable sample audit
+## 4. Phase 0 & Phase 1 Completion Record
 
-Recreate the machine-checkable inventory, frame decode/timestamp comparison, run-label counts, and selected-run GT summary with:
+- [x] **00.1–00.5 Project Definition:** Target user, fixed crossing scene, 2 core interaction types, event vocabulary, draft acceptance targets, and risk boundaries are recorded in the linked project documents.
+- [x] **00.2 MVP Boundary:** Core matrix, inputs, outputs, and dataset boundaries frozen in [`docs/mvp-scope.md`](docs/mvp-scope.md).
+- [x] **00.3 Event Vocabulary:** Operational definitions, three-state review labels, and source label mappings frozen in [`docs/event-vocabulary.md`](docs/event-vocabulary.md).
+- [x] **00.4 Acceptance Targets:** Proposed targets and measurement rules are recorded in [`docs/acceptance-targets.md`](docs/acceptance-targets.md); they are not measured or claimed achieved.
+- [x] **00.5 Risk Register:** Privacy, surrogate safety limits, domain shift, and non-warning guardrails recorded in [`docs/risk-register.md`](docs/risk-register.md).
+- [x] **01.1–01.3 Dataset Gate & Audit:** DOT Stage 1B validation sample, full archive, and timing CSV irregularities audited and documented in [`docs/dataset-access.md`](docs/dataset-access.md) and [`docs/projection-audit.md`](docs/projection-audit.md).
+- [x] **01.1–01.9 Data review artifacts:** Source/access, inventory, split, subset, gallery, data card, and supplementary audits are documented. Some candidate footage remains excluded or exploratory, as recorded in the audits.
+- [ ] **01.10 Event labels:** Incomplete. Current labels are unadjudicated drafts; there are zero vehicle–vehicle event rows. Review [`docs/phase0-phase1-freeze.md`](docs/phase0-phase1-freeze.md) for exact student actions.
 
-```powershell
-python scripts/audit_sample_data.py
-```
+---
 
-The script reads existing files under the Git-ignored `data/raw/` directory and writes `results/audits/dot-sample-audit.json`. It downloads nothing. Human label interpretation and the camera-projection decision remain documented separately in `docs/event-vocabulary.md` and `docs/projection-audit.md`.
-
-To download the planned public datasets into the ignored `data/raw/` folder, run:
-
-```powershell
-python scripts/fetch_project_data.py
-```
-
-The fetch script downloads the 41-run DOT validation archive, both public DOT training-sample archives, the camera-calibration archive, and the FHWA TGSIM Foggy Bottom trajectory CSV. Ensure at least 60 GB is free for the downloads. Full-archive extraction is not required: the selected 10-run RGB subset uses about 328.4 MiB of video plus small timestamp CSVs and can be extracted with `python scripts/extract_compact_subset.py`. The approximately 1 TB DOT training archive is unlabeled and is not part of the required download.
-
-## Planned milestones
-
-1. Keep the reported instructor approval of LiveCross and solo work in the course registration/project record if requested.
-2. Audit the DOT sample, full validation set, label semantics, and supplementary data; select the compact pool and freeze the whole-run split. Re-run the audit and split scripts to reproduce these records.
-3. Build a reproducible video reader, scene configuration, detection, and tracking pipeline.
-4. Define and manually review interaction windows for all five interaction types using the frozen source-run split; keep event annotations and model results out of the test partition until final evaluation. The source-run split is already recorded in `data/manifests/splits.csv`.
-5. Implement rule scoring, interaction features, the linear SVM, and training-only hard-negative mining.
-6. Add explanations, uncertainty, event log, and responsive desktop/phone review screens.
-7. Evaluate, analyze failure cases, rehearse the live demo, and prepare the report and slides.
-
-## Technologies
-
-Python 3.10+, OpenCV, NumPy, Pandas, Matplotlib, PyTorch/torchvision, scikit-learn, Ultralytics (candidate YOLO implementation), and Streamlit. Versions and model weights must be recorded after environment setup and license review.
-
-## Fit with the Computer Vision module
-
-The planned work applies video/image representation and preprocessing (OpenCV/NumPy), classical feature engineering and SVM classification, and pretrained YOLO object detection. The main assessed contribution is the run-separated rule-versus-SVM experiment and hard-negative-mining ablation, not simply calling a pretrained detector. A custom CNN is optional and will be attempted only if labels and time support a fair experiment.
-
-## Repository structure
+## 5. Repository Structure
 
 ```text
 LiveCross/
@@ -115,82 +83,57 @@ LiveCross/
 ├── .gitignore
 ├── data/
 │   ├── README.md
-│   └── manifests/
-│       ├── compact-subset.csv
-│       └── splits.csv
-├── notebooks/
-│   └── README.md
+│   ├── manifests/
+│   │   ├── compact-subset.csv
+│   │   └── splits.csv
+│   └── annotations/
+│       └── v1/events.csv
+├── docs/
+│   ├── project-brief.md
+│   ├── mvp-scope.md
+│   ├── event-vocabulary.md
+│   ├── acceptance-targets.md
+│   ├── data-card.md
+│   ├── dataset-decision.md
+│   ├── candidate-dataset-audit.md
+│   └── risk-register.md
 ├── scripts/
 │   ├── audit_sample_data.py
 │   ├── audit_supplemental_data.py
-│   ├── build_compact_subset_manifest.py
+│   ├── audit_candidate_datasets.py
 │   ├── create_sequence_split.py
-│   ├── extract_compact_subset.py
-│   ├── fetch_project_data.py
-│   └── build_inspection_gallery.py
-├── src/
-│   └── README.md
-├── models/
-│   └── README.md
+│   └── build_compact_subset_manifest.py
 ├── results/
-│   ├── README.md
 │   └── audits/
 │       ├── dot-sample-audit.json
 │       ├── supplemental-dataset-audit.json
-│       ├── compact-subset-audit.json
+│       ├── candidate-dataset-audit.json
 │       └── sequence-split-audit.json
-└── docs/
-    ├── references.md
-    ├── professor-guide-alignment.md
-    ├── dataset-decision.md
-    ├── compact-subset-selection.md
-    ├── inspection-gallery.md
-    └── ...
+├── src/
+│   ├── detector.py          # YOLO perception
+│   ├── tracker.py           # Multi-object association
+│   ├── geometry.py          # Conflict zones & path features
+│   ├── risk.py              # Rule baseline + linear SVM
+│   ├── mining.py            # Hard-negative mining loop
+│   ├── explain.py           # XAI factor attribution
+│   └── app.py               # Streamlit review UI
+└── models/
+    └── README.md
 ```
 
-## Setup and planned launch
+---
 
-The app entry point will be added during implementation. These are the planned local commands; the launch command is not usable until `src/app.py` exists.
+## 6. Setup and Usage
 
 ```powershell
-python -m venv .venv
+# 1. Activate virtual environment
 .\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
+
+# 2. Run dataset audit scripts
+python scripts/audit_sample_data.py
+python scripts/audit_supplemental_data.py
+python scripts/audit_candidate_datasets.py
+
+# 3. Launch review application (Phase 8 deliverable)
 streamlit run src/app.py
 ```
-
-## Project owner
-
-Solo project, approved by the instructor according to the student. Add the owner’s full name and technical responsibilities to the registration form and retain a record of the solo-work approval if requested.
-
-| Owner | Responsibility |
-|---|---|
-| Full name to be entered | Data, perception, interaction modeling, hard-negative experiment, explainability, interface, evaluation, and report |
-
-## GitHub repository
-
-Repository remote: [github.com/Shawarma-Frikz/LiveCross](https://github.com/Shawarma-Frikz/LiveCross). Confirm the repository is public during evaluation or explicitly grant the instructor access if it is private.
-
-## Current limitations
-
-- The five-run sample is too small for strong performance claims and has only run-level conflict labels.
-- The local inspection gallery samples every source run, but its frames are contextual samples, not event annotations; difficult/uncertain event examples remain unavailable until manual labeling.
-- Event-level reference intervals must be annotated for every evaluated pair type.
-- All five interaction types are in the MVP; the four non-VRU–vehicle types require separate, suitable annotations and category-specific evaluation. Treat results as exploratory if a category has too few examples.
-- No model is trained, and no UI or launch command is implemented yet.
-
-## Documentation
-
-- [Project brief](docs/project-brief.md)
-- [MVP boundary](docs/mvp-scope.md)
-- [Event vocabulary](docs/event-vocabulary.md)
-- [Manual annotation protocol](docs/manual-annotation-protocol.md)
-- [Acceptance targets](docs/acceptance-targets.md)
-- [Dataset access and terms](docs/dataset-access.md)
-- [Dataset-alignment decision](docs/dataset-decision.md)
-- [Compact subset selection](docs/compact-subset-selection.md)
-- [DOT data card](docs/data-card.md)
-- [Supplemental dataset audit](docs/supplemental-data-audit.md)
-- [Professor-guide alignment and submission checklist](docs/professor-guide-alignment.md)
-- [Risk and ethics register](docs/risk-register.md)
-- [References](docs/references.md)

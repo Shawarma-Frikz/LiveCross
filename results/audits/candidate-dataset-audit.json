@@ -1,0 +1,300 @@
+{
+  "audit_date": "2026-11-18",
+  "purpose": "Rigorous audit of candidate expansion datasets for the LiveCross project, benchmarked against the U.S. DOT ISC Stage 1B standard. Evaluates access gates, licensing, data format, camera perspective, label semantics, and category fit.",
+  "livecross_mvp_categories": [
+    "pedestrian–vehicle",
+    "vehicle–vehicle"
+  ],
+  "out_of_scope_categories": [
+    "pedestrian–pedestrian",
+    "vehicle–fixed-object",
+    "pedestrian–fixed-object"
+  ],
+  "sources": {
+    "tumtraf_accid3nd": {
+      "dataset_name": "TUMTraf-Accid3nD (Towards Vision Zero: The TUM Traffic Accid3nD Dataset)",
+      "official_url": "https://accident-dataset.github.io/",
+      "paper": "https://arxiv.org/abs/2503.12095",
+      "dev_kit": "https://github.com/tum-traffic-dataset/tum-traffic-dataset-dev-kit",
+      "license": "CC BY-NC-SA 4.0 (Attribution-NonCommercial-ShareAlike 4.0 International)",
+      "attribution_requirement": "Cite Zimmer et al. (2025), preserve CC BY-NC-SA 4.0 license",
+      "redistribution_limits": "Non-commercial only; modified versions must be distributed under identical license",
+      "camera_perspective": "Fixed roadside gantry infrastructure cameras (A9 motorway, Munich, Germany)",
+      "sensor_suite": "Roadside camera (Basler 50mm, 1920x1200 @ 25 Hz) + LiDAR",
+      "annotation_format": "OpenLABEL standard (ASAM OpenLABEL v1.0.0 JSON)",
+      "remote_access_details": {
+        "portal_type": "Nextcloud Public Share",
+        "download_endpoint": "https://nx21496.your-storageshare.de/s/Zd4rwsMwwXMaXiK/download",
+        "transfer_encoding": "chunked (Content-Length header omitted by web server)",
+        "underlying_webdav_folder": "/public.php/webdav/accid3nd_dataset/",
+        "total_remote_archives": 5,
+        "total_remote_bytes": 46587516755,
+        "total_remote_size_gib": 43.39,
+        "remote_archive_manifest": [
+          {
+            "filename": "train1.zip",
+            "bytes": 9436619494,
+            "size_gib": 8.79
+          },
+          {
+            "filename": "train2.zip",
+            "bytes": 9436522698,
+            "size_gib": 8.79
+          },
+          {
+            "filename": "train3.zip",
+            "bytes": 9436612632,
+            "size_gib": 8.79
+          },
+          {
+            "filename": "train4.zip",
+            "bytes": 9435983723,
+            "size_gib": 8.79
+          },
+          {
+            "filename": "train5.zip",
+            "bytes": 8841778208,
+            "size_gib": 8.23
+          }
+        ]
+      },
+      "local_sample": {
+        "status": "SAMPLED_AND_VERIFIED",
+        "directory": "data/raw/tumtraf-accid3nd/sample",
+        "sample_frames_count": 5,
+        "sample_labels_count": 5,
+        "decoded_image_resolution": [
+          1200,
+          1920,
+          3
+        ],
+        "verified_samples": [
+          {
+            "image_file": "1634804504_413000000_s040_camera_basler_north_50mm.jpg",
+            "label_file": "1634804504_413000000_s040_camera_basler_north_50mm.json",
+            "image_bytes": 305991,
+            "label_bytes": 294122,
+            "timestamp_match": true,
+            "sensor_id": "s040_camera_basler_north_50mm",
+            "object_count": 29,
+            "object_types": {
+              "CAR": 22,
+              "TRUCK": 7
+            },
+            "features_present": {
+              "2d_bounding_box": true,
+              "3d_cuboid": true,
+              "2d_instance_polygon": true
+            }
+          },
+          {
+            "image_file": "1634804504_453000000_s040_camera_basler_north_50mm.jpg",
+            "label_file": "1634804504_453000000_s040_camera_basler_north_50mm.json",
+            "image_bytes": 324433,
+            "label_bytes": 299125,
+            "timestamp_match": true,
+            "sensor_id": "s040_camera_basler_north_50mm",
+            "object_count": 29,
+            "object_types": {
+              "CAR": 23,
+              "TRUCK": 6
+            },
+            "features_present": {
+              "2d_bounding_box": true,
+              "3d_cuboid": true,
+              "2d_instance_polygon": true
+            }
+          },
+          {
+            "image_file": "1634804504_493000000_s040_camera_basler_north_50mm.jpg",
+            "label_file": "1634804504_493000000_s040_camera_basler_north_50mm.json",
+            "image_bytes": 319353,
+            "label_bytes": 304540,
+            "timestamp_match": true,
+            "sensor_id": "s040_camera_basler_north_50mm",
+            "object_count": 28,
+            "object_types": {
+              "CAR": 22,
+              "TRUCK": 6
+            },
+            "features_present": {
+              "2d_bounding_box": true,
+              "3d_cuboid": true,
+              "2d_instance_polygon": true
+            }
+          },
+          {
+            "image_file": "1634804504_533000000_s040_camera_basler_north_50mm.jpg",
+            "label_file": "1634804504_533000000_s040_camera_basler_north_50mm.json",
+            "image_bytes": 322331,
+            "label_bytes": 314250,
+            "timestamp_match": true,
+            "sensor_id": "s040_camera_basler_north_50mm",
+            "object_count": 29,
+            "object_types": {
+              "CAR": 23,
+              "TRUCK": 6
+            },
+            "features_present": {
+              "2d_bounding_box": true,
+              "3d_cuboid": true,
+              "2d_instance_polygon": true
+            }
+          },
+          {
+            "image_file": "1634804504_573000000_s040_camera_basler_north_50mm.jpg",
+            "label_file": "1634804504_573000000_s040_camera_basler_north_50mm.json",
+            "image_bytes": 323623,
+            "label_bytes": 313967,
+            "timestamp_match": true,
+            "sensor_id": "s040_camera_basler_north_50mm",
+            "object_count": 30,
+            "object_types": {
+              "CAR": 23,
+              "TRUCK": 6,
+              "PEDESTRIAN": 1
+            },
+            "features_present": {
+              "2d_bounding_box": true,
+              "3d_cuboid": true,
+              "2d_instance_polygon": true
+            }
+          }
+        ],
+        "aggregate_category_counts": {
+          "CAR": 113,
+          "TRUCK": 31,
+          "PEDESTRIAN": 1
+        }
+      },
+      "target_category_coverage": {
+        "vehicle_vehicle": "COVERED (ACTUAL ACCIDENTS ONLY) — High-speed motorway collisions, rollovers, and rear-ends. Does NOT contain controlled intersection surrogate conflict/non-conflict pairs.",
+        "pedestrian_vehicle": "NOT COVERED — Motorway setting without pedestrian crosswalks.",
+        "pedestrian_pedestrian": "NOT COVERED.",
+        "vehicle_fixed_object": "PARTIAL — Barrier impacts exist in accident scenarios, but on motorways.",
+        "pedestrian_fixed_object": "NOT COVERED."
+      },
+      "livecross_suitability_verdict": "SUITABLE FOR HIGH-SPEED VEHICLE PERCEPTION / EXPLORATORY WORK ONLY. Unlike DOT Stage 1B (which supplies native 2D projection issues), TUMTraf has native, clean 2D bboxes and polygons directly on 1920x1200 roadside camera images. However, its operational domain is high-speed highway crashes rather than fixed-crossing urban interactions. It cannot serve as the primary benchmark for LiveCross's 5 urban interaction types."
+    },
+    "dota": {
+      "dataset_name": "DoTA (Detection of Traffic Anomaly in Driving Videos)",
+      "official_url": "https://github.com/MoonBlvd/Detection-of-Traffic-Anomaly",
+      "paper": "Yao et al., IEEE TPAMI 2022 (https://arxiv.org/abs/2004.03044)",
+      "license": "MIT License (Code & Annotations). Video footage subject to third-party YouTube rights.",
+      "attribution_requirement": "Cite Yao et al. (IEEE TPAMI 2022)",
+      "redistribution_limits": "Raw video clips cannot be redistributed without third-party channel permissions.",
+      "camera_perspective": "Moving ego-vehicle dashcam (first-person in-cabin view)",
+      "download_status": {
+        "annotations_and_splits": "DOWNLOADED_AND_AUDITED (10.36 MB zip + official train/val metadata)",
+        "video_frames": "GATED / THIRD-PARTY HOSTED",
+        "video_frames_storage": "Raw frames are ~55 GB hosted on Google Drive (split into 5x 10 GB + 1x 5 GB). Google Drive requires manual interactive browser download or OAuth. Direct YouTube download requires yt-dlp, ffmpeg, and YouTube cookie credentials for age-restricted content."
+      },
+      "dataset_scale": {
+        "total_clips": 4677,
+        "train_clips": 3275,
+        "val_clips": 1402,
+        "annotation_schema": [
+          "video_name",
+          "channel",
+          "num_frames",
+          "ignore",
+          "ego_involve",
+          "night",
+          "anomaly_start",
+          "anomaly_end",
+          "video_start",
+          "video_end",
+          "accident_id",
+          "accident_name",
+          "labels"
+        ],
+        "train_class_distribution": {
+          "ego: turning": 672,
+          "other: turning": 539,
+          "ego: lateral": 325,
+          "ego: moving_ahead_or_waiting": 298,
+          "ego: oncoming": 267,
+          "other: moving_ahead_or_waiting": 171,
+          "other: lateral": 165,
+          "other: leave_to_right": 141,
+          "other: leave_to_left": 137,
+          "ego: leave_to_left": 134,
+          "ego: leave_to_right": 103,
+          "other: oncoming": 77,
+          "other: pedestrian": 35,
+          "other: start_stop_or_stationary": 34,
+          "ego: start_stop_or_stationary": 33,
+          "ego: obstacle": 32,
+          "other: unknown": 30,
+          "ego: unknown": 29,
+          "other: obstacle": 27,
+          "ego: pedestrian": 26
+        },
+        "val_class_distribution": {
+          "ego: turning": 279,
+          "other: turning": 206,
+          "ego: lateral": 153,
+          "ego: moving_ahead_or_waiting": 119,
+          "ego: oncoming": 104,
+          "other: lateral": 83,
+          "other: leave_to_right": 77,
+          "other: moving_ahead_or_waiting": 75,
+          "other: leave_to_left": 54,
+          "ego: leave_to_left": 45,
+          "ego: leave_to_right": 41,
+          "other: oncoming": 30,
+          "other: pedestrian": 21,
+          "other: obstacle": 20,
+          "ego: unknown": 19,
+          "ego: pedestrian": 18,
+          "other: start_stop_or_stationary": 17,
+          "ego: obstacle": 16,
+          "other: unknown": 14,
+          "ego: start_stop_or_stationary": 11
+        }
+      },
+      "split_leakage_audit": {
+        "train_unique_youtube_sources": 188,
+        "val_unique_youtube_sources": 179,
+        "overlapping_youtube_sources": 177,
+        "overlap_percentage_of_train_sources": 94.15,
+        "leakage_risk_explanation": "CRITICAL SPLIT LEAKAGE: 177 of 188 YouTube source videos in Train are also present in Validation. Individual clips are temporal slices of the same recording sessions. This violates LiveCross sequence-level split policy (Roadmap 01.6) and leaks scene, weather, camera parameters, and vehicle identities."
+      },
+      "target_category_coverage": {
+        "vehicle_vehicle": "COVERED (EGO-DASHCAM ONLY) — Turning, lateral, oncoming, rear-end accidents.",
+        "pedestrian_vehicle": "PARTIAL (EGO-DASHCAM ONLY) — 100 clips (61 train, 39 val) of pedestrian collisions/near-misses.",
+        "pedestrian_pedestrian": "NOT COVERED.",
+        "vehicle_fixed_object": "PARTIAL (EGO-DASHCAM ONLY) — 95 obstacle clips (59 train, 36 val); includes debris, parked cars, barriers.",
+        "pedestrian_fixed_object": "NOT COVERED."
+      },
+      "livecross_suitability_verdict": "NOT SUITABLE AS PRIMARY FIXED-CROSSING BENCHMARK; EXPLORATORY COMPARATOR ONLY. 1. Domain gap: moving dashcam with ego-motion vs. LiveCross fixed roadside camera. 2. Split leakage: 94.1% YouTube source overlap between official train and val splits. 3. Ground truth target: labels represent actual traffic anomalies/crashes, not surrogate potential-conflict candidate pairs."
+    },
+    "jrdb_jrdb_social": {
+      "dataset_name": "JRDB & JRDB-Social (JackRabbot Dataset and Social Benchmark)",
+      "official_url": "https://jrdb.erc.monash.edu.au/",
+      "papers": [
+        "JRDB: Rezatofighi et al. (CVPR 2022)",
+        "JRDB-Social: Vendrow et al. (CVPR 2023)"
+      ],
+      "license": "CC BY-NC-SA 3.0 (Attribution-NonCommercial-ShareAlike 3.0 Unported)",
+      "attribution_requirement": "Cite Rezatofighi et al. (2022) and Vendrow et al. (2023), Monash University & Stanford",
+      "redistribution_limits": "Non-commercial only; share-alike applies to derivative datasets",
+      "access_gate": {
+        "status": "ACCESS_GATED",
+        "requires_account": true,
+        "registration_url": "https://jrdb.erc.monash.edu.au/",
+        "next_steps_for_user": "1. Open https://jrdb.erc.monash.edu.au/ in browser.\n2. Register an academic/research account and accept the terms of use.\n3. Log in and download desired packages (2D bounding boxes, JRDB-Social labels).\n4. Place downloaded archives in data/raw/jrdb/ for local extraction and auditing."
+      },
+      "camera_perspective": "Mobile social robot (JackRabbot) navigating campus pathways at pedestrian height",
+      "environment": "54 indoor and outdoor university campus scenes (Stanford University)",
+      "target_category_coverage": {
+        "vehicle_vehicle": "NOT COVERED — Campus pedestrian walkways; zero road vehicles.",
+        "pedestrian_vehicle": "NOT COVERED — Zero road vehicles.",
+        "pedestrian_pedestrian": "SEMANTIC MISMATCH (CRITICAL) — JRDB-Social annotates human social dynamics: talking, walking together, queueing, gesturing, and demographics. These are cooperative social interactions, NOT physical conflict or near-miss collision candidates.",
+        "vehicle_fixed_object": "NOT COVERED.",
+        "pedestrian_fixed_object": "NOT COVERED."
+      },
+      "livecross_suitability_verdict": "NOT SUITABLE FOR LIVECROSS INTERACTION BENCHMARKING. 1. Access is gated behind account registration. 2. Fundamental domain gap: moving mobile robot camera on campus vs. fixed crossing roadside camera. 3. Fundamental semantic mismatch: social group interactions (conversations, strolling) are completely different from potential traffic collision conflicts. 4. Zero vehicle presence across the entire dataset."
+    }
+  }
+}

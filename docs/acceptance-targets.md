@@ -1,57 +1,38 @@
-# LiveCross — Acceptance Targets
+# LiveCross — Acceptance Targets & Evaluation Protocol
 
-**Status:** Initial targets recorded before any held-out test results are viewed.  
-**Dataset metadata and five-run sample inspected:** U.S. DOT Intersection Safety Challenge Stage 1B, 14 November 2026. The public sample is adequate for an engineering pilot, not for strong final performance claims. The five-type evidence plan is in [`dataset-expansion-plan.md`](dataset-expansion-plan.md); RGB projection is not approved for Run_1003 / Visual Camera 7 until the mismatch documented in [`projection-audit.md`](projection-audit.md) is resolved or an alternate annotation route is selected.
+**Version:** 2.1
+**Status:** Target definitions are documented before model/test evaluation; targets are not results. Per-category feasibility remains pending label review.
 
-**Annotation feasibility update (15 November 2026):** The qualitative manual-label profile `visual-categorical-v1.0.0` is frozen before test predictions. The current table contains two unadjudicated pedestrian–vehicle potential-conflict drafts, one uncertain pedestrian-pair window, and two excluded low-visibility windows. A one-second survey pack covers all 16 train and 4 development runs, but is not an exhaustive annotation pass. No category meets its minimum target; **all five categories are exploratory and there are zero adjudicated ground-truth events**. Details and denominators are in [`event-label-set-v1.md`](event-label-set-v1.md) and [`results/annotation-summary-v1.json`](../results/annotation-summary-v1.json). The original numeric acceptance thresholds below remain unchanged. Model scoring thresholds still need to be frozen on training/development data before any test predictions are opened.
+## 1. Evaluation scope and evidence limits
 
-## Dataset facts that affect evaluation
+The intended evaluation reports pedestrian–vehicle and vehicle–vehicle separately, using whole source recordings for split assignment. The DOT split assigns 16 public training-sample runs to train, 4 to development, and all 41 official validation runs to test. It is source-run-disjoint. A context gallery was generated across all splits, including test; the repository does not record whether test sheets were visually reviewed. Therefore, describe the DOT test as not used for model/threshold tuning in the current pilot, but do not claim a completely unseen or content-blind test set. No model predictions or test event labels are present in the current annotation pilot.
 
-The official DOT pages describe separate training and validation assets. Training has 1,104 runs, is unlabeled, is approximately 1 TB in full, and only a subset is downloadable as public sample ZIPs; the full set requires a data request. Validation has 41 runs, is approximately 30 GB in full, and includes a five-run sample; the downloaded ZIP is 3,540,625,371 bytes. Its ground truth includes 3D road-user boxes per timestamp and a **run-level** conflict/no-conflict label. The inspected five-run label file contains two conflict and three non-conflict runs. DOT describes scenarios involving vulnerable road users (pedestrians/bicyclists) and vehicles. That supports the primary VRU–vehicle benchmark only; it does not establish reference labels for vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, or pedestrian–fixed-object interactions. The sample includes visual camera MP4s with frame-timestamp CSVs.
+**Current data limits:** DOT labels are run/scenario-level, not event-level. The 10-run compact DOT subset is only a candidate video test pool until project event windows are adjudicated. DOT does not provide native vehicle–vehicle event labels. ROCO has source-labeled vehicle–vehicle trajectories but no RGB video and must be evaluated as a separate trajectory-only comparator. Waterloo is excluded from public evaluation until reuse terms are resolved.
 
-Therefore:
+## 2. Predeclared acceptance targets
 
-- The run-level labels can support a run-level conflict/no-conflict measure.
-- The MVP includes five interaction types. DOT-backed evaluation applies only to VRU–vehicle; vehicle–vehicle, pedestrian–pedestrian, vehicle–fixed-object, and pedestrian–fixed-object need separate suitable annotations and category-specific evaluation.
-- They do not, by themselves, provide event start/end times. Event-level precision/recall and alert delay need a separately documented manual event annotation set.
-- Do not treat the unlabeled training runs as supervised conflict labels, and do not report event-level metrics against run labels.
-- If inspection of the five-run sample cannot support the minimum event set below, keep event-level results exploratory and record the limitation; do not weaken thresholds after looking at test results.
+These thresholds are intended project goals, not evidence of achieved performance. If a target is infeasible on development data, document and version a justified change before inspecting test predictions.
 
-Sources: [DOT training data](https://data.transportation.gov/Roadways-and-Bridges/Intersection-Safety-Challenge-Stage-1B-Training-Da/vq7s-mv3v), [DOT validation data](https://data.transportation.gov/Roadways-and-Bridges/Intersection-Safety-Challenge-Stage-1B-Validation-/j58q-ymi4), and [DOT open-data story](https://data.transportation.gov/stories/s/U-S-DOT-Intersection-Safety-Challenge-Stage-1B-Sys/smqb-i5sx/).
+| ID | Metric | Target | Measurement |
+|---|---|---|---|
+| T1 | Event precision | $≥ 0.70$ | TP / (TP + FP), reported separately for each category. |
+| T2 | Event recall | $≥ 0.70$ | TP / (TP + FN), against adjudicated event windows, separately per category. |
+| T3 | False-alert rate | $≤ 0.5$ alerts/min | False alerts per annotated non-conflict video minute, per category. |
+| T4 | Hard-negative mining impact | $≥ 20%$ relative FP reduction, recall drop $≤ 5$ percentage points | Compare fixed baseline and mined model on the same evaluation set; mine only from training sequences. |
+| T5 | Alert delay | Median $≤ 1.5$ s | From earliest annotation-supported observable conflict cue to first alert. Define the cue consistently before evaluation. |
+| T6 | End-to-end throughput | $≥ 15$ FPS | Decode, detection, tracking, risk logic, and rendering at 720p; report hardware and timing method. |
+| T7 | Demo startup | $≤ 15$ s | From launch command to usable first playback screen, measured on documented hardware. |
 
-## Evaluation set and split gate
+No target is currently measured. T1–T5 require sufficient adjudicated event and non-conflict annotations; T6–T7 require an implemented application. If a category fails its sample minimum, mark its metrics exploratory or not estimable rather than treating an absent denominator as success.
 
-Before training or viewing test-set results:
+## 3. Event matching
 
-1. Inspect the full validation sample/metadata and confirm camera MP4s, timestamp CSVs, run labels, 3D-box contents, and frame-to-time behavior. A representative MP4/CSV has already been verified; its timestamps span about 73 seconds for 1,968 frames while the MP4 reports 30 FPS.
-2. Create manual event intervals only for the subset used for event-level evaluation. Record reviewer, run, time bounds, involved tracks when identifiable, label, and uncertainty reason.
-3. Apply the minimum separately to each pair type: at least **20 conflict and 20 non-conflict interaction windows across at least five distinct source clips/runs**, with source clips/runs held out from tuning. The current DOT sample has only two conflict and three non-conflict run labels and does not meet this event-window target. If a category cannot meet it with permission-cleared footage, report its event metrics as exploratory and show counts and failure cases; do not pool categories to hide sparse evidence.
-4. The source-run split is recorded in [`data/manifests/splits.csv`](../data/manifests/splits.csv): train and development come only from the two unlabeled public training samples; all 41 official validation runs are reserved for test. Keep test runs out of hard-negative mining, model selection, and threshold tuning. DOT's run-level source labels are already known and may be reported only as a separate coarse source-label result; they are not event labels.
-5. Freeze this target sheet and the event-matching rule before opening test predictions or project-created test event annotations. Keep the test event labels unavailable to model/threshold selection.
+A predicted event matches a ground-truth event only when sequence and pair category match and temporal intersection-over-union is at least 0.30, or the overlap covers at least 50% of the shorter interval. Match each ground-truth event at most once. Count duplicate predictions as false positives unless a documented merge rule combines them. Freeze the exact implementation and any merge tolerance before test evaluation.
 
-## Primary acceptance targets
+## 4. Reporting
 
-| ID | Measure | Target | How it will be measured |
-|---|---|---:|---|
-| A1 | Event precision, per pair type | **≥ 0.70** where the category meets its sample-size gate | True positive event matches divided by all predicted events on held-out source clips/runs; report each category separately. |
-| A2 | Event recall, per pair type | **≥ 0.70** where the category meets its sample-size gate | True positive event matches divided by all manually annotated conflict events on held-out source clips/runs; report each category separately. |
-| A3 | False-alert rate, per pair type | **≤ 0.5 per minute** of annotated non-conflict footage, where sample permits | Count unmatched predicted events only over non-conflict duration; report category and duration denominator. |
-| A4 | Hard-negative mining effect, per pair type | **≥ 20% relative reduction** in false-alert rate versus the unmined baseline, with recall loss **≤ 5 percentage points**, where measurable | Compare rule/classifier before and after mining on identical held-out clips and matching rule. Mine only training negatives. If baseline rate is zero or a category is too sparse, mark not measurable/exploratory. |
-| A5 | Event detection delay, per pair type | Median **≤ 2.0 seconds** from first annotated observable conflict evidence, where labels permit | Evaluate only matched held-out events; report category, full distribution, and missed events. |
-| A6 | End-to-end processing speed | **≥ 5 processed FPS** at the chosen MVP image size on the named demo computer | Include decode, detection, tracking, scoring, and rendering; report hardware, input size, and whether CPU/GPU was used. |
-| A7 | Demo readiness | Browser demo ready within **60 seconds** of launch in **3 of 3 cold starts** | Measure from the documented start command to the first usable replay screen; keep webcam startup as a separate result. |
-
-### Event-matching rule
-
-For event-level scores, a prediction matches a reference event when it is in the same source clip/run, has the same pair type, and its time interval overlaps the reference interval by at least **50% of the shorter interval**. If the data permits reliable actor identity, require the same actor pair (or same vehicle and fixed-hazard ID) too. Count each reference event and each predicted event at most once; unmatched predictions are false alerts and unmatched references are misses. Review this rule against each sample annotation format before locking the test protocol.
-
-## Secondary reporting targets
-
-- Report run-level conflict/no-conflict balanced accuracy and per-class precision/recall when the official run labels are available; do not substitute this for event-level metrics.
-- Report counts and denominators for every metric, not only percentages.
-- Break out results by day/night or other conditions only when the number of held-out runs supports a meaningful comparison; otherwise mark them descriptive.
-- Include representative true positives, false positives, false negatives, and uncertain/occluded cases.
-
-## Freeze rule
-
-These are project acceptance thresholds, not a claim that the model already meets them. After inspecting the sample and documenting annotation feasibility, any change must be recorded here **before** test predictions or test metrics are viewed, with the reason and the date. Once test results have been viewed, preserve these targets for the reported evaluation and explain any unmet target rather than changing it retrospectively.
+- Report counts and denominators alongside rates, separately for each category and source.
+- Keep ROCO trajectory results separate from video detection/tracking results.
+- Report the transparent rule baseline and learned model only when the training labels support them.
+- Include false-positive and false-negative examples, uncertainty, camera/domain limits, and all unmet targets.
+- Do not claim collision prediction, safety improvement, or deployable warning performance from this prototype.
